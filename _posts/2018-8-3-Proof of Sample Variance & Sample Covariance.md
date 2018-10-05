@@ -1,9 +1,12 @@
 ---
 layout: article
 title: Proof of Sample Variance & Sample Covariance
-
+mathjax: true
+mermaid: true
+chart: true
 chart: true
 mathjax_autoNumber: true
+tags : math
 ---
 
 Inspired from roomate's quesion,I have tried to find a convincible proof for this question but filed,then I referred to the outline of Proof of Sample Variance in Wikipedia,and tried to write a convincing proof of sample covariance and its necessary precondition.
