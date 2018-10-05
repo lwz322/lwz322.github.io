@@ -6,8 +6,10 @@ titles:
   zh-Hans: 关于
   zh-Hant: 關於
 key: page-about
+
 ---
 #I
+
 A student major in Mathematic,intrested in computer science,hardware,programing
 
 ## Blog

@@ -13,7 +13,7 @@ article_header:
   theme: dark
   background_color: '#203028'
   background_image:
-    gradient: 'linear-gradient(135deg, rgba(34, 139, 87 , .4), rgba(139, 34, 139, .4))'
+    gradient: 'linear-gradient(90deg, rgba(0, 0, 87 , .4), rgba(0, 0, 139, .4))'
     src: assets/cover3.jpg
 ---
 曾经给队友发的文件的归档 测试flowchart

@@ -6,6 +6,14 @@ mermaid: true
 chart: true
 toc: true
 tags : Math Statistic Proof
+header:
+  theme: dark
+article_header:
+  type: overlay
+  theme: dark
+  background_color: '#203028'
+  background_image:
+    src: assets/cover1.jpg
 ---
 
 I have tried to find a convincible proof for this question but filed,then I referred to the outline of Sample Variance'proof in Wikipedia,and tried to write a convincing proof of sample covariance and its necessary precondition.
