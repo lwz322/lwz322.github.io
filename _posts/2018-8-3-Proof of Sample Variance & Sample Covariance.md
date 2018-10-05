@@ -8,6 +8,8 @@ mathjax_autoNumber: true
 
 Inspired from roomate's quesion,I have tried to find a convincible proof for this question but filed,then I referred to the outline of Proof of Sample Variance in Wikipedia,and tried to write a convincing proof of sample covariance and its necessary precondition.
 Besides,I have to thanks for my roomate,who point out some mistake in the following proof
+<!--more-->
+
 ##Unbiased Estimator
 
 Suppose we have a statistical model,parameterized by a real number $\theta$, giving rise to a probability distribution for observed data, and a statistic $\hat {\theta }$ which serves as an estimator of $θ$ based on any observed data $x$. That is, we assume that our data follow some unknown distribution $P(x\mid \theta )$(where $\theta$ is a fixed constant that is part of this distribution, but is unknown), and then we construct some estimator $\hat {\theta }$maps observed data to values that we hope are close to $\theta$. The **bias** of $\hat \theta$ relative to $\theta$ is defined as
