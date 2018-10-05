@@ -4,17 +4,16 @@ title: Proof of Sample Variance & Sample Covariance
 mathjax: true
 mermaid: true
 chart: true
-mathjax_autoNumber: true
 toc: true
-tags : math
+tags : math statistic
 ---
 
 I have tried to find a convincible proof for this question but filed,then I referred to the outline of Proof of Sample Variance in Wikipedia,and tried to write a convincing proof of sample covariance and its necessary precondition.
 Besides,I have to thanks for my roomate,who point out some mistake in the following proof
 <!--more-->
-#Proof of Sample Variance & Sample Covariance
+# Proof of Sample Variance & Sample Covariance
 
-##Unbiased Estimator
+## Unbiased Estimator
 
 Suppose we have a statistical model,parameterized by a real number $\theta$, giving rise to a probability distribution for observed data, and a statistic $\hat {\theta }$ which serves as an estimator of $θ$ based on any observed data $x$. That is, we assume that our data follow some unknown distribution $P(x\mid \theta )$(where $\theta$ is a fixed constant that is part of this distribution, but is unknown), and then we construct some estimator $\hat {\theta }$maps observed data to values that we hope are close to $\theta$. The **bias** of $\hat \theta$ relative to $\theta$ is defined as
 
@@ -28,7 +27,7 @@ An estimator is said to be **unbiased** if its bias is equal to zero for all val
 
 In a simulation experiment concerning the properties of an estimator, the bias of the estimator may be assessed using the mean signed difference.
 
-##Sample Variance & Sample Covariance
+## Sample Variance & Sample Covariance
 
 The **sample variance**  of a random variable demonstrates two aspects of estimator bias:
 
@@ -40,7 +39,8 @@ Concretely, the naive estimator sums the squared deviations and divides by $n$, 
 
 Conversely, MSE can be minimized by dividing by a different number (depending on distribution), but this results in a biased estimator. This number is always larger than $n − 1$, so this is known as a shrinkage estimator, as it "shrinks" the unbiased estimator towards zero; for the normal distribution the optimal value is $n + 1$.
 
-###Distribution
+### Distribution
+
 Varaiables $X,Y$ follow different and certain distributions with
 
 Expectation
@@ -56,7 +56,7 @@ $$
 Cov(X,Y)=\sigma_{XY}
 $$
 
-###Sample
+### Sample
 
 **Independent and identical distribution (I.I.D)** random variables
 $$
@@ -95,6 +95,7 @@ $$
 $$
 \hat\sigma_{XY}=\frac{1}{n-1}\sum_{i=1}^n(X_i-\overline X)(Y_i-\overline Y)
 $$
+
 ### Biased Sample Variance's expectation
 
 $$
@@ -171,8 +172,9 @@ $$
 $$
 
 
-##Refference
-###Another Proof of $E(\sigma_X^2)$
+## Refference
+
+### Another Proof of $E(\sigma_X^2)$
 $$
 {\begin{aligned}
 & \quad \ E[\sigma_{y}^{2}] \\
@@ -183,7 +185,8 @@ $$
 &={\frac {n-1}{n}}\sigma ^{2}
 \end{aligned}}
 $$
-###Cite
+
+### citation
 
 - https://en.wikipedia.org/wiki/Bias_of_an_estimator
 - https://en.wikipedia.org/wiki/Variance#Sample_variance
