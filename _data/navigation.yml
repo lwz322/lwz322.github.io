@@ -1,10 +1,18 @@
 header:
   - titles:
+      en:       Home
+      zh:       主页
+      zh-Hans:  主页
+      zh-Hant:  主页
+    url:        /about.html
+
+  - titles:
       en:       Archive
       zh:       归档
       zh-Hans:  归档
       zh-Hant:  歸檔
     url:        /archive.html
+
   - titles:
       en:       About
       zh:       关于
