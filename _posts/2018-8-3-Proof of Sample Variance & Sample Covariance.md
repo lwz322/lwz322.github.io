@@ -4,14 +4,15 @@ title: Proof of Sample Variance & Sample Covariance
 mathjax: true
 mermaid: true
 chart: true
-chart: true
 mathjax_autoNumber: true
+toc: true
 tags : math
 ---
 
-Inspired from roomate's quesion,I have tried to find a convincible proof for this question but filed,then I referred to the outline of Proof of Sample Variance in Wikipedia,and tried to write a convincing proof of sample covariance and its necessary precondition.
+I have tried to find a convincible proof for this question but filed,then I referred to the outline of Proof of Sample Variance in Wikipedia,and tried to write a convincing proof of sample covariance and its necessary precondition.
 Besides,I have to thanks for my roomate,who point out some mistake in the following proof
 <!--more-->
+#Proof of Sample Variance & Sample Covariance
 
 ##Unbiased Estimator
 
@@ -21,7 +22,7 @@ $$
 {Bias}_{\theta }[\,{\hat {\theta }}\,]=\operatorname {E}_{x\mid \theta }[\,{\hat {\theta }}\,]-\theta =\operatorname {E}_{x\mid \theta }[\,{\hat {\theta }}-\theta \,]
 $$
 
-where $ {E}_{x\mid \theta }$ denotes over the distribution $P(x\mid \theta )$, i.e. averaging over all possible observations$x$. The second equation follows since *θ* is measurable with respect to the conditional distribution $P(x\mid \theta )$
+where ${E}_{x\mid \theta }$ denotes over the distribution $P(x\mid \theta )$, i.e. averaging over all possible observations$x$. The second equation follows since *θ* is measurable with respect to the conditional distribution $P(x\mid \theta )$
 
 An estimator is said to be **unbiased** if its bias is equal to zero for all values of parameter $θ$.
 
