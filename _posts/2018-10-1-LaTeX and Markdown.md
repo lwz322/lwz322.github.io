@@ -1,3 +1,12 @@
+---
+layout: article
+title: Document - Writing Posts
+mathjax: true
+mermaid: true
+chart: true
+mathjax_autoNumber: true
+---
+
 ####$\LaTeX$
 
 因为之前有提到LaTeX 所以就简单地推荐一本书还有软件
