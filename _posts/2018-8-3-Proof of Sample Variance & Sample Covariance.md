@@ -16,11 +16,12 @@ Besides,I have to thanks for my roomate,who point out some mistake in the follow
 ##Unbiased Estimator
 
 Suppose we have a statistical model,parameterized by a real number $\theta$, giving rise to a probability distribution for observed data, and a statistic $\hat {\theta }$ which serves as an estimator of $θ$ based on any observed data $x$. That is, we assume that our data follow some unknown distribution $P(x\mid \theta )$(where $\theta$ is a fixed constant that is part of this distribution, but is unknown), and then we construct some estimator $\hat {\theta }$maps observed data to values that we hope are close to $\theta$. The **bias** of $\hat \theta$ relative to $\theta$ is defined as
+
 $$
-{Bias} _{\theta }[\,{\hat {\theta }}\,]=\operatorname {E} _{x\mid \theta }[\,{\hat {\theta }}\,]-\theta =\operatorname {E} _{x\mid \theta }[\,{\hat {\theta }}-\theta \,]
+{Bias}_{\theta }[\,{\hat {\theta }}\,]=\operatorname {E}_{x\mid \theta }[\,{\hat {\theta }}\,]-\theta =\operatorname {E}_{x\mid \theta }[\,{\hat {\theta }}-\theta \,]
 $$
 
-where $ {E} _{x\mid \theta }$ denotes over the distribution $P(x\mid \theta )$, i.e. averaging over all possible observations$x$. The second equation follows since *θ* is measurable with respect to the conditional distribution $P(x\mid \theta )$
+where $ {E}_{x\mid \theta }$ denotes over the distribution $P(x\mid \theta )$, i.e. averaging over all possible observations$x$. The second equation follows since *θ* is measurable with respect to the conditional distribution $P(x\mid \theta )$
 
 An estimator is said to be **unbiased** if its bias is equal to zero for all values of parameter $θ$.
 
