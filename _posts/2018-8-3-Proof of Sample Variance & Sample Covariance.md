@@ -5,6 +5,7 @@ mathjax: true
 mermaid: true
 chart: true
 toc: true
+mode: immersive
 tags : Math Statistic Proof
 header:
   theme: dark

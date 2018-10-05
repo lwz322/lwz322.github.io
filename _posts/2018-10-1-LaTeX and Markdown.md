@@ -59,7 +59,7 @@ $$
 $$
 甚至绘制简单的框图：
 
-```
+```flowchart
 st=>start: Start
 op=>operation: Your Operation
 cond=>condition: Yes or No?
