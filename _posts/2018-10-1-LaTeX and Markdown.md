@@ -11,7 +11,7 @@ header:
 article_header:
   type: overlay
   theme: dark
-  background_color: '##aeafaf'
+
   background_image:
     src: assets/cover3.jpg
 ---
