@@ -13,7 +13,7 @@ article_header:
   theme: dark
 
   background_image:
-    src: assets/cover3.jpg
+    src: assets/background/sea.jpg
 ---
 曾经给队友发的文件的归档 测试flowchart
 <!--more-->
