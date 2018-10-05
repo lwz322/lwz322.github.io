@@ -7,7 +7,7 @@ chart: true
 mathjax_autoNumber: true
 ---
 
-####$\LaTeX$
+#### $\LaTeX$
 
 因为之前有提到LaTeX 所以就简单地推荐一本书还有软件
 电子书《一份不太简短的LATEX 2ε 介绍》（或《103 分钟了解LATEX2ε 》）
@@ -59,7 +59,7 @@ cond(yes)->e
 cond(no)->op
 ```
 
-```flow
+```mermaid
 st=>start: Start
 op=>operation: Your Operation
 cond=>condition: Yes or No?

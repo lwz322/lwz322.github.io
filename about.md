@@ -7,7 +7,16 @@ titles:
   zh-Hant: 關於
 key: page-about
 ---
+#I
+A student major in Mathematic,intrested in computer science,hardware,programing
 
+## Blog
+
+
+## About this page
+
+
+### Theme
 ![TeXt Theme](https://raw.githubusercontent.com/kitian616/jekyll-TeXt-theme/master/screenshots/TeXt-home.jpg)
 
 TeXt is a super customizable Jekyll theme for personal site, team site, blog, project, documentation, etc. Similar to iOS 11 style, it has large and prominent titles, round buttons and cards.
@@ -16,7 +25,7 @@ TeXt is a super customizable Jekyll theme for personal site, team site, blog, pr
 (() => console.log('Hello, World!'))();
 ```
 
-## Features
+### Features
 
 - Responsive
 - Skins
