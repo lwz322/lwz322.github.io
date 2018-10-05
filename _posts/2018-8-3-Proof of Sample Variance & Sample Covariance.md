@@ -5,13 +5,13 @@ mathjax: true
 mermaid: true
 chart: true
 toc: true
-tags : math statistic
+tags : Math Statistic Proof
 ---
 
-I have tried to find a convincible proof for this question but filed,then I referred to the outline of Proof of Sample Variance in Wikipedia,and tried to write a convincing proof of sample covariance and its necessary precondition.
-Besides,I have to thanks for my roomate,who point out some mistake in the following proof
+I have tried to find a convincible proof for this question but filed,then I referred to the outline of Sample Variance'proof in Wikipedia,and tried to write a convincing proof of sample covariance and its necessary precondition.
+
+Besides,I have to thanks my roomate,who pointed out some mistakes in this proof
 <!--more-->
-# Proof of Sample Variance & Sample Covariance
 
 ## Unbiased Estimator
 
@@ -44,14 +44,19 @@ Conversely, MSE can be minimized by dividing by a different number (depending on
 Varaiables $X,Y$ follow different and certain distributions with
 
 Expectation
+
 $$
 E(X)=\mu_X,E(Y)=\mu_Y
 $$
-Variance		
+
+Variance
+
 $$
 \sigma_X^2,\sigma_Y^2
 $$
+
 Covariance 	
+
 $$
 Cov(X,Y)=\sigma_{XY}
 $$
@@ -59,10 +64,13 @@ $$
 ### Sample
 
 **Independent and identical distribution (I.I.D)** random variables
+
 $$
 X_i,Y_i	\quad i=1,2,\dots,n
 $$
+
 **precondition**: $X_i,Y_j$ are only correlated when $i=j$ ,that is
+
 $$
 Cov(X_i,Y_j)=\begin{cases}
 Cov(X_i,Y_i) \ \quad &i=j \\
@@ -72,26 +80,34 @@ $$
 
 
 **Sample mean**
+
 $$
 \overline X=\frac{1}{n}\sum_{i=1}^nX_i,\overline Y=\frac{1}{n}\sum_{i=1}^nY_i
 $$
+
 **For** biased estimator is
 
 Variance
+
 $$
 S_{X}^2=\frac{1}{n}\sum_{i=1}^n(X_i-\overline X)^2,S_{Y}^2=\frac{1}{n}\sum_{i=1}^n(Y_i-\overline Y)^2
 $$
+
 Covariance
+
 $$
 S_{XY}=\frac{1}{n}\sum_{i=1}^n(X_i-\overline X)(Y_i-\overline Y)
 $$
 **For** unbiased estimator is
 
 **Sample variance**
+
 $$
 \hat\sigma_X^2=\frac{1}{n-1}\sum_{i=1}^n(X_i-\overline X)^2
 $$
+
 **Sample covariance**
+
 $$
 \hat\sigma_{XY}=\frac{1}{n-1}\sum_{i=1}^n(X_i-\overline X)(Y_i-\overline Y)
 $$
@@ -124,10 +140,13 @@ Var(\overline X)
 $$
 
 To be a Unbiased Estimator,required
+
 $$
 E[\hat\sigma_X^2]-\sigma_X^2=0
 $$
+
 $\therefore$ unbiased estimator is
+
 $$
 \hat\sigma_X^2=\frac{n}{n-1}E[S_X^2]=\frac{1}{n-1}\sum_{i=1}^n(X_i-\overline X)^2
 $$
@@ -167,6 +186,7 @@ $$
 $$
 
 $\therefore$ similarly,unbiased estimator is
+
 $$
 \hat\sigma_{XY}=\frac{n}{n-1}E[S_{XY}]=\frac{1}{n-1}\sum_{i=1}^n(X_i-\overline X)(Y_i-\overline Y)
 $$
