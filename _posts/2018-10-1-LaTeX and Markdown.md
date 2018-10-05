@@ -11,7 +11,7 @@ header:
 article_header:
   type: overlay
   theme: dark
-  background_color: '#203028'
+  background_color: '##aeafaf'
   background_image:
     gradient: 'linear-gradient(90deg, rgba(0, 0, 87 , .4), rgba(0, 0, 139, .4))'
     src: assets/cover3.jpg
