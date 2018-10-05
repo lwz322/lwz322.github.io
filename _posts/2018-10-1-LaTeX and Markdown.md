@@ -1,6 +1,6 @@
 ---
 layout: article
-title: Document - Writing Posts
+title: LaTeX and Markdown
 mathjax: true
 mermaid: true
 chart: true
