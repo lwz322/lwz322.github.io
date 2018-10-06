@@ -1,15 +1,15 @@
 ---
 layout: article
-titles: ...
+titles: About
   en: About
   zh: 关于
   zh-Hans: 关于
   zh-Hant: 關於
 key: page-about
 ---
-
+<!--more-->
 # About Me
-
+<!--more-->
 A student major in Mathematic,intrest in computer science,hardware,programing and is always keeping learning everything around.
 
 ## Blog
