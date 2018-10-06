@@ -21,7 +21,7 @@ article_header:
 <!--more-->
 I have tried to find a convincible proof for this question but filed,then I referred to the outline of Sample Variance'proof in Wikipedia,and tried to write a convincing proof of sample covariance and its necessary precondition.
 
-Besides,I have to thanks my roomate,who pointed out some mistakes in this proof
+Besides,I have to thanks my roomate,who pointed out some mistakes in this proof.
 <!--more-->
 
 ## Unbiased Estimator
