@@ -1,6 +1,6 @@
 ---
 layout: article
-titles: About
+titles:
   en: About
   zh: 关于
   zh-Hans: 关于
@@ -8,11 +8,7 @@ titles: About
 key: page-about
 ---
 
-### Theme
-
-
-![TeXtTheme](https://raw.githubusercontent.com/kitian616/jekyll-TeXt-theme/master/screenshots/TeXt-home.jpg)
-
+![TeXt Theme](https://raw.githubusercontent.com/kitian616/jekyll-TeXt-theme/master/screenshots/TeXt-home.jpg)
 
 TeXt is a super customizable Jekyll theme for personal site, team site, blog, project, documentation, etc. Similar to iOS 11 style, it has large and prominent titles, round buttons and cards.
 
@@ -20,14 +16,14 @@ TeXt is a super customizable Jekyll theme for personal site, team site, blog, pr
 (() => console.log('Hello, World!'))();
 ```
 
-### Features
+## Features
 
 - Responsive
 - Skins
 - Highlight Theme
 - Table of contents
 - Authors
-- Multi-language support(English, Simplified Chinese, Traditional Chinese)
+- Multi-language support
 - Search
 - Semantic HTML
 - RSS（[jekyll-feed](https://github.com/jekyll/jekyll-feed))
@@ -39,7 +35,7 @@ TeXt is a super customizable Jekyll theme for personal site, team site, blog, pr
 - Comments ([Disqus](https://disqus.com/))
 - Google Analytics
 
-### Skins
+## Skins
 
 TeXt has 6 built-in skins, you can also set up your own skin.
 
