@@ -14,7 +14,7 @@ article_header:
   theme: dark
   background_color: '#ffffff'
   background_image:
-    gradient: 'linear-gradient(0deg, rgba(0, 0, 0 , .6), rgba(0, 0, 0, .6))'
+    gradient: 'linear-gradient(0deg, rgba(0, 0, 0 , .4), rgba(0, 0, 0, .4))'
     src: assets/background/wall.jpg
 ---
 
