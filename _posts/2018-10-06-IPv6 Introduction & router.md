@@ -19,6 +19,7 @@ article_header:
   background_image:
     src: assets/background/thinkworld.jpg
 ---
+主要介绍了之后使用的到的IPv6基础知识以及内网配置IPv6方法的思路，以及一种接入IPv6的简单方法，最后就路由器选购写了一点东西
 <!--more-->
 ## 前言
 
