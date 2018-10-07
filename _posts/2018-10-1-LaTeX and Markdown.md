@@ -83,7 +83,6 @@ cond(no)->op
 
 因为排版简洁美观，读起来也更加舒服，用来简单的写个作业或者论文初稿也是可以的。
 入门的教程的话 推荐两个
-Github的Guid
-https://guides.github.com/features/mastering-markdown/
-西电开源社区的帖子
-https://linux.xidian.edu.cn/forum/d/27-markdown
+Github的[Guid](https://guides.github.com/features/mastering-markdown/)
+
+西电开源社区的[帖子](https://linux.xidian.edu.cn/forum/d/27-markdown)
