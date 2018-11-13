@@ -6,12 +6,15 @@ mermaid: true
 chart: true
 toc: true
 mode: immersive
-tags : 网络 路由器 OpenWRT
 header:
   theme: dark
 article_header:
   type: overlay
   theme: dark
+  background_color: '#ffffff'
+  background_image:
+    src: assets/images/400Mbps.jpg
+    gradient: 'linear-gradient(0deg, rgba(0, 0, 0 , .7), rgba(0, 0, 0, .7))'
 ---
 
 如何能够使用一台路由器让多个人拥有各自独立的网络（降低购买多个路由器的开销）
@@ -40,11 +43,8 @@ article_header:
 **自顶而下的对结构的解读**：
 
 Wireless Master0 和 Wireless Master1 是两个独立的无线网络AP，桥接到不同的LAN，从属于不同的子网，有不同的路由表；
-
-Wireless Client0 是桥接自另外一个接入点的无线网络，直接桥接到WWAN，主要目的是结合有线网络，使用Linux网络防火墙iptables的FwMark功能轮流给数据包打上**标记**，通过**路由表级别的负载均衡**来实现对网络的**加速**和数据包的内外网**分流**；
-
+Wireless Client0 是桥接自另外一个接入点的无线网络，直接桥接到WWAN，主要目的是结合有线网络，使用Linux网络防火墙iptables的FwMark功能轮流给数据包打上标记，通过路由表级别的负载均衡来实现对网络的**加速**和数据包的内外网**分流**；
 两个子网通过防火墙的空间（Firewall Zone）来划分，再对出入路由器于特定接口的数据包 使FwMark功能打上**标记**，之后再添加一张新的路由表负责被标记的数据包的路由，这样来自两个LAN空间的流量会转发到各自的WAN空间，图示的内外网转发也就是：	lan->wan	lan_2->wan_2
-
 有线PPPoE连接单个网卡只能有一个，因为大多数路由器只有一块网卡，所以在网络接口方面需要用到虚拟网卡得到veth1，veth2...；
 
 而虚拟网卡又坐落在VLAN之上，现在我们使用的大多数路由器都是通过VLAN来为网口进行划分的，通过设备对不同的VLAN ID的接口的标记，就可以划分出多组WAN口和LAN口，通过以上两步就可以实现单/多有线链路的接入以及对LAN口的划分；
@@ -54,15 +54,11 @@ Wireless Client0 是桥接自另外一个接入点的无线网络，直接桥接
 **注**：
 
 图中的Physical Interface也指Device，是相对于pppoe-wan的Interface而言的
-
 不同的设备和系统以及设置的名称可能不同，这里仅供原理的叙述
-
 以及对当前已有的解决方案的改进：校园网IPv6地址SLAAC分配情况下NAT的改进；
 
 
 ## 代码
-
-在两年的使用中，从原生的OpenWRT开始构建,不断的提出想法，发现问题和解决问题，日趋成熟，而现今有相当多的路由器的系统也是基于OpenWRT，在软件方面具有很好的可移植性，主要是Shell脚本（OpenWRT支持的ash）,并且采用了OpenWRT开发中的规范的UCI设置方式，配置简单高效。
 
 ### 添加防火墙空间
 
