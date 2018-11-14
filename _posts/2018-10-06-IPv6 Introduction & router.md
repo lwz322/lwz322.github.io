@@ -16,7 +16,7 @@ article_header:
   theme: dark
   background_color: '#ffffff'
   background_image:
-    src: assets/images/thinkworld.jpg
+    src: assets/background/thinkworld.jpg
     gradient: 'linear-gradient(0deg, rgba(0, 0, 0 , .7), rgba(0, 0, 0, .7))'
 ---
 
