@@ -6,7 +6,7 @@ mathjax: true
 mermaid: true
 chart: true
 mathjax_autoNumber: true
-key : 网络  路由器 OpenWRT
+tags : 网络  路由器 OpenWRT
 mode: immersive
 header:
   theme: dark
