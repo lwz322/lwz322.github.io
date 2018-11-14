@@ -16,8 +16,8 @@ article_header:
   theme: dark
   background_color: '#ffffff'
   background_image:
-    src: assets/background/thinkworld.jpg
     gradient: 'linear-gradient(0deg, rgba(0, 0, 0 , .7), rgba(0, 0, 0, .7))'
+    src: assets/background/thinkworld.jpg
 ---
 
 主要介绍了之后使用的到的IPv6基础知识以及内网配置IPv6方法的思路，以及一种接入IPv6的简单方法
