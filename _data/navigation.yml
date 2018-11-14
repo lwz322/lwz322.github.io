@@ -6,6 +6,9 @@ header:
       zh-Hant:  主页
     url:        /
 
+   - titles:      Docs
+     url:        /docs/en/quick-start
+     
   - titles:
       en:       Archive
       zh:       归档
@@ -26,6 +29,9 @@ header:
       zh-Hans:  关于
       zh-Hant:  關於
     url:        /about.html
+
+  - title:      GitHub
+    url:        https://github.com/lwz322
 
 docs-en:
   - title:      Start
