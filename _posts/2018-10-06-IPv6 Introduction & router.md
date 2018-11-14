@@ -90,7 +90,7 @@ article_header:
 > | Multicast | 11111111 | FF00::/8 |
 > | Link-Local unicast | 1111111010 | FE80::/10 |
 > | Unique local address | 1111110 | FC00::/7 |
-> | Global Unicast | 所有其它 | 123 |
+> | Global Unicast | 所有其它 |  |
 >
 > - 全 0 的地址::/128 为未定义地址，大家不要去使用
 > - 除了最后一位是 1，其它都是 0 的地址::1/128 为本地环回地址，同 IPv4 里面的 127.0.0.1
