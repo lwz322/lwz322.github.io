@@ -1,23 +1,23 @@
 ---
 layout: article
-title: IPv6和路由器配置
+title: IPv6与路由
 author :
 mathjax: true
 mermaid: true
 chart: true
 mathjax_autoNumber: true
 toc: true
-tags: 网络 IPv6 路由器
+tags : 网络 IPv6 路由器 
 mode: immersive
 header:
   theme: dark
 article_header:
   type: overlay
   theme: dark
-  background_color: '#6a6d6c'
-  gradient: 'linear-gradient(0deg, rgba(0, 0, 0 , .6), rgba(0, 0, 0, .6))'
+  background_color: '#ffffff'
   background_image:
-    src: assets/background/thinkworld.jpg
+    src: assets/images/thinkworld.jpg
+    gradient: 'linear-gradient(0deg, rgba(0, 0, 0 , .7), rgba(0, 0, 0, .7))'
 ---
 
 主要介绍了之后使用的到的IPv6基础知识以及内网配置IPv6方法的思路，以及一种接入IPv6的简单方法
@@ -89,7 +89,7 @@ article_header:
 > | Multicast | 11111111 | FF00::/8 |
 > | Link-Local unicast | 1111111010 | FE80::/10 |
 > | Unique local address | 1111110 | FC00::/7 |
-> | Global Unicast | 所有其它 | |
+> | Global Unicast | 所有其它 | 123 |
 >
 > - 全 0 的地址::/128 为未定义地址，大家不要去使用
 > - 除了最后一位是 1，其它都是 0 的地址::1/128 为本地环回地址，同 IPv4 里面的 127.0.0.1
