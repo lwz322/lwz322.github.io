@@ -6,9 +6,13 @@ header:
       zh-Hant:  主页
     url:        /
 
-   - titles:      Docs
-     url:        /docs/en/quick-start
-     
+  - titles:
+      en:       Wiki
+      zh:       Wiki
+      zh-Hans:  Wiki
+      zh-Hant:  Wiki
+    url:        /docs/en/quick-start
+
   - titles:
       en:       Archive
       zh:       归档
