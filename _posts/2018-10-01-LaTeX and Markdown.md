@@ -6,6 +6,7 @@ mermaid: true
 chart: true
 mathjax_autoNumber: true
 mode: immersive
+tags: LaTeX Markdown
 header:
   theme: dark
 article_header:
