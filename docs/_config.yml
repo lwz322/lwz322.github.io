@@ -165,13 +165,8 @@ exclude:
   - jekyll-text-theme.gemspec
   - package-lock.json
   - package.json
-<<<<<<< HEAD
-  # - /docs
-  # - /node_modules
-=======
   - /docs
   - /node_modules
->>>>>>> 6e35cb8037fe89fb0aca94cb9f644ebe4ce07a8a
   # - /screenshots
   - /test
   - /vendor
