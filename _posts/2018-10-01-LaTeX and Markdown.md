@@ -22,12 +22,12 @@ article_header:
 
 因为之前有提到LaTeX 所以就简单地推荐一本书还有软件
 电子书《一份不太简短的LATEX 2ε 介绍》（或《103 分钟了解LATEX2ε 》）
-https://github.com/louisstuart96/lshort-new-zh-cn
+[Github](https://github.com/louisstuart96/lshort-new-zh-cn)
 这本书的特点就是薄 而且尽可能的做到了全面 如果打算学的话 建议花一天时间通览然后再挑重点看一看
 国内还有一本书就是刘海洋的《LaTeX入门》，会厚很多也详尽很多
 
 剩下就是论文的模版和搜索引擎以及熟能生巧了
-模版网站 http://www.latexstudio.net/
+模版网站[LaTeXStudio]( http://www.latexstudio.net/)
 自己试过主流的几种编辑器方案之后还是觉得TeXstudio最简单好用
 
 #### Markdown
