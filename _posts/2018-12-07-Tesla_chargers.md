@@ -1,12 +1,12 @@
 ---
 layout: article
-title: 策略路由
+title: 爬取Tesla充电桩数据
 mathjax: true
 mermaid: true
 chart: true
 toc: true
 mode: immersive
-tags : 网络 IPv6 路由器 OpenWRT 多拨
+tags : Python 数学建模
 header:
   theme: dark
 article_header:
@@ -14,7 +14,7 @@ article_header:
   theme: dark
   background_color: '#ffffff'
   background_image:
-    src: assets/images/Tesla_chargers.jpg
+    src: https://img.vim-cn.com/b5/8ffebe4387c5e66c15e62360a81733307a4d15.png
     gradient: 'linear-gradient(0deg, rgba(0, 0, 0 , .7), rgba(0, 0, 0, .7))'
 ---
 源起于2018年[MCM\ICM](https://www.comap.com/undergraduate/contests/mcm/contests/2018/problems/)的D题，没有数据是很麻烦的，所以数据就只能自己爬取了，首先就是Tesla的充电桩的地理信息，最近尝试了下，发现没有之前想的那么难
@@ -42,13 +42,13 @@ python3环境即可，不过这里可以提的一点是网络环境，大概是�
 
   [Supercharger](https://www.tesla.com/supercharger)中地图右下有[View list of location](https://www.tesla.com/findus/list/superchargers/United%20States)
 
-  ![1544246432708](assets/images/tesla_map.jpg)
+  ![1544246432708](https://img.vim-cn.com/96/ba7c025b8e1e5c2b112e7dd3d9bea677d380d0.png)
 
   跳转后的网站就给出了美国的充电站的详细位置，那么又如何去获取经纬度呢？
 
   进入某个充电站的详细信息之后就有
 
-  ![1544246603839](assets/images/check.png)
+  ![1544246603839](https://img.vim-cn.com/29/3c1355a2f0d6e10c2315c2fa63fc11c20acbb0.png)
 
   通过浏览器的F12的检查功能就可以看到地图给出了经纬度的信息，另外左侧的文字也给出了充电站内的充电桩的数目，经过这样的分析之后发现，其实只需要做下正则匹配就行了。
 
@@ -179,6 +179,6 @@ python3环境即可，不过这里可以提的一点是网络环境，大概是�
 
 ## 结果
 
-程序大概要跑几分钟，爬下来的数据大概是4000+条，最后在[Google MAP](https://www.google.com/maps/d/edit?hl=en&hl=en&mid=1Txaoldp6_ZeG7_rwjwO1IW8zB66107oW&ll=36.200869445648266%2C-98.56588939157513&z=5)画出来就是下面这样， 这里也把即将建成的充电站画了进来，不过充电桩数目为0![1544247339926](assets/images/Tesla_chargers.jpg)
+程序大概要跑几分钟，爬下来的数据大概是4000+条，最后在[Google MAP](https://www.google.com/maps/d/edit?hl=en&hl=en&mid=1Txaoldp6_ZeG7_rwjwO1IW8zB66107oW&ll=36.200869445648266%2C-98.56588939157513&z=5)画出来就是下面这样， 这里也把即将建成的充电站画了进来，不过充电桩数目为0![1544247339926](https://img.vim-cn.com/b5/8ffebe4387c5e66c15e62360a81733307a4d15.png)
 
 缺点还是程序的速度太慢，几分钟已经是简单优化过的
