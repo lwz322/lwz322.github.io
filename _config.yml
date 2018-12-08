@@ -21,7 +21,8 @@ highlight_theme: default # "default" (default), "tomorrow", "tomorrow-night", "t
 url     : # the base hostname & protocol for your site e.g. https://www.someone.com
 baseurl : # does not include hostname
 title   : TimeForget
-description:  Time forget everything # this means to ignore newlines until "Language & timezone"
+description: > # this means to ignore newlines until "Language & timezone"
+  Carry inspiron and Stimulate wisdom
 
 
 ## => Language and Timezone
@@ -37,8 +38,8 @@ author:
   name      : Weizheng Li
   url       :
   avatar    : # path or url of avatar image
-  bio       : Achieve nothing
-  email     : lwz322@qq.com
+  bio       : Stay hungery,Stay foolish
+  email     :
   facebook  : # "user_name" the last part of your profile url, e.g. https://www.facebook.com/user_name
   twitter   : # "user_name" the last part of your profile url, e.g. https://twitter.com/user_name
   googleplus: # "user_id"   the last part of your profile url, e.g. https://plus.google.com/u/0/user_id
@@ -47,12 +48,13 @@ author:
   linkedin  : # "user_name" the last part of your profile url, e.g. https://www.linkedin.com/in/user_name/
   github    : # "user_name" the last part of your profile url, e.g. https://github.com/user_name
   npm       : # "user_name" the last part of your profile url, e.g. https://www.npmjs.com/~user_name
+  telegram  : # "user_name" the last part of your profile url, e.g. https://t.me/user_name
 
 
 ## => GitHub Repository (if the site is hosted by GitHub)
 ##############################
-repository:
-repository_tree:
+repository: lwz322/lwz322.github.io
+repository_tree: master
 
 
 ## => Paths
@@ -62,7 +64,6 @@ paths:
   home    : # home layout url, "/" (default)
   archive : # "/archive.html" (default)
   rss     : # "/feed.xml" (default)
-  assets  :
 
 
 ## => Post
@@ -81,14 +82,14 @@ toc:
 ## => Markdown Enhancements
 ##############################
 ## Mathjax
-mathjax: ture # false (default), true
+mathjax: true # false (default), true
 mathjax_autoNumber: # false (default), true
 
 ## Mermaid
-mermaid: ture # false (default), true
+mermaid: true # false (default), true
 
 ## Chart
-chart: ture # false (default), true
+chart: true # false (default), true
 
 
 ## => Paginate
@@ -137,7 +138,7 @@ pageview:
 ## => Analytics
 ##############################
 analytics:
-  provider: google # false (default), "google", "custom"
+  provider: false # false (default), "google", "custom"
 
   ## Google Analytics
   google:
@@ -176,8 +177,7 @@ defaults:
     values:
       layout: article
       license: true
-      aside:
-        toc: true
+      aside: true
       show_edit_on_github: true
       pageview: true
 
