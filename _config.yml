@@ -75,7 +75,7 @@ excerpt_separator: <!--more-->
 license: CC-BY-NC-4.0 # "CC-BY-4.0", "CC-BY-SA-4.0", "CC-BY-NC-4.0", "CC-BY-ND-4.0"
 
 ## TOC
-toc:
+toc: ture
   selectors: # "h1,h2,h3" (default)
 
 
