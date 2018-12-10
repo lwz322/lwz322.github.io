@@ -55,7 +55,7 @@ python3环境即可，不过这里可以提的一点是网络环境，大概是�
 
 ## 代码
 
-  这里因为程序是单线程的，索性就把各种充电桩的代码分开写和分开运行了（假装是多线程....）
+  这里因为程序是单线程的，索性就把两种充电桩的代码分开写和分开运行了（假装是多线程....），不同的部分主要是网页url和匹配的规则
 
 ### Supercharger
 
@@ -76,7 +76,7 @@ python3环境即可，不过这里可以提的一点是网络环境，大概是�
       else:
           print(response.status_code)
           return None
-   except RequestException:
+   except
       print('ConnectionError')
       return None
   #创建表格,添加工作表
@@ -136,7 +136,7 @@ python3环境即可，不过这里可以提的一点是网络环境，大概是�
       else:
           print(response.status_code)
           return None
-   except RequestException:
+   except
       print('Error on HTTP')
       return None
   #创建表格,添加工作表
@@ -182,4 +182,4 @@ python3环境即可，不过这里可以提的一点是网络环境，大概是�
 
 程序大概要跑几分钟，爬下来的数据大概是4000+条，最后在[Google MAP](https://www.google.com/maps/d/edit?hl=en&hl=en&mid=1Txaoldp6_ZeG7_rwjwO1IW8zB66107oW&ll=36.200869445648266%2C-98.56588939157513&z=5)画出来就是下面这样， 这里也把即将建成的充电站画了进来，不过充电桩数目为0![1544247339926](https://img.vim-cn.com/b5/8ffebe4387c5e66c15e62360a81733307a4d15.png)
 
-缺点还是程序的速度太慢，几分钟已经是简单优化过的
+缺点还是程序的速度太慢，几分钟已经是简单优化过的，如果面对规模更大数据，比如说全球的Tesla充电桩，就力不从心了
