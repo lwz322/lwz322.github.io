@@ -212,6 +212,8 @@ default from 2001:xxxx:xxxx:xxxx::/64 via fe80::96db:daff:fe3e:8fcf dev pppoe-wa
 
 ## 一种获得IPv6连接的方法
 
+**因为该IP段被北邮屏蔽，这种方法已经不能访问北邮人了**
+
 就简单的分享一下吧
 
 1. 注册一个v4转v6的OpenVPN的账号http://6plat.org/
