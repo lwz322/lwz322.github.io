@@ -28,7 +28,9 @@ article_header:
 ## 设备和环境
 
 路由器：Xiaomi R3G
+
 系统：OpenWRT 18.06.1
+
 网络：校园网PPPoE，中国联通4G
 
 ## 原理
