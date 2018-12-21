@@ -57,7 +57,7 @@ Aria2本身只是一个命令行下载软件，而OpenWRT提供了以个LuCI的�
 [luci-app-statistics](https://oldwiki.archive.openwrt.org/doc/howto/luci_app_statistics)
 
 ### iperf3
-跨平台的网络测试工具，主要是拿来测速的，测试一下就知道路由器的极限是什么情况了
+跨平台的网络测试工具，主要是拿来测速的，测试一下就知道路由器的性能是什么情况了，比如说5G-5G的传输速度，LAN-5G的传输速度
 
 [iperf3](https://iperf.fr/iperf-download.php)，这里面还有个软件值得推荐[HE.NET-Network Tools](http://networktools.he.net/)
 
@@ -81,7 +81,137 @@ LuCI的System->Scheduled Tasks中就是了，和Linux中的Crontab差不多，�
 
 ```
 ### 热插拔脚本 Hotplug
-Hotplug功能实际上是相当的实用的，涉及到接口的热插拔到执行脚本 https://github.com/wywincl/hotplug 这篇文章做了详细的剖析
+Hotplug功能实际上是相当的实用的，涉及到接口的热插拔到执行脚本 https://github.com/wywincl/hotplug 这篇文章做了详细的剖析，比如说个人就写过一个针对夜间断网的桥接切换脚本
+```shell
+#!/bin/sh
+exec 1>>/root/wwan
+exec 2>>/root/wwan
+[ "$INTERFACE" = wwan ] || exit 0
+status_update(){
+  ifstatus=`ubus call network.interface.wwan status | jsonfilter -e "@.up"`
+  telstatus=`ubus call network.interface.tel status | jsonfilter -e "@.up"`
+  edustatus=`ubus call network.interface.edu status | jsonfilter -e "@.up"`
+}
+status_echo(){
+  echo interface status:
+  echo -e " WWAN \t TEL \t EDU"
+  echo -e " $ifstatus \t $telstatus \t $edustatus "
+}
+time_init(){
+  date1="23:25:00"
+  date2=`date "+%H:%M:%S"`
+  date3="06:25:00"
+  poff=`date -d "$date1" +%s`
+  now=`date -d "$date2" +%s`
+  pon=`date -d "$date3" +%s`
+}
+head_echo(){
+  echo -e "\n \n"
+  echo "==============================  `date`  ================================"
+  status_echo
+}
+status_update
+time_init
+time_begin=$(date "+%s")
+case "$ACTION" in
+  ifup)
+  case "$telstatus" in
+    true)
+     head_echo
+     if [ $poff -gt $now ] && [ $now -gt $pon ]; then
+       echo "========================== MORNING SWITCH ========================="
+       ubus call network.interface.tel down
+       sleep 6
+       status_update
+       if [ "$ifstatus" = true ]; then
+         echo "-------------------- MORNING SWITCH SUCESSFUL -------------------"
+       else
+         echo "------------------=== MORNING SWITCH FAILED ===------------------"
+       fi
+     else
+       echo "---------------------=== MAKE WAY FOR WWAN ===---------------------"
+       ubus call network.interface.tel down
+       sleep 6
+       status_update
+       if [ "$ifstatus" = true ]; then
+         echo "------------------------ SWITCH SUCESSFUL -----------------------"
+       else
+         echo "----------------------=== SWITCH FAILED ===----------------------"
+       fi
+     fi
+     exit 0
+     ;;
+    false)
+     #echo "interface wwan is up,interface.tel is down already"
+     #status_echo
+     exit 0
+     ;;
+  esac
+    ;;
+  ifdown)
+  if [ $poff -gt $now ] && [ $now -gt $pon ]; then
+    head_echo
+    echo "-------------------=== WWAN is Offline DAYTIME ===--------------------"
+    echo -n "WWAN is Reconnecting"
+      until [ "$ifstatus" = true ]; do
+        status_update
+        sleep 6
+        echo -n "."
+        time_end=$(date "+%s")
+        duration=$((time_end - time_begin))
+        if [ "$ifstatus" = true ]; then
+          echo ;
+          echo "----------------------- WWAN Connected -------------------------"
+          exit 0
+        elif [ $duration -gt 30 ]; then
+          echo ;
+          echo "---------------- Connect TIMEOUT & Switch to EDU ---------------"
+          exit 0
+        fi
+      done
+  else
+    head_echo
+    echo "============================ NIGHT SWITCH ============================"
+    echo -n "TEL is Connecting"
+    count=100
+    while [ $count -ne 0  ]; do
+      ubus call network.interface.tel up
+      retry=6
+      sleep $retry
+      count=$(($count - 1))
+      time_sleep=$(((100 - count)*retry))
+      status_update
+      if [ "$telstatus" = true ]; then
+        time_end=$(date "+%s")
+        duration=$((time_end - time_begin))
+        echo ;
+        echo "Tried $((100-count)) times"
+        echo "--------------------- NIGHT SWITCH SUCCESSFUL --------------------"
+        echo "Time used: $duration seconds"
+        echo "----------------------------- `date` -----------------------------"
+        exit 0
+      elif [ "$ifstatus" = true ]; then
+        echo ;
+        echo "------------------------ WWAN Reconnected --------------------------"
+        echo "-----------------------====== `date` ======-----------------------"
+        exit 0
+      elif [ $count -eq 0 ]; then
+        echo ;
+        echo "---------------- Connect TIMEOUT & Switch to EDU -----------------"
+        echo "Time used: $duration seconds"
+        echo "----------------------------- `date` -----------------------------"
+        status_update
+        status_echo
+        exit 0
+      else
+        echo -n "."
+      fi
+    done
+    fi
+  ;;
+esac
+
+```
 
 ### 系统日志 Logger
 在OpenWrt中可通过```logread```命令查看运行时的log日志
