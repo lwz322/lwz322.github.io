@@ -24,7 +24,7 @@ article_header:
 <!--more-->
 
 ## 关于OpenWRT
-[Wireless Freedom](https://openwrt.org/lib/tpl/openwrt/images/logo.png)
+![Wireless Freedom](https://openwrt.org/lib/tpl/openwrt/images/logo.png)
 从OpenWRT Logo下面的那个Wireless Freedom讲起吧，追寻自由的里程碑
 - 让无线设备用上IPv6网络，畅通的使用Google，Youtube，IPv6 PT
 - 通过IPv6免流量高速上网
