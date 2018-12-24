@@ -33,7 +33,6 @@ article_header:
 - 逐步改进又达到了40Mbps,60Mbps,有线无线双LAN叠加到达150Mbps
 - 最后趁舍友国庆出游，用新的负载均衡方法以及HWNAT把汇聚全宿舍端口达到400Mps
 - 接触OpenWRT开发的一些方法，开始根据自己的需求做策略路由
-零零散散地花了一些时间，把自己身边的网络算是完善的差不多了，然后写东西是为了榨干这方面的剩余价值
 
 ## 如何开始
 建议选有官方固件支持，软件支持的路由器（也就是不太建议刷仅有民间固件的那种了，不开源感觉不安全），具体可以参考官方支持的[Hardware Table](https://openwrt.org/toh/start)，进入某一款路由器的详情界面就可以看到支持的情况
@@ -47,7 +46,6 @@ article_header:
 
 ## 软件推荐
 具体的操作这里就不写了，以后有时间写到博客的WiKi一栏，大部分软件使用也比较简单，官方的说明文档和教程都很好找
-
 ### Aria2
 这是一个跨平台的多线程下载软件，主要是支持BT，在路由器性能允许的情况下能够做到全天挂PT，并且可以通过网络共享做一个简易的NAS
 >之前有一段时间官方源下载的Aria2是不支持BT的，需要自己动手编译，而1.34之后又自带BT支持了
@@ -59,7 +57,8 @@ Aria2本身只是一个命令行下载软件，而OpenWRT提供了以个LuCI的�
 [luci-app-statistics](https://oldwiki.archive.openwrt.org/doc/howto/luci_app_statistics)
 
 ### iperf3
-跨平台的网络测试工具，主要是拿来测速的，测试一下就知道路由器的极限是什么情况了
+跨平台的网络测试工具，主要是拿来测速的，测试一下就知道路由器的性能是什么情况了，比如说5G-5G的传输速度，LAN-5G的传输速度
+
 [iperf3](https://iperf.fr/iperf-download.php)，这里面还有个软件值得推荐[HE.NET-Network Tools](http://networktools.he.net/)
 
 ### luci-app-nlbwmon
@@ -69,8 +68,157 @@ Aria2本身只是一个命令行下载软件，而OpenWRT提供了以个LuCI的�
 OpenWRT上少有的网速监测工具，没有官方的Feed，需要自己去[Github](https://github.com/Kiougar/luci-wrtbwmon)上面下载ipk
 >为什么没有人做分设备的实时网速监测的可视化，就像OpenWRT的Realtime Graph一样，之后学了JavaScript我觉得我可以自己写一个
 
-## 一些坑
-OpenWRT的shell是ash，常用的一些shell语句是不通用的，偶尔调试也非常麻烦
+## 实用的功能
+
+### 交换机 Switch
+这个的用途就是当路由器做路由，占用掉了墙壁内嵌的网口，但是这个时候又有设备需要直接拨号，从前的话可能就需要使用交换机了，但是考虑到现在的路由器都是通过VLAN来划分网口的，而OpenWRT对此是可以自定义的，所以只需要改下网口的VLAN ID就好，因为设备之间有差别，所以这里建议参考[OpenWRT Guide](https://openwrt.org/docs/guide-user/network/vlan/switch_configuration)，然后根据自己的需求做设置
+
+### 定时任务Crontab
+LuCI的System->Scheduled Tasks中就是了，和Linux中的Crontab差不多，所以查下就好，算是简单实用的东西了，用来做个定时重启、运行某个脚本都是可以的,下面这个就是定时断开和连接一个PPPoE拨号
+```shell
+6 * * * * /sbin/ifdown tel
+23 40 * * * /sbin/ifup tel
+
+```
+### 热插拔脚本 Hotplug
+Hotplug功能实际上是相当的实用的，涉及到接口的热插拔到执行脚本 https://github.com/wywincl/hotplug 这篇文章做了详细的剖析，比如说个人就写过一个针对夜间断网的桥接切换脚本
+```shell
+#!/bin/sh
+exec 1>>/root/wwan
+exec 2>>/root/wwan
+[ "$INTERFACE" = wwan ] || exit 0
+status_update(){
+  ifstatus=`ubus call network.interface.wwan status | jsonfilter -e "@.up"`
+  telstatus=`ubus call network.interface.tel status | jsonfilter -e "@.up"`
+  edustatus=`ubus call network.interface.edu status | jsonfilter -e "@.up"`
+}
+status_echo(){
+  echo interface status:
+  echo -e " WWAN \t TEL \t EDU"
+  echo -e " $ifstatus \t $telstatus \t $edustatus "
+}
+time_init(){
+  date1="23:25:00"
+  date2=`date "+%H:%M:%S"`
+  date3="06:25:00"
+  poff=`date -d "$date1" +%s`
+  now=`date -d "$date2" +%s`
+  pon=`date -d "$date3" +%s`
+}
+head_echo(){
+  echo -e "\n \n"
+  echo "==============================  `date`  ================================"
+  status_echo
+}
+status_update
+time_init
+time_begin=$(date "+%s")
+case "$ACTION" in
+  ifup)
+  case "$telstatus" in
+    true)
+     head_echo
+     if [ $poff -gt $now ] && [ $now -gt $pon ]; then
+       echo "========================== MORNING SWITCH ========================="
+       ubus call network.interface.tel down
+       sleep 6
+       status_update
+       if [ "$ifstatus" = true ]; then
+         echo "-------------------- MORNING SWITCH SUCESSFUL -------------------"
+       else
+         echo "------------------=== MORNING SWITCH FAILED ===------------------"
+       fi
+     else
+       echo "---------------------=== MAKE WAY FOR WWAN ===---------------------"
+       ubus call network.interface.tel down
+       sleep 6
+       status_update
+       if [ "$ifstatus" = true ]; then
+         echo "------------------------ SWITCH SUCESSFUL -----------------------"
+       else
+         echo "----------------------=== SWITCH FAILED ===----------------------"
+       fi
+     fi
+     exit 0
+     ;;
+    false)
+     #echo "interface wwan is up,interface.tel is down already"
+     #status_echo
+     exit 0
+     ;;
+  esac
+    ;;
+  ifdown)
+  if [ $poff -gt $now ] && [ $now -gt $pon ]; then
+    head_echo
+    echo "-------------------=== WWAN is Offline DAYTIME ===--------------------"
+    echo -n "WWAN is Reconnecting"
+      until [ "$ifstatus" = true ]; do
+        status_update
+        sleep 6
+        echo -n "."
+        time_end=$(date "+%s")
+        duration=$((time_end - time_begin))
+        if [ "$ifstatus" = true ]; then
+          echo ;
+          echo "----------------------- WWAN Connected -------------------------"
+          exit 0
+        elif [ $duration -gt 30 ]; then
+          echo ;
+          echo "---------------- Connect TIMEOUT & Switch to EDU ---------------"
+          exit 0
+        fi
+      done
+  else
+    head_echo
+    echo "============================ NIGHT SWITCH ============================"
+    echo -n "TEL is Connecting"
+    count=100
+    while [ $count -ne 0  ]; do
+      ubus call network.interface.tel up
+      retry=6
+      sleep $retry
+      count=$(($count - 1))
+      time_sleep=$(((100 - count)*retry))
+      status_update
+      if [ "$telstatus" = true ]; then
+        time_end=$(date "+%s")
+        duration=$((time_end - time_begin))
+        echo ;
+        echo "Tried $((100-count)) times"
+        echo "--------------------- NIGHT SWITCH SUCCESSFUL --------------------"
+        echo "Time used: $duration seconds"
+        echo "----------------------------- `date` -----------------------------"
+        exit 0
+      elif [ "$ifstatus" = true ]; then
+        echo ;
+        echo "------------------------ WWAN Reconnected --------------------------"
+        echo "-----------------------====== `date` ======-----------------------"
+        exit 0
+      elif [ $count -eq 0 ]; then
+        echo ;
+        echo "---------------- Connect TIMEOUT & Switch to EDU -----------------"
+        echo "Time used: $duration seconds"
+        echo "----------------------------- `date` -----------------------------"
+        status_update
+        status_echo
+        exit 0
+      else
+        echo -n "."
+      fi
+    done
+    fi
+  ;;
+esac
+
+```
+
+### 系统日志 Logger
+在OpenWrt中可通过```logread```命令查看运行时的log日志
+
+使用```logger -t IPv6 "Add good IPv6 route..."```
+
+就可以添加log并且打上标签，打标签的方便之处在于调取日志的时候可以根据标签来筛选```logread | grep IPv6```
 
 ## 路由器的选购
 
@@ -84,7 +232,7 @@ OpenWRT的shell是ash，常用的一些shell语句是不通用的，偶尔调试
 
 在当前，5G WiFi是很有必要的，2.4G尽管穿墙更好，但是即使是在这种情况下可能依旧比不上同点位的5G WiFi的速度，至于无线信号这一点，一般看内部的硬件，有没有独立的信号放大器之类的，至于天线数量，其实那个影响反而不那么大，具体也是有实例的，也就是第二点，看买家的评价。
 
-以上可能不够具体，但是都是路由器最最根本的硬性性能指标，具体的测试数据需要到比较高端的硬件论坛或者网站去看详细的测试，对应前面的两条就是路由器的数据吞吐量测试和无线信号测试，KoolShare论坛，Chiphell都是不错的
+以上可能不够具体，但是都是路由器最最根本的硬性性能指标，具体的测试数据需要到比较高端的硬件论坛或者网站去看详细的测试，对应前面的两条就是路由器的数据吞吐量测试和无线信号测试，KoolShare论坛，Chiphell都是不错的（只是觉得部分文章从内容上来说是不错的）
 
 ### 可玩性
 
