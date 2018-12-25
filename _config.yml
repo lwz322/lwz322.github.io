@@ -115,35 +115,34 @@ comments:
   ## Gitalk
   # please refer to https://github.com/gitalk/gitalk for more info.
   gitalk:
-    clientID    : # GitHub Application Client ID
-    clientSecret: # GitHub Application Client Secret
-    repository  : # GitHub repo
-    owner       : # GitHub repo owner
-    admin: # GitHub repo owner and collaborators, only these guys can initialize GitHub issues, IT IS A LIST.
-      # - your GitHub Id
+    clientID    : b34ff87f151ebb89922d
+    clientSecret: 2fab6b9bbbda944d557bb8c0337044a68f9303e0
+    repository  : lwz322.github.io
+    owner       : lwz322
+    admin: lwz322
 
 
 ## => Pageview
 ##############################
 pageview:
-  provider: false # false (default), "leancloud", "custom"
+  provider: leancloud # false (default), "leancloud", "custom"
 
   ## Leancloud
   leancloud:
-    app_id    : # LeanCloud App id
-    app_key   : # LeanCloud App key
-    app_class : # LeanCloud App class
+    app_id    : an6NJU8HpBuHrT7T1ty2Bq3l-gzGzoHsz
+    app_key   : 8rSnHlr2d21op6CC6CkikC9D
+    app_class : sh6zXjUvzgT0ga2B2PdFXuwX
 
 
 ## => Analytics
 ##############################
 analytics:
-  provider: false # false (default), "google", "custom"
+  provider: google # false (default), "google", "custom"
 
   ## Google Analytics
   google:
-    tracking_id : # Google Analytics id for the site
-    anonymize_ip: false # Anonymize IP tracking for Analytics
+    tracking_id : UA-131400716-1
+    anonymize_ip: true # Anonymize IP tracking for Analytics
 
 
 ## => Build
