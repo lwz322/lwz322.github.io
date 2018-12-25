@@ -75,7 +75,7 @@ OpenWRT上少有的分设备的网速监测工具，没有官方的Feed，需要
 
 ### Netdata
 ![netdata](https://img.vim-cn.com/e3/44f5fa92845bda4dc5c31193badd6c2da0f87c.jpg)
-算是一个比较好看的性能监测界面了，第一次见到还是印象深刻，然而用处...对个人来说不大，效果可以看[Github](https://github.com/netdata/netdata),在OpenWRT中直接用``opkg install netdata``就好，之后直接访问LuCI管理IP的19999端口就可以看到了
+算是一个比较好看的性能监测界面了，第一次见到还是印象深刻，然而用处...对个人来说不大，效果可以看[Github](https://github.com/netdata/netdata)，在OpenWRT中直接用``opkg install netdata``就好，之后直接访问LuCI管理IP的19999端口就可以看到了，优点还是信息量大，占用低
 
 ## 实用的功能
 
