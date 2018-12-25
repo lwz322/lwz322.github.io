@@ -7,6 +7,7 @@ chart: true
 toc: true
 mode: immersive
 tags : Python 数学建模
+key: tesla
 header:
   theme: dark
 article_header:
