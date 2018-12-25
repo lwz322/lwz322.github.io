@@ -7,6 +7,7 @@ chart: true
 toc: true
 mode: immersive
 tags : Math Statistic Proof
+key: Sample_variance
 header:
   theme: dark
 article_header:

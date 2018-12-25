@@ -7,7 +7,8 @@ mermaid: true
 chart: true
 mathjax_autoNumber: true
 toc: true
-tags : 网络 IPv6 路由器 
+tags : 网络 IPv6 路由器
+key: ipv6
 mode: immersive
 header:
   theme: dark
@@ -82,7 +83,7 @@ article_header:
 > - Multicast: 多播地址，代表一类unicast的集合，但往这个地址发送数据的时候，会将数据发给属于这个多播组的每个unicast地址。
 >
 > 现有的 IP 地址被分配成如下几大类：
-> 
+>
 > | 类型 | 前缀 | IPv6 表示方法 |
 > | :-- | :-- | :-- |
 > | Unspecified | 00...00 (128 位) | ::/128 |

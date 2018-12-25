@@ -7,6 +7,7 @@ chart: true
 toc: true
 mode: immersive
 tags : 网络 IPv6 路由器 OpenWRT 多拨
+key: strategy
 header:
   theme: dark
 article_header:
