@@ -25,6 +25,7 @@ article_header:
 
 ## 关于OpenWRT
 ![Wireless Freedom](https://openwrt.org/lib/tpl/openwrt/images/logo.png)
+
 从OpenWRT Logo下面的那个Wireless Freedom讲起吧，追寻自由的里程碑
 - 让无线设备用上IPv6网络，畅通的使用Google，Youtube，IPv6 PT
 - 通过IPv6免流量高速上网
@@ -67,9 +68,6 @@ Aria2本身只是一个命令行下载软件，而OpenWRT提供了以个LuCI的�
 ### luci-wrtbwmon
 OpenWRT上少有的网速监测工具，没有官方的Feed，需要自己去[Github](https://github.com/Kiougar/luci-wrtbwmon)上面下载ipk
 >为什么没有人做分设备的实时网速监测的可视化，就像OpenWRT的Realtime Graph一样，之后学了JavaScript我觉得我可以自己写一个
-
-### netdata
-直接用opkg安装就好，主要是比较好看，具体不太会用...
 
 ## 实用的功能
 
