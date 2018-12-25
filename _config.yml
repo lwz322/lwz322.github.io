@@ -22,7 +22,7 @@ url     : # the base hostname & protocol for your site e.g. https://www.someone.
 baseurl : # does not include hostname
 title   : TimeForget
 description: > # this means to ignore newlines until "Language & timezone"
-  Carry inspiron and Stimulate wisdom
+  Carry inspiron and Stimulate Wisdom
 
 
 ## => Language and Timezone
@@ -94,7 +94,7 @@ chart: true # false (default), true
 
 ## => Paginate
 ##############################
-paginate: 8
+paginate: 13
 paginate_path: /page:num # don't change this unless for special need
 
 
@@ -131,7 +131,7 @@ pageview:
   leancloud:
     app_id    : an6NJU8HpBuHrT7T1ty2Bq3l-gzGzoHsz
     app_key   : 8rSnHlr2d21op6CC6CkikC9D
-    app_class : sh6zXjUvzgT0ga2B2PdFXuwX
+    app_class : lwz322_github_io
 
 
 ## => Analytics
@@ -163,7 +163,7 @@ exclude:
   - jekyll-text-theme.gemspec
   - package-lock.json
   - package.json
-  - /docs
+  #- /docs
   - /node_modules
   - /screenshots
   - /test
@@ -176,7 +176,8 @@ defaults:
     values:
       layout: article
       license: true
-      aside: true
+      aside:
+        toc: true
       show_edit_on_github: true
       pageview: true
 
