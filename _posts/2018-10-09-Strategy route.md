@@ -6,7 +6,7 @@ mermaid: true
 chart: true
 toc: true
 mode: immersive
-tags : 网络 IPv6 路由器 OpenWRT 多拨
+tags : 网络 IPv6 路由器 OpenWrt 多拨
 key: strategy
 header:
   theme: dark
@@ -30,7 +30,7 @@ article_header:
 
 路由器：Xiaomi R3G
 
-系统：OpenWRT 18.06.1
+系统：OpenWrt 18.06.1
 
 网络：校园网PPPoE，中国联通4G
 
@@ -96,7 +96,7 @@ uci commit firewall
 ```shell
 echo "set and add wireless radio..."
 
-uci set wireless.default-radio1.ssid='OpenWRT_5G'
+uci set wireless.default-radio1.ssid='OpenWrt_5G'
 uci set wireless.default-radio1.mode='ap'
 uci set wireless.default-radio1.encryption='psk-mixed'
 uci set wireless.default-radio1.key='key'
@@ -104,7 +104,7 @@ uci set wireless.default-radio1.key='key'
 uci add wireless wifi-iface
 uci set wireless.@wifi-iface[3]=wifi-iface
 uci set wireless.@wifi-iface[3].device='radio1'
-uci set wireless.@wifi-iface[3].ssid='OpenWRT_6'
+uci set wireless.@wifi-iface[3].ssid='OpenWrt_6'
 uci set wireless.@wifi-iface[3].mode='ap'
 uci set wireless.@wifi-iface[3].encryption='psk-mixed'
 uci set wireless.@wifi-iface[3].key='key'

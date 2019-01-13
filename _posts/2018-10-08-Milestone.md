@@ -1,12 +1,12 @@
 ---
 layout: article
-title: How to OpenWRT
+title: How to OpenWrt
 author :
 mathjax: true
 mermaid: true
 chart: true
 mathjax_autoNumber: true
-tags: 网络  路由器 OpenWRT Howto
+tags: 网络  路由器 OpenWrt Howto
 key: milestone
 mode: immersive
 header:
@@ -24,41 +24,41 @@ article_header:
 
 <!--more-->
 
-## 关于OpenWRT
-![Wireless Freedom](https://openwrt.org/lib/tpl/openwrt/images/logo.png)
+## 关于OpenWrt
+![Wireless Freedom](https://OpenWrt.org/lib/tpl/OpenWrt/images/logo.png)
 
-从OpenWRT Logo下面的那个Wireless Freedom讲起吧，追寻自由的里程碑
+从OpenWrt Logo下面的那个Wireless Freedom讲起吧，追寻自由的里程碑
 - 让无线设备用上IPv6网络，畅通的使用Google，Youtube，IPv6 PT
 - 通过IPv6免流量高速上网
 - 用Aria2挂PT，攒下了可以用几年的上传量
 - 在学校限速1Mbps的情况下把网速多拨叠加到6Mbps
 - 逐步改进又达到了40Mbps,60Mbps,有线无线双LAN叠加到达150Mbps
 - 最后趁舍友国庆出游，用新的负载均衡方法以及HWNAT把汇聚全宿舍端口达到400Mps
-- 接触OpenWRT开发的一些方法，开始根据自己的需求做策略路由
+- 接触OpenWrt开发的一些方法，开始根据自己的需求做策略路由
 
 ## 如何开始
-建议选有官方固件支持，软件支持的路由器（也就是不太建议刷仅有民间固件的那种了，不开源感觉不安全），具体可以参考官方支持的[Hardware Table](https://openwrt.org/toh/start)，进入某一款路由器的详情界面就可以看到支持的情况
+建议选有官方固件支持，软件支持的路由器（也就是不太建议刷仅有民间固件的那种了，不开源感觉不安全），具体可以参考官方支持的[Hardware Table](https://OpenWrt.org/toh/start)，进入某一款路由器的详情界面就可以看到支持的情况
 
 
 或者是论坛，一般都会有详细的刷机教程，如国内的[恩山](https://right.com.cn/forum/portal.php),[Koolshare](http://koolshare.cn/portal.php)
->就刷OpenWRT而言，推荐以高通（QAC）和联发科（MTK）或者软路由为主，博通CPU的因为驱动开源的不太好，所以可能会缺少无线功能
+>就刷OpenWrt而言，推荐以高通（QAC）和联发科（MTK）或者软路由为主，博通CPU的因为驱动开源的不太好，所以可能会缺少无线功能
 
 就版本的话，主要是稳定版(写这篇文章的时候最新的是18.06.1)和每日构建的版本(Snapshot)
 >后者没有自带LuCI界面，需要自己安装，又因为版本太新，不是所有的软件都有已经编译好的ipk，优势在于可以体验到最新的驱动之类的
 
 ## 软件推荐
-具体的操作这里就不写了，以后有时间写到博客的WiKi一栏，大部分软件使用也比较简单，官方的说明文档和教程都很好找，特别需要提到的是，因为个人用的OpenWRT改动比较大，一些软件由于可定制性有限，尤其是流量统计、速度监测类的软件，部分功能是失效的
+具体的操作这里就不写了，以后有时间写到博客的WiKi一栏，大部分软件使用也比较简单，官方的说明文档和教程都很好找，特别需要提到的是，因为个人用的OpenWrt改动比较大，一些软件由于可定制性有限，尤其是流量统计、速度监测类的软件，部分功能是失效的
 
 ### Aria2
 这是一个跨平台的多线程下载软件，主要是支持BT，在路由器性能允许的情况下能够做到全天挂PT，并且可以通过网络共享做一个简易的NAS
 >之前有一段时间官方源下载的Aria2是不支持BT的，需要自己动手编译，而1.34之后又自带BT支持了
 
-Aria2本身只是一个命令行下载软件，而OpenWRT提供了以个LuCI的配置APP(只能拿来做些设置)luci-app-aria2，所以如果不想用命令行的话就需要一个前端界面，推荐一个[AiraNG](https://github.com/mayswind/AriaNg)
+Aria2本身只是一个命令行下载软件，而OpenWrt提供了以个LuCI的配置APP(只能拿来做些设置)luci-app-aria2，所以如果不想用命令行的话就需要一个前端界面，推荐一个[AiraNG](https://github.com/mayswind/AriaNg)
 
 ### luci-app-statistics
 ![collectd](https://img.vim-cn.com/66/cce412e04be5032bddb4aa14a0845f07241647.jpg)
 强大的统计软件，和其他的包组合收集各种数据，个人的主要作用就是拿来监测网络延迟，可以提一下的就是能够结合防火墙数据收集实现复杂的流量监控，下面附上官方的WiKi
-[luci-app-statistics](https://oldwiki.archive.openwrt.org/doc/howto/luci_app_statistics)
+[luci-app-statistics](https://oldwiki.archive.OpenWrt.org/doc/howto/luci_app_statistics)
 
 ### iperf3
 跨平台的网络测试工具，主要是拿来测速的，测试一下就知道路由器的性能是什么情况了，比如说5G-5G的传输速度，LAN-5G的传输速度
@@ -71,17 +71,17 @@ Aria2本身只是一个命令行下载软件，而OpenWRT提供了以个LuCI的�
 
 ### luci-wrtbwmon
 ![mac](https://img.vim-cn.com/92/1b76c51f4991fd5b82f1d7c88a58efd33a917d.jpg)
-OpenWRT上少有的分设备的网速监测工具，没有官方的Feed，需要自己去[Github](https://github.com/Kiougar/luci-wrtbwmon)上面下载ipk
->为什么没有人做分设备的实时网速监测的可视化，就像OpenWRT的Realtime Graph一样，之后学了JavaScript我觉得我可以自己写一个
+OpenWrt上少有的分设备的网速监测工具，没有官方的Feed，需要自己去[Github](https://github.com/Kiougar/luci-wrtbwmon)上面下载ipk
+>为什么没有人做分设备的实时网速监测的可视化，就像OpenWrt的Realtime Graph一样，之后学了JavaScript我觉得我可以自己写一个
 
 ### Netdata
 ![netdata](https://img.vim-cn.com/e3/44f5fa92845bda4dc5c31193badd6c2da0f87c.jpg)
-算是一个比较好看的性能监测界面了，第一次见到还是印象深刻，然而用处...对个人来说不大，效果可以看[Github](https://github.com/netdata/netdata)，在OpenWRT中直接用``opkg install netdata``就好，之后直接访问LuCI管理IP的19999端口就可以看到了，优点还是信息量大，占用低
+算是一个比较好看的性能监测界面了，第一次见到还是印象深刻，然而用处...对个人来说不大，效果可以看[Github](https://github.com/netdata/netdata)，在OpenWrt中直接用``opkg install netdata``就好，之后直接访问LuCI管理IP的19999端口就可以看到了，优点还是信息量大，占用低
 
 ## 实用的功能
 
 ### 交换机 Switch
-这个的用途就是当路由器做路由，占用掉了墙壁内嵌的网口，但是这个时候又有设备需要直接拨号，从前的话可能就需要使用交换机了，但是考虑到现在的路由器都是通过VLAN来划分网口的，而OpenWRT对此是可以自定义的，所以只需要改下网口的VLAN ID就好，因为设备之间有差别，所以这里建议参考[OpenWRT Guide](https://openwrt.org/docs/guide-user/network/vlan/switch_configuration)，然后根据自己的需求做设置
+这个的用途就是当路由器做路由，占用掉了墙壁内嵌的网口，但是这个时候又有设备需要直接拨号，从前的话可能就需要使用交换机了，但是考虑到现在的路由器都是通过VLAN来划分网口的，而OpenWrt对此是可以自定义的，所以只需要改下网口的VLAN ID就好，因为设备之间有差别，所以这里建议参考[OpenWrt Guide](https://OpenWrt.org/docs/guide-user/network/vlan/switch_configuration)，然后根据自己的需求做设置
 
 ### 定时任务Crontab
 LuCI的System->Scheduled Tasks中就是了，和Linux中的Crontab差不多，所以查下就好，算是简单实用的东西了，用来做个定时重启、运行某个脚本都是可以的,下面这个就是定时断开和连接一个PPPoE拨号
@@ -248,9 +248,9 @@ esac
 
 智能路由？其实也就是锦上添花，就以官方的固件而言，添加了一些定制好的功能，但是依然不够实用，而对于有更高需求的人，向往的还是可以自由定制的路由，况且硬路由性能普遍还是有限
 
-就内网配置IPv6而言，自然是可以刷机的最好，要论最简单的当属可以刷OpenWRT，LEDE，Pandorabox，Padavan之类的固件的路由器
+就内网配置IPv6而言，自然是可以刷机的最好，要论最简单的当属可以刷OpenWrt，LEDE，Pandorabox，Padavan之类的固件的路由器
 
-当前就OpenWRT操作起来比较方便的主要有采用MT7260 CPU的百兆路由斐讯的K2，Newifi mini等等，这些因为年代有些久远，可以收二手；性能更强的，MT7261千兆路由的K2P（暂时无线功能不可用），Newifi D1，miwifi 3G，以及有线路由ER-X等等，基本上都支持硬件转发，至于其他的没接触过就不多说了
+当前就OpenWrt操作起来比较方便的主要有采用MT7260 CPU的百兆路由斐讯的K2，Newifi mini等等，这些因为年代有些久远，可以收二手；性能更强的，MT7261千兆路由的K2P（暂时无线功能不可用），Newifi D1，miwifi 3G，以及有线路由ER-X等等，基本上都支持硬件转发，至于其他的没接触过就不多说了
 
 ### 更高级的路由器
 
