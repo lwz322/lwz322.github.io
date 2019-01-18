@@ -149,7 +149,7 @@ print('Finished,totally got %d Charger Station,and %d Error'% (data_got,data_err
 
 这里用了下[ScatterGL](https://www.echartsjs.com/examples/editor.html?c=scatterGL-gps&gl=1)，点的数量不多，但是可以看出密度越高的部分也就越亮
 
-![US](https://img.vim-cn.com/05/b5ce6dd81606c034ffb88d60bee2bce0cf6a70.jpg)
+![US](https://img.vim-cn.com/dc/7c180c409d8786a3360fdf7ec17c11f515bf32.png)
 
 ### 推一下舍友的工作
 
