@@ -61,124 +61,84 @@ python3环境即可，不过这里可以提的一点是网络环境，大概是�
 
 ### Supercharger
 
-  ```python
-  #!/usr/bin/env python
-  # coding=utf-8
-  import xlwt
-  import requests
-  import re
-  #从Tesla的美国官网获得美国境内的的充电桩位置信息，以及个数，再由地图导出经纬度信息
-  ##获取网页的源代码
-  def get_one_page(url):
-   try:
-      headers = {'User-Agent':'Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) ''Chrome/51.0.2704.63 Safari/537.36'}
-      response = requests.get(url,headers = headers, timeout = 30)
-      if response.status_code == 200:
-          return response.text
-      else:
-          print(response.status_code)
-          return None
-   except
-      print('ConnectionError')
-      return None
-  #创建表格,添加工作表
-  book = xlwt.Workbook(encoding='utf-8',style_compression=0)
-  sheet = book.add_sheet('sheet1',cell_overwrite_ok=True)
-  #对网页源代码进行匹配
-  url = 'https://www.tesla.com/findus/list/superchargers/United+States'
-  all_html = get_one_page(url)
-  ##编译正则匹配对象(就是括号内的部分)
-  ##re.S正则表达式修饰符:使 . 匹配包括换行在内的所有字符
-  pattern = re.compile('<address.*?<a.*?href="(.*?)".*?>(.*?)</a>.*?</address>',re.S)
-  ##匹配所有的位置条目
-  items = re.findall(pattern,all_html)
-  #输出形如(/findus/location/charger/dc2789，Benson&#039;s Appliance Center)的tuple组成的list
-  #对匹配的位置条目查询器经纬度信息
-  i = 0
-  k = 0
-  for item in items:
-      sheet.write(i,0,item[1])
-      t_url = "https://www.tesla.com"+item[0]
-      t_html = get_one_page(t_url)
-      t_pattern = re.compile('&center=(.*?)&zoom',re.S)
-      n_pattern = re.compile('<p><strong>[Cc]harging</strong>.*?>(.*?) [Ss]uperchargers.*?</p>',re.S)
-      try:
-          t_items = re.findall(t_pattern,t_html) ##输出经纬度的list
-          sheet.write(i,1,t_items[0])
-      except:
-          print('Error',k,':',t_url)
-          k+=1
-      try:
-          n_items = re.findall(n_pattern,t_html) ##输出充电桩的个数
-          sheet.write(i,2,n_items[0])
-      except:
-          sheet.write(i,2,'0')
-      print(i,':',item[1],t_items[0])
-      i+=1
-  #直接把结果保存在当前目录下的xls文件里面
-  book.save('tesla_super_chargers.xls')
-  print('Finished,totally got %d Chargers,and %d Error'% (i,k))
-  ```
-### Destination Charger
+```python
+#!/usr/bin/env python
+# coding=utf-8
+#从Tesla的美国官网获得美国境内的的充电站位置信息与充电桩个数
 
-  ```python
-  #!/usr/bin/env python
-  # coding=utf-8
-  import xlwt
-  import requests
-  import re
-  #从Tesla的美国官网获得美国境内的的充电桩位置信息，再由地图导出经纬度信息
-  ##获取网页的源代码
-  def get_one_page(url):
-   try:
-      headers = {'User-Agent':'Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) ''Chrome/51.0.2704.63 Safari/537.36'}
-      response = requests.get(url,headers = headers, timeout = 30)
-      if response.status_code == 200:
-          return response.text
-      else:
-          print(response.status_code)
-          return None
-   except
-      print('Error on HTTP')
-      return None
-  #创建表格,添加工作表
-  book = xlwt.Workbook(encoding='utf-8',style_compression=0)
-  sheet = book.add_sheet('sheet1',cell_overwrite_ok=True)
-  #对网页源代码进行匹配
-  url = 'https://www.tesla.com/findus/list/chargers/United+States'
-  all_html = get_one_page(url)
-  ##编译正则匹配对象(就是括号内的部分)
-  ##re.S正则表达式修饰符:使 . 匹配包括换行在内的所有字符
-  pattern = re.compile('<address.*?<a.*?href="(.*?)".*?>(.*?)</a>.*?</address>',re.S)
-  ##匹配所有的位置条目
-  items = re.findall(pattern,all_html)
-  #输出形如(/findus/location/charger/dc2789，Benson&#039;s Appliance Center)的tuple组成的list
-  #对匹配的位置条目查询器经纬度信息
-  i = 0
-  k = 0
-  for item in items:
-      sheet.write(i,0,item[1])
-      t_url = "https://www.tesla.com"+item[0]
-      t_html = get_one_page(t_url)
-      t_pattern = re.compile('&center=(.*?)&zoom',re.S)
-      n_pattern = re.compile('<p><strong>[Cc]harging</strong>.*?>(.*?)Tesla.*?</p>',re.S)
-      try:
-          t_items = re.findall(t_pattern,t_html) ##输出经纬度的list
-          sheet.write(i,1,t_items[0])
-      except:
-          print('Error',k,':',t_url)
-          k+=1
-      try:
-          n_items = re.findall(n_pattern,t_html) ##输出充电桩的个数
-          sheet.write(i,2,n_items[0])
-      except:
-          sheet.write(i,2,'0')
-      print(i,':',item[1],t_items[0])
-      i+=1
-  #直接把结果保存在当前目录下的xls文件里面
-  book.save('tesla_des_chargers.xls')
-  print('Finished,totally got %d Chargers,and %d Error'% (i,k))
-  ```
+import xlwt
+import requests
+import re
+
+BASE_URL="https://www.tesla.com"
+LIST_URL="https://www.tesla.com/findus/list"
+#chargers or superchargers
+CHARER_TYPE="superchargers"
+#这里需要自己结合网页上的地名修改
+REGION="United+States"
+
+filename="tesla_"+CHARER_TYPE+".xls"
+region_url = LIST_URL+"/"+CHARER_TYPE+"/"+REGION
+
+data_got = 0
+data_error = 0
+
+def get_one_page(url):
+ try:
+    headers = {'User-Agent':'Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) ''Chrome/51.0.2704.63 Safari/537.36'}
+    response = requests.get(url,headers = headers, timeout = 30)
+    if response.status_code == 200:
+        return response.text
+    else:
+        print(response.status_code)
+        return None
+ except:
+    print('Requests Error')
+    return None
+
+#创建表格,添加工作表
+book = xlwt.Workbook(encoding='utf-8',style_compression=0)
+sheet = book.add_sheet('sheet1',cell_overwrite_ok=True)
+
+#对网页源代码进行匹配
+html_region = get_one_page(region_url)
+##编译正则匹配对象(就是括号内的部分)
+##re.S正则表达式修饰符:使 . 匹配包括换行在内的所有字符
+pattern_sub_regions = re.compile('<address.*?<a.*?href="(.*?)".*?>(.*?)</a>.*?</address>',re.S)
+##匹配所有的位置条目
+suffix_sub_regions = re.findall(pattern_sub_regions,html_region)
+#输出形如(/findus/location/charger/dc2789，Benson&#039;s Appliance Center)的tuple组成的list
+
+#对匹配的位置条目查询器经纬度信息
+for suffix_sub_region in suffix_sub_regions:
+    sheet.write(data_got,0,suffix_sub_region[1])
+    url_sub_region = BASE_URL+suffix_sub_region[0]
+    html_sub_region = get_one_page(url_sub_region)
+    pattern_location = re.compile('&center=(.*?)&zoom',re.S)
+    if CHARER_TYPE=="superchargers":
+        pattern_chargers = re.compile('<p><strong>[Cc]harging</strong>.*?>(.*?) [Ss]uperchargers.*?</p>',re.S)
+    if CHARER_TYPE=="chargers":
+        pattern_chargers = re.compile('<p><strong>[Cc]harging</strong>.*?>(.*?)Tesla.*?</p>',re.S)
+    try:
+        location = re.findall(pattern_location,html_sub_region) ##输出经纬度的list
+        sheet.write(data_got,1,location[0])
+    except:
+        print('Error',data_error,':',url_sub_region)
+        data_error+=1
+    try:
+        chargers = re.findall(pattern_chargers,html_sub_region) ##输出充电桩的个数
+        sheet.write(data_got,2,chargers[0])
+    except:
+        chargers = ['0']
+        sheet.write(data_got,2,'0')
+    print(data_got,':',suffix_sub_region[1],location[0],chargers[0])
+    data_got+=1
+
+#直接把结果保存在当前目录下的xls文件里面
+book.save(filename)
+print('Finished,totally got %d Charger Station,and %d Error'% (data_got,data_error))
+
+```
 
 ## 结果
 
@@ -189,7 +149,7 @@ python3环境即可，不过这里可以提的一点是网络环境，大概是�
 
 这里用了下[ScatterGL](https://www.echartsjs.com/examples/editor.html?c=scatterGL-gps&gl=1)，点的数量不多，但是可以看出密度越高的部分也就越亮
 
-![US](https://img.vim-cn.com/dc/7c180c409d8786a3360fdf7ec17c11f515bf32.png)
+![US](https://img.vim-cn.com/05/b5ce6dd81606c034ffb88d60bee2bce0cf6a70.jpg)
 
 ### 推一下舍友的工作
 
