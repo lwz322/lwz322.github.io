@@ -64,20 +64,19 @@ python3环境即可，不过这里可以提的一点是网络环境，大概是�
 ```python
 #!/usr/bin/env python
 # coding=utf-8
-#从Tesla的美国官网获得美国境内的的充电站位置信息与充电桩个数
-
 import xlwt
 import requests
 import re
+#从Tesla的美国官网获得美国境内的的充电桩位置信息，再由地图导出经纬度信息
 
 BASE_URL="https://www.tesla.com"
 LIST_URL="https://www.tesla.com/findus/list"
 #chargers or superchargers
-CHARER_TYPE="superchargers"
+CHARER_TYPE="chargers"
 #这里需要自己结合网页上的地名修改
 REGION="United+States"
 
-filename="tesla_"+CHARER_TYPE+".xls"
+filename=REGION+"./tesla_"+CHARER_TYPE+".xls"
 region_url = LIST_URL+"/"+CHARER_TYPE+"/"+REGION
 
 data_got = 0
@@ -95,12 +94,11 @@ def get_one_page(url):
  except:
     print('Requests Error')
     return None
-
 #创建表格,添加工作表
 book = xlwt.Workbook(encoding='utf-8',style_compression=0)
 sheet = book.add_sheet('sheet1',cell_overwrite_ok=True)
-
 #对网页源代码进行匹配
+
 html_region = get_one_page(region_url)
 ##编译正则匹配对象(就是括号内的部分)
 ##re.S正则表达式修饰符:使 . 匹配包括换行在内的所有字符
@@ -108,8 +106,8 @@ pattern_sub_regions = re.compile('<address.*?<a.*?href="(.*?)".*?>(.*?)</a>.*?</
 ##匹配所有的位置条目
 suffix_sub_regions = re.findall(pattern_sub_regions,html_region)
 #输出形如(/findus/location/charger/dc2789，Benson&#039;s Appliance Center)的tuple组成的list
-
 #对匹配的位置条目查询器经纬度信息
+
 for suffix_sub_region in suffix_sub_regions:
     sheet.write(data_got,0,suffix_sub_region[1])
     url_sub_region = BASE_URL+suffix_sub_region[0]
@@ -136,7 +134,7 @@ for suffix_sub_region in suffix_sub_regions:
 
 #直接把结果保存在当前目录下的xls文件里面
 book.save(filename)
-print('Finished,totally got %d Charger Station,and %d Error'% (data_got,data_error))
+print('Finished,totally got %d Charging Station,and %d Error'% (data_got,data_error))
 
 ```
 
