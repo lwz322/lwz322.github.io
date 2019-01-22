@@ -18,7 +18,7 @@ article_header:
     src: https://img.vim-cn.com/00/5be9e38bc749ac02d3a2903294de538ce2f3fd.png
     gradient: 'linear-gradient(0deg, rgba(0, 0, 0 , .7), rgba(0, 0, 0, .7))'
 ---
-源起于2018年[MCM\ICM](https://www.comap.com/undergraduate/contests/mcm/contests/2018/problems/)的D题，没有数据是很麻烦的，所以数据就只能自己爬取了，首先就是Tesla的充电桩的地理信息，最近尝试了下，发现没有之前想的那么难
+源起于2018年[MCM\ICM](https://www.comap.com/undergraduate/contests/mcm/contests/2018/problems/)的D题，缺少数据是很麻烦的，部分数据只能自己爬取了，首先就是Tesla的充电桩的地理信息，以及利用Google Maps的API对周边地区做搜索
 
 <!--more-->
 
@@ -152,6 +152,52 @@ print('Finished,totally got %d Charging Station,and %d Error'% (data_got,data_er
 
 ![US](https://img.vim-cn.com/dc/7c180c409d8786a3360fdf7ec17c11f515bf32.png)
 
+### 附近搜索功能
+
+常用的一个功能：返回一个地点的周围的搜索结果，可以用Google Map的API实现，这里用的是Python的googlemaps库
+详细的使用方法可见：[reference documentation](https://googlemaps.github.io/google-maps-services-python/docs/)
+
+需要注意的地方：
+- 每次搜索返回二十个结果，但是可以翻页，最多返回六十个结果
+
+- 翻页的速度不能太快，所以这里在使用token的时候sleep了3秒
+
+- 默认的搜索结果是按推荐排序的，有选项可以按照距离排序
+
+```python
+import googlemaps
+import xlwt
+import time
+
+TYPE='restaurant'
+KEYWORK='food'
+filename="./near_by_"+TYPE+".xls"
+book = xlwt.Workbook(encoding='utf-8',style_compression=0)
+sheet = book.add_sheet('sheet1',cell_overwrite_ok=True)
+
+gmaps = googlemaps.Client(key='YOUR_API_KEY')
+near_json=gmaps.places_nearby(location='34.0664817,-118.3520389',radius='50000',type=TYPE,keyword=KEYWORK)
+list_results=near_json['results']
+next_page_token=near_json['next_page_token']
+time.sleep(3)
+next_json=gmaps.places_nearby(page_token=next_page_token)
+time.sleep(3)
+list_results.extend(next_json['results'])
+next_page_token=next_json['next_page_token']
+nxet_json=gmaps.places_nearby(page_token=next_page_token)
+list_results.extend(next_json['results'])
+list_loc=[]
+sheet.write(0,0,'lat&lng')
+i=1
+for result in list_results:
+    str_temp=str(result['geometry']['location']['lat'])+','+str(result['geometry']['location']['lng'])
+    list_loc.append(str_temp)
+    sheet.write(i,0,str_temp)
+    i+=1
+book.save(filename)
+
+```
+
 ### 推一下舍友的工作
 
-[Equations.online](http://equations.online/2018/12/09/chargebar/)上面是从北汽爬取的数据，数据量要大很多
+[Equations.online](http://equations.online/2018/12/09/chargebar/)上面是从北汽爬取的数据，复杂度更高，数据量也要大很多
