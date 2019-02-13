@@ -39,7 +39,6 @@ article_header:
 ## 如何开始
 建议选有官方固件支持，软件支持的路由器（也就是不太建议刷仅有民间固件的那种了，不开源感觉不安全），具体可以参考官方支持的[Hardware Table](https://OpenWrt.org/toh/start)，进入某一款路由器的详情界面就可以看到支持的情况
 
-
 或者是论坛，一般都会有详细的刷机教程，如国内的[恩山](https://right.com.cn/forum/portal.php),[Koolshare](http://koolshare.cn/portal.php)
 >就刷OpenWrt而言，推荐以高通（QAC）和联发科（MTK）或者软路由为主，博通CPU的因为驱动开源的不太好，所以可能会缺少无线功能
 
@@ -261,7 +260,7 @@ ubus call network.interface dump | jsonfilter -e '$.interface[@.interface="edu_6
 具体的使用
 
 ```shell
-root@LEDE:~# source /usr/share/libubox/jshn.sh 
+root@LEDE:~# source /usr/share/libubox/jshn.sh
 root@LEDE:~# data=$(/sbin/ifstatus edu_6)
 root@LEDE:~# json_init
 root@LEDE:~# json_load "$data"
@@ -340,7 +339,7 @@ done
 
 当前就OpenWrt操作起来比较方便的主要有采用MT7260 CPU的百兆路由斐讯的K2，Newifi mini等等，这些因为年代有些久远，可以收二手；性能更强的，MT7261千兆路由的K2P（暂时无线功能不可用），Newifi D1，miwifi 3G，以及有线路由ER-X等等，基本上都支持硬件转发，至于其他的没接触过就不多说了
 
-就2019年年初而言，低价的可以刷OpenWrt都凉的差不多的...
+就2019年年初而言，市场上低价位的、可以刷OpenWrt的路由器都凉的差不多了...
 
 ### 更高级的路由器
 
