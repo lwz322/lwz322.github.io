@@ -14,6 +14,9 @@ $text-color-2:     #fff;
 $main-color-3:     #ff8a64;
 $text-color-3:     #fff;
 
+$main-color-theme-light: rgba(#000, .9);
+$main-color-theme-dark:  rgba(#fff, .9);
+
 // page background
 $background-color: #fffdfa;
 
@@ -36,7 +39,6 @@ $text-background-color: rgba(#000, .05);
 $header-text-color: $text-color-3;
 $header-background: linear-gradient(60deg, #ffa650 0%, #ff7b50 100%);
 
-
 $footer-text-color: $text-color-3;
 $footer-background: linear-gradient(60deg, #ffa650 0%, #ff7b50 100%);
 
@@ -44,7 +46,7 @@ $footer-background: linear-gradient(60deg, #ffa650 0%, #ff7b50 100%);
 $border-color:     mix($main-color-1, $background-color, 50%);
 $border-color-l:   mix(#000, $background-color, 10%);
 $decorate-color:   rgba(#000, .1);
-$mask-color:       rgba(#000, .8);
+$mask-color:       rgba(#000, .9);
 $select-color:     rgba($main-color-3, .5);
 
 // function colors
@@ -56,13 +58,16 @@ $text-color-function: #fff;
 
 // logo colors
 $mail-color:       #0072c5;
-$weibo-color:      #e6162d;
 $facebook-color:   #4267b2;
-$google-plus-color:#ea4335;
 $twitter-color:    #1da1f2;
+$weibo-color:      #e6162d;
+$google-plus-color:#ea4335;
+$telegram-color:   #32afed;
+$medium-color:     #000;
+$zhihu-color:      #0084ff;
 $douban-color:     #42bd56;
-$github-color:     #000;
 $linkedin-color:   #1074af;
+$github-color:     #000;
 $npm-color:        #fff;
 
 // highlight colors

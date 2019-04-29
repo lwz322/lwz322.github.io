@@ -27,7 +27,7 @@ description: >
 
 ## => Language and Timezone
 ##############################
-lang: en # the language of your site, "en" (default, English), "zh"(简体中文), "zh-Hans"(简体中文), "zh-Hant"(繁體中文)
+lang: en # the language of your site, default as "en"
 timezone: Asia/Shanghai
 
 
@@ -44,8 +44,11 @@ author:
   email     : kitian616@outlook.com
   facebook  :
   twitter   : kitian616
-  googleplus: 101827554735084402671
   weibo     : 234695683
+  googleplus: 101827554735084402671
+  telegram  :
+  medium    :
+  zhihu     :
   douban    :
   linkedin  :
   github    : kitian616/jekyll-TeXt-theme
@@ -105,10 +108,21 @@ paginate_path: /test/page:num # don't change this unless for special need
 sources: # bootcdn (default), unpkg
 
 
+## => Sharing
+##############################
+sharing:
+  provider: addthis # false (default), "addtoany", "addthis", "custom"
+
+  ## AddThis
+  addthis:
+    id: ra-5be59ee2486770cb # AddThis pubid, e.g. ra-5xxxxxxxxxxx
+
+
 ## => Comments
 ##############################
 comments:
-  provider: gitalk # false (default), "disqus", "gitalk", "custom"
+  provider: gitalk # false (default), "disqus", "gitalk", "valine", "custom"
+  # provider: valine
 
   ## Disqus
   disqus:
@@ -124,6 +138,13 @@ comments:
     admin:
       - kitian616
 
+  ## Valine
+  # please refer to https://valine.js.org/en/ for more info.
+  valine:
+    app_id      : uAG3OhdcH8H4fxSqXLyBljA7-gzGzoHsz
+    app_key     : Mzf5m9skSwYVWVXhGiYMNyXs
+    placeholder : # Prompt information
+
 
 ## => Pageview
 ##############################
@@ -135,6 +156,16 @@ pageview:
     app_id    : uAG3OhdcH8H4fxSqXLyBljA7-gzGzoHsz
     app_key   : Mzf5m9skSwYVWVXhGiYMNyXs
     app_class : TeXtDemo
+
+
+## => Search
+##############################
+search:
+  provider: default # "default" (default), false, "google", "custom"
+
+  ## Google Custom Search Engine
+  google:
+    custom_search_engine_id: # Google Custom Search Engine ID
 
 
 ## => Analytics
@@ -178,44 +209,60 @@ collections_dir: docs
 collections:
   docs:
     output: true
-  page:
+  sample_page:
     output: true
-  articles:
+  sample_articles:
     output: true
-  languages:
+  sample_languages:
     output: true
 
 defaults:
+  ## home
   - scope:
       path: "test"
     values:
       articles:
         excerpt_type: html
+  ## posts
   - scope:
       path: ""
       type: posts
     values:
       layout: article
+      sharing: true
       license: true
       category: post
       aside:
         toc: true
       show_edit_on_github: true
+      show_subscribe: true
       pageview: true
+      # lightbox: true
+  ## samples
   - scope:
       path: ""
-      type: articles
+      type: sample_page
     values:
+      nav_key: samples
+  - scope:
+      path: ""
+      type: sample_articles
+    values:
+      nav_key: samples
       show_date: false
   - scope:
       path: ""
-      type: languages
+      type: sample_languages
     values:
       layout: article
+      nav_key: samples
+      show_date: false
+  ## docs
   - scope:
       path: "_docs/en"
     values:
       layout: article
+      nav_key: docs
       sidebar:
         nav: docs-en
       license: true
@@ -223,10 +270,12 @@ defaults:
         toc: true
       show_edit_on_github: true
       show_date: false
+      # lightbox: true
   - scope:
       path: "_docs/zh"
     values:
       layout: article
+      nav_key: docs
       sidebar:
         nav: docs-zh
       license: true
@@ -235,6 +284,7 @@ defaults:
       lang: zh
       show_edit_on_github: true
       show_date: false
+      # lightbox: true
 
 
 ## => Plugins

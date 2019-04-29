@@ -1,7 +1,21 @@
 @mixin block-elements {
-  h1, h2, h3, h4, h5, h6, p,
-  hr, blockquote, figure, pre, .highlighter-rouge,
-  ul, ol, dl, table, .footnotes {
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6,
+  p,
+  hr,
+  blockquote,
+  figure,
+  pre,
+  .highlighter-rouge,
+  ul,
+  ol,
+  dl,
+  table,
+  .footnotes {
     @content;
   }
 }
@@ -23,23 +37,16 @@
  **/
 
 html {
-  height: 100%;
   font-size: map-get($base, font-size-root);
   -webkit-text-size-adjust: 100%; /* 1 */
+  @media print {
+    font-size: map-get($base, font-size-root-sm);
+  }
 }
 
 body {
   padding: 0;
   margin: 0;
-}
-
-@include block-elements() {
-  padding: 0;
-  margin: map-get($base, vertical-space) 0;
-}
-
-body {
-  height: 100%;
   font: map-get($base, font-weight) #{map-get($base, font-size)}/#{map-get($base, line-height)} map-get($base, font-family);
   ::-moz-selection {
     background: $select-color;
@@ -50,6 +57,11 @@ body {
   ::selection {
     background: $select-color;
   }
+}
+
+@include block-elements() {
+  padding: 0;
+  margin: map-get($spacers, 2) 0;
 }
 
 input, textarea, select, button {
@@ -117,17 +129,7 @@ h6 {
 
 a {
   font-weight: map-get($base, font-weight-bold);
-  @include plain() {
-    text-decoration: none;
-  }
-  @include hover() {
-    text-decoration: underline;
-  }
-  @include active() {
-    text-decoration: none;
-  }
   @include link-colors($main-color-1);
-  @include transition(map-get($link, transition));
 }
 
 pre, code {
@@ -150,7 +152,7 @@ figcaption {
 button {
   padding: 0;
   margin: 0;
-  font-size: 1rem;
+  font-size: map-get($spacers, 3);
   cursor: pointer;
   background-color: transparent;
   border-width: 0;

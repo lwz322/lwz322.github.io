@@ -2,7 +2,7 @@
 
 {%- assign _excerpt_type = include.excerpt_type -%}
 
-{%- include snippets/locale-to-string.html locale=site.data.locale.READMORE -%}
+{%- include snippets/get-locale-string.html key='READMORE' -%}
 {%- assign _locale_readmore = __return -%}
 
 {%- assign _sorted_list = include.articles -%}
@@ -18,7 +18,11 @@
 {%- elsif include.type == 'brief' -%}
 <div class="article-list items">
 {%- elsif include.type == 'grid' -%}
-<div class="article-list grid grid--p-3">
+  {%- if include.size == 'sm' -%}
+  <div class="article-list grid gird--sm grid--p-3">
+  {%- else -%}
+  <div class="article-list grid grid--p-3">
+  {%- endif -%}
 {%- endif -%}
 
   {%- for _article in _sorted_list -%}
@@ -51,7 +55,7 @@
           </div>
         {%- endif -%}
         <div class="item__content">
-          <header><h2 itemprop="headline" class="item__header"><a href="{{ _article_url }}">{{ _article.title }}</a></h2></header>
+          <header><a href="{{ _article_url }}"><h2 itemprop="headline" class="item__header">{{ _article.title }}</h2></a></header>
           <div class="item__description">
             {%- if _article.excerpt and include.show_excerpt -%}
               <div class="article__content" itemprop="description articleBody">
@@ -79,7 +83,7 @@
     {%- elsif include.type == 'brief' -%}
       {%- assign _tags = '' -%}
       {%- for _tag in _article.tags -%}
-        {%- assign _tag_encode = _tag | strip | url_encode } -%}
+        {%- assign _tag_encode = _tag | strip | url_encode -%}
         {%- if forloop.last -%}
           {%- assign _tags = _tags | append: _tag_encode -%}
         {%- else -%}
@@ -90,11 +94,11 @@
         {%- assign _currentdate = _article.date | date: '%Y' -%}
         {%- if _currentdate != _date -%}
           {%- unless forloop.first -%}</ul></section>{%- endunless -%}
-          <section><h2 class="article-list__group-header">{{ _currentdate }}</h2><ul>
+          <section><h2 class="article-list__group-header">{{ _currentdate }}</h2><ul class="items">
           {%- assign _date = _currentdate -%}
         {%- endif -%}
       {%- endif -%}
-      {%- include snippets/locale-to-string.html locale=site.data.locale.ARTICLE_LIST_DATE_FORMAT -%}
+      {%- include snippets/get-locale-string.html key='ARTICLE_LIST_DATE_FORMAT' -%}
       <li class="item" itemscope itemtype="http://schema.org/BlogPosting" data-tags="{{ _tags }}">
         <div class="item__content">
           {%- if include.show_info -%}
@@ -105,14 +109,14 @@
 
     {%- elsif include.type == 'grid' -%}
       {%- if include.size == 'sm' -%}
-        <div class="cell cell--3 cell--md-4 cell--sm-12">
-          <div class="card">
+        <div class="cell cell--12 cell--md-4 cell--lg-3">
+          <div class="card card--flat">
             {%- if _article.cover -%}
               <div class="card__image">
                 <img class="image" src="{{ _article_cover }}" />
                 <div class="overlay overlay--bottom">
                   <header>
-                    <a class="card__header" href="{{ _article_url }}">{{ _article.title }}</a>
+                    <a href="{{ _article_url }}"><h2 class="card__header">{{ _article.title }}</h2></a>
                   </header>
                 </div>
               </div>
@@ -121,14 +125,14 @@
         </div>
       {%- else -%}
 
-        <div class="cell cell--4 cell--md-6 cell--sm-12">
+        <div class="cell cell--12 cell--md-6 cell--lg-4">
           <div class="card card--flat">
             {%- if _article.cover -%}
               <div class="card__image"><img src="{{ _article_cover }}" /></div>
             {%- endif -%}
               <div class="card__content">
                 <header>
-                  <h2 class="card__header"><a href="{{ _article_url }}">{{ _article.title }}</a></h2>
+                  <a href="{{ _article_url }}"><h2 class="card__header">{{ _article.title }}</h2></a>
                 </header>
               </div>
           </div>

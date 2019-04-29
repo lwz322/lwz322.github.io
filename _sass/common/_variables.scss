@@ -3,12 +3,13 @@ $base: (
   font-family-code:       (Menlo, Monaco, Consolas, Andale Mono, lucida console, Courier New, monospace),
 
   font-size-root:         16px,
+  font-size-root-sm:      14px,
 
   font-size-xl:           1.5rem,
   font-size-lg:           1.25rem,
   font-size:              1rem,
-  font-size-sm:           .875rem,
-  font-size-xs:           .75rem,
+  font-size-sm:           .85rem,
+  font-size-xs:           .7rem,
 
   font-size-h1-xl:        3.5rem,
   font-size-h2-xl:        2.5rem,
@@ -38,26 +39,23 @@ $base: (
   font-size-h5-sm:        1rem,
   font-size-h6-sm:        1rem,
 
-  font-size-h1-xs:        1rem,
-  font-size-h2-xs:        .9rem,
-  font-size-h3-xs:        .85rem,
-  font-size-h4-xs:        .8rem,
-  font-size-h5-xs:        .75rem,
-  font-size-h6-xs:        .75rem,
+  font-size-h1-xs:        1.05rem,
+  font-size-h2-xs:        1rem,
+  font-size-h3-xs:        .95rem,
+  font-size-h4-xs:        .9rem,
+  font-size-h5-xs:        .85rem,
+  font-size-h6-xs:        .85rem,
 
   font-weight:            400,
   font-weight-bold:       700,
 
-  line-height-xl:         2.1,
+  line-height-xl:         2,
   line-height-lg:         1.8,
   line-height:            1.6,
   line-height-sm:         1.4,
   line-height-xs:         1.2,
 
   spacer:                 1rem,
-
-  vertical-space:         .5rem,
-  vertical-space-lg:      1.4rem,
 
   border-radius-lg:       .8rem,
   border-radius:          .4rem,
@@ -73,11 +71,11 @@ $spacers: (
   5:                      map-get($base, spacer) * 3
 );
 
-$z-index: (
+$z-indexes: (
   actions: 996,
   mask: 997,
   sidebar: 998,
-  search: 999
+  modal: 999
 );
 
 $layout: (
@@ -86,8 +84,7 @@ $layout: (
   content-max-width:      950px,
   sidebar-width:          250px,
   sidebar-header-height:  3rem,
-  aside-width:            220px,
-  footer-height:          10rem
+  aside-width:            220px
 );
 
 //     sm       md       lg
@@ -101,11 +98,12 @@ $responsive: (
 );
 
 $animation: (
-  duration:               .6s,
+  duration:               .4s,
+  duration-sm:            .2s,
   timing-function:        ease-in-out
 );
 
-$link: (
+$clickable: (
   transition:             all .2s ease-in-out
 );
 
@@ -135,9 +133,7 @@ $button: (
   circle-diameter-sm:     $button-height-sm,
   circle-diameter-xs:     $button-height-xs,
 
-  font-weight:            map-get($base, font-weight-bold),
-
-  transition:             all .2s ease-in-out
+  font-weight:            map-get($base, font-weight-bold)
 );
 
 $image: (
@@ -149,6 +145,6 @@ $image: (
 );
 
 $menu: (
-  horizontal-spacer:      1,
+  horizontal-spacer: 1,
   horizontal-item-vertical-spacer: 1
 );

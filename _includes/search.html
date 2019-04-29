@@ -1,24 +1,20 @@
-{%- include snippets/locale-to-string.html locale=site.data.locale.CANCEL -%}
+{%- include snippets/get-locale-string.html key='CANCEL' -%}
 {%- assign _locale_cancel = __return -%}
-{%- include snippets/locale-to-string.html locale=site.data.locale.SEARCH -%}
+{%- include snippets/get-locale-string.html key='SEARCH' -%}
 {%- assign _locale_search = __return -%}
 
-<div class="search">
-  <div class="main">
-    <div class="search__header">{{ _locale_search }}</div>
-    <div class="search-bar">
-      <div class="search-box js-search-box">
-        <div class="search-box__icon-search"><i class="fas fa-search"></i></div>
-        <input type="text" />
-        <div class="search-box__icon-clear js-icon-clear">
-          <a><i class="fas fa-times"></i></a>
-        </div>
-      </div>
-      <button class="button button--secondary button--pill search__cancel js-search-toggle">
-        {{ _locale_cancel }}</button>
-    </div>
-    <div class="search-result js-search-result"></div>
-  </div>
-</div>
+{%- if site.search.provider == 'google' -%}
+  <script>window.useDefaultSearchBox = false;</script>
+{%- endif -%}
 
-<script>{%- include scripts/search.js -%}</script>
+{%- if site.search.provider -%}
+  <script>{%- include scripts/components/search.js -%}</script>
+{%- endif -%}
+
+{%- if site.search.provider == 'default' -%}
+  {%- include search-providers/default/search.html -%}
+{%- elsif site.search.provider == 'google' -%}
+  {%- include search-providers/google-custom-search-engine/search.html -%}
+{%- elsif site.search.provider == 'custom' -%}
+  {%- include search-providers/custom/search.html -%}
+{%- endif -%}

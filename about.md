@@ -1,10 +1,20 @@
 ---
 layout: article
 titles:
-  en: About
-  zh: 关于
-  zh-Hans: 关于
-  zh-Hant: 關於
+  en      : &EN       About
+  en-GB   : *EN
+  en-US   : *EN
+  en-CA   : *EN
+  en-AU   : *EN
+  zh-Hans : &ZH_HANS  关于
+  zh      : *ZH_HANS
+  zh-CN   : *ZH_HANS
+  zh-SG   : *ZH_HANS
+  zh-Hant : &ZH_HANT  關於
+  zh-TW   : *ZH_HANT
+  zh-HK   : *ZH_HANT
+  ko      : &KO       소개
+  ko-KR   : *KO
 key: page-about
 ---
 
@@ -19,21 +29,21 @@ TeXt is a super customizable Jekyll theme for personal site, team site, blog, pr
 ## Features
 
 - Responsive
+- Semantic HTML
 - Skins
 - Highlight Theme
+- Internationalization
+- Search
 - Table of contents
 - Authors
-- Multi-language support
-- Search
-- Semantic HTML
-- RSS（[jekyll-feed](https://github.com/jekyll/jekyll-feed))
-- Contact information (Email, Facebook, Twitter, Linkedin, Weibo, Zhihu, etc)
-- Mathematical formula ([MathJax](https://www.mathjax.org/))
-- Flowchart, Sequence diagram, Gantt diagram ([mermaid](https://mermaidjs.github.io/))
-- Line Chart, Bar Chart, Radar Chart, Pie Chart ([chartjs](http://www.chartjs.org/))
-- Page views ([LeanCloud](https://leancloud.cn/))
-- Comments ([Disqus](https://disqus.com/))
-- Google Analytics
+- Additional styles (alert, tag, image, icon, button, grid, etc)
+- Extensions (audios, videos, slides, demos)
+- Markdown enhancements ([MathJax](https://www.mathjax.org/), [mermaid](https://mermaidjs.github.io/), [chartjs](http://www.chartjs.org/))
+- Sharing ([AddToAny](https://www.addtoany.com/), [AddThis](https://www.addthis.com/))
+- Comments ([Disqus](https://disqus.com/), [Gitalk](https://gitalk.github.io/), [Valine](https://valine.js.org/en/))
+- Pageview ([LeanCloud](https://leancloud.cn/))
+- Analytics ([Google Analytics](https://analytics.google.com/analytics/web/))
+- RSS ([jekyll-feed](https://github.com/jekyll/jekyll-feed))
 
 ## Skins
 
