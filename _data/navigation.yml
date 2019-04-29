@@ -13,6 +13,7 @@ header:
       zh-Hant:  Wiki
     url:        /docs/en/quick-start
 
+  - titles:
       en      : &EN       Archive
       en-GB   : *EN
       en-US   : *EN
