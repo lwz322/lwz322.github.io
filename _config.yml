@@ -119,11 +119,7 @@ sharing:
 ## => Comments
 ##############################
 comments:
-<<<<<<< HEAD
   provider: gitalk # false (default), "disqus", "gitalk", "custom"
-=======
-  provider: false # false (default), "disqus", "gitalk", "valine", "custom"
->>>>>>> pr/11
 
   ## Disqus
   disqus:
