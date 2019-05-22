@@ -86,7 +86,16 @@ OpenWrt上少有的分设备的网速监测工具，没有官方的Feed，需要
 ### 交换机 Switch
 这个的用途就是当路由器做路由，占用掉了墙壁内嵌的网口，但是这个时候又有设备需要直接拨号，从前的话可能就需要使用交换机了，但是考虑到现在的路由器都是通过VLAN来划分网口的，而OpenWrt对此是可以自定义的，所以只需要改下网口的VLAN ID就好，因为设备之间有差别，所以这里建议参考[OpenWrt Guide](https://OpenWrt.org/docs/guide-user/network/vlan/switch_configuration)，然后根据自己的需求做设置
 
-### 定时任务Crontab
+### 定时任务 Cron
+> **cron** is the general name for the service that runs scheduled actions. 
+> **crond** is the name of the daemon that runs in the background and reads crontab files. 
+> A **crontab** is a file containing jobs in the format
+>minute hour day-of-month month day-of-week  command
+>crontabs are normally stored by the system in /var/spool/<username>/crontab. These files are not meant to be edited directly. You can use the crontab command to invoke a text editor (what you have defined for the EDITOR env variable) to modify a crontab file.
+
+There are various implementations of cron. Commonly there will be per-user crontab files (accessed with the command crontab -e) as well as system crontabs in /etc/cron.daily, /etc/cron.hourly, etc.
+
+In your first example you are scheduling a job via a crontab. In your second example you're using the  at command to queue a job for later execution.
 LuCI的System->Scheduled Tasks中就是了，和Linux中的Crontab差不多，所以查下就好，算是简单实用的东西了，用来做个定时重启、运行某个脚本都是可以的,下面这个就是定时断开和连接一个PPPoE拨号
 ```shell
 6 * * * * /sbin/ifdown wan
