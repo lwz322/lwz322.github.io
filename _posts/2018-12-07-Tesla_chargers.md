@@ -200,4 +200,4 @@ book.save(filename)
 
 ### 推一下舍友的工作
 
-[Equations.online](http://equations.online/2018/12/09/chargebar/)上面是从北汽爬取的数据，复杂度更高，数据量也要大很多
+[Equations.online](https://equationliu.github.io/2018/12/09/chargebar/)上面是从北汽爬取的数据，复杂度更高，数据量也要大很多
