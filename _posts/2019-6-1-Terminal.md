@@ -14,9 +14,9 @@ article_header:
   type: overlay
   theme: dark
   background_color: '#ffffff'
-  background_image: https://img.vim-cn.com/84/9c4457d8ab081c4b2906b20a39ee45e7ce66d4.png
+  background_image: 
     gradient: 'linear-gradient(0deg, rgba(0, 0, 0 , .4), rgba(0, 0, 0, .4))'
-    src: 
+    src: assets/background/Terminal.png
 ---
 在Microsoft Build 2019上微软发布了Windows Terminal，我也在第一时间找到了编译好的版本体验了一下，然而可能是在Github上开源的版本主要是为了解决功能方面的问题，和宣传视频里的相差甚远，所以也趁此机会配置一下Windows下的终端，另外就是附带了对现阶段的Windows Terminal的配置文件
 <!--more-->
@@ -32,7 +32,7 @@ article_header:
 
 见过了[Cmder](https://cmder.net/)之后就没有考虑这方面问题，Cmder是一个Console Emulator,对这个概念个人的理解是这样的：
 
-在图形化界面出现之前，与Unix系统交互的唯一方式就是借助Shell所提供的文本命令行界面（Command Line Interface,CLI）,而日常用的操作系统都配备了图形化界面，如一些Linux发行版进入CLI的一种方法是退出图形化界面，进入文本模式，也就是显示器上只有shell CLI，这种方式就叫做Linux控制台（Linux Console）,而Linux系统启动后又会创建出多个虚拟控制台（TTY）方便使用；而另外一种方式也就是在图形化界面打开图形化的终端窗口连接到TTY，也就是终端仿真器（Console Emulator）。
+> 在图形化界面出现之前，与Unix系统交互的唯一方式就是借助Shell所提供的文本命令行界面（Command Line Interface,CLI）,而日常用的操作系统都配备了图形化界面，如一些Linux发行版进入CLI的一种方法是退出图形化界面，进入文本模式，也就是显示器上只有shell CLI，这种方式就叫做Linux控制台（Linux Console）,而Linux系统启动后又会创建出多个虚拟控制台（TTY）方便使用；而另外一种方式也就是在图形化界面打开图形化的终端窗口连接到TTY，也就是终端仿真器（Console Emulator）。
 
 Cmder不仅仅解决了Windows下终端的美观性问题还引入了部分Linux命令使得shell的体验更好
 
@@ -64,7 +64,8 @@ Cmder不仅仅解决了Windows下终端的美观性问题还引入了部分Linux
 - 一个SSH帮助程序，可让您再也不输入私钥密码
 - 明智的别名，以及添加自己的别名和删除不喜欢的别名的简单方法
 
-主题方面，个人暂时使用的主题是基于oh-my-zsh默认的ys修改的
+主题方面，个人暂时使用的主题是基于oh-my-zsh默认的ys修改的, 可以在```C:\Users\lwz32\scoop\apps\pshazz\0.2019.04.02\themes```目录下修改或者创建主题配置文件，下面的Concfg也类似
+
 ```json
 {
     "plugins": [ "git", "ssh", "z" ],
@@ -89,7 +90,7 @@ Cmder不仅仅解决了Windows下终端的美观性问题还引入了部分Linux
 }
 
 ```
-这个作者同时也开发了Windows下的包管理软件scoop，在我之前的文章中有介绍，另外一个就是自定义配色的问题了，依然使用这个作者开发的工具
+这个作者同时也开发了Windows下的包管理软件scoop，在我[之前的文章](https://lwz322.github.io/2019/03/30/Efee.html#%E9%99%84windows%E4%B8%8B%E7%9A%84%E5%8C%85%E7%AE%A1%E7%90%86%E5%B7%A5%E5%85%B7scoop)中有介绍，网上搜一下也有其他人写的配置文章；另外一个就是自定义配色的问题了，依然使用这个作者开发的工具
 
 ### 使用Concfg修改shell的配色
 先贴上Github项目链接：[lukesampson/concfg](https://github.com/lukesampson/concfg)
