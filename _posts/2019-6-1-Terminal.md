@@ -7,14 +7,14 @@ chart: true
 toc: true
 mode: immersive
 tags : CLI Shell Terminal
-key: Terminal
+key: terminal
 header:
   theme: dark
 article_header:
   type: overlay
   theme: dark
   background_color: '#ffffff'
-  background_image: assets/background/Terminal.png
+  background_image: https://img.vim-cn.com/84/9c4457d8ab081c4b2906b20a39ee45e7ce66d4.png
     gradient: 'linear-gradient(0deg, rgba(0, 0, 0 , .4), rgba(0, 0, 0, .4))'
     src: 
 ---
