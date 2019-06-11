@@ -18,10 +18,11 @@ article_header:
     gradient: 'linear-gradient(0deg, rgba(0, 0, 0 , .4), rgba(0, 0, 0, .4))'
     src: assets/background/Terminal.png
 ---
-在Microsoft Build 2019上微软发布了Windows Terminal，我也在第一时间找到了编译好的版本体验了一下，然而可能是在Github上开源的版本主要是为了解决功能方面的问题，和宣传视频里的相差甚远，所以也趁此机会配置一下Windows下的终端，另外就是附带了对现阶段的Windows Terminal的配置文件
+在Microsoft Build 2019上微软发布了Windows Terminal，我也提前体验了一把，趁此机会配置一下Windows下的终端和shell，另外就是附带了对现阶段的Windows Terminal的配置文件，使其接近宣传图中的效果
 <!--more-->
 
 ## Windows下的终端与Shell
+
 > 这里需要了解一下终端terminal和 shell 的区别：
 > 在命令行中，shell 提供了访问操作系统内核功能的途径，比如说我们所熟悉的 bash、zsh，都是不同的 shell；而终端则为 shell 提供视觉界面（窗口），比如我们所熟悉的 iTerm2、Linux 桌面上的终端工具等。甚至于我们在 VSCode 中所使用的命令行，也是某种意义上的终端。
 > 我们在 Windows 下所使用的 CMD、Powershell 既然是一个终端，也是一个 Shell，还是同名的脚本系统。
@@ -48,8 +49,9 @@ Cmder不仅仅解决了Windows下终端的美观性问题还引入了部分Linux
 
 ### 修改终端软件的字体
 
-默认的Powershell终端窗口是无法使用Consola字体的，考虑到偶尔还是要用的，所以可以在运行的时候输入chcp 65001使代码页用UTF8进行编码，而在新版本的Win10中，在“控制面板-时钟和区域-区域-管理-更改系统区域设置”可以打开系统编码默认为UTF8的设置，看了下评论，现阶段还是可能存在一些问题，我暂时没有遇到，另外还有其他的字体可以不依赖于此使用
-比如说[Microsoft YaHei Mono](https://github.com/Microsoft/BashOnWindows/files/1362006/Microsoft.YaHei.Mono.zip) on GitHub 微软为 WSL/Bash on Ubuntu on Windows 设计的字体，PowerShell 和 cmd也能用效果相当于微软雅黑和 Consolas 的混搭
+默认的Powershell终端窗口是无法使用Consola字体的，考虑到偶尔还是要用的，所以可以在运行的时候输入chcp 65001使代码页用UTF8进行编码，而在新版本的Win10中，在“控制面板-时钟和区域-区域-管理-更改系统区域设置”可以打开系统编码默认为UTF8的设置，看了下评论，现阶段还是可能存在一些问题，我暂时没有遇到，另外还有其他的字体可以不依赖于此使用:
+
+[Microsoft YaHei Mono](https://github.com/Microsoft/BashOnWindows/files/1362006/Microsoft.YaHei.Mono.zip) on GitHub 微软为 WSL/Bash on Ubuntu on Windows 设计的字体，PowerShell 和 cmd也能用效果相当于微软雅黑和 Consolas 的混搭
 
 更详细的可以参考：[自定义 Windows PowerShell 和 cmd 的字体](https://blog.walterlv.com/post/customize-fonts-of-command-window.html)
 
@@ -93,6 +95,7 @@ Cmder不仅仅解决了Windows下终端的美观性问题还引入了部分Linux
 这个作者同时也开发了Windows下的包管理软件scoop，在我[之前的文章](https://lwz322.github.io/2019/03/30/Efee.html#%E9%99%84windows%E4%B8%8B%E7%9A%84%E5%8C%85%E7%AE%A1%E7%90%86%E5%B7%A5%E5%85%B7scoop)中有介绍，网上搜一下也有其他人写的配置文章；另外一个就是自定义配色的问题了，依然使用这个作者开发的工具
 
 ### 使用Concfg修改shell的配色
+
 先贴上Github项目链接：[lukesampson/concfg](https://github.com/lukesampson/concfg)
 
 concfg 是一个实用程序，用于导入和导出Windows控制台设置，如字体和颜色，这里主要是更改一下颜色的映射关系，因为最后呈现的效果也取决于终端，所以还是时不时还是需要细调（建议给编辑器装些色彩方面的插件），我暂时的配置文件如下：
@@ -136,7 +139,7 @@ concfg 是一个实用程序，用于导入和导出Windows控制台设置，如
 
 ## Windows Terminal的配置
 
-现阶段只有Json的方式做配置，添加了icon，修改了部分参数使得看起来更舒服
+现阶段只有Json的方式做配置，添加了icon，修改了部分参数使得看起来更舒服，下面是主要修改的部分
 
 ```json
 {
@@ -198,76 +201,7 @@ concfg 是一个实用程序，用于导入和导出Windows控制台设置，如
             "padding": "0, 0, 0, 0",
             "icon": "C:\\Users\\lwz32\\Pictures\\powershell.ico"
         }
-    ],
-    "schemes": [
-        {
-            "name": "Campbell",
-            "foreground": "#F2F2F2",
-            "background": "#0C0C0C",
-            "colors": [
-                "#0C0C0C",
-                "#C50F1F",
-                "#13A10E",
-                "#C19C00",
-                "#0037DA",
-                "#881798",
-                "#3A96DD",
-                "#CCCCCC",
-                "#767676",
-                "#E74856",
-                "#16C60C",
-                "#F9F1A5",
-                "#3B78FF",
-                "#B4009E",
-                "#61D6D6",
-                "#F2F2F2"
-            ]
-        },
-        {
-            "name": "Solarized Dark",
-            "foreground": "#FDF6E3",
-            "background": "#073642",
-            "colors": [
-                "#073642",
-                "#D30102",
-                "#859900",
-                "#B58900",
-                "#268BD2",
-                "#D33682",
-                "#2AA198",
-                "#EEE8D5",
-                "#002B36",
-                "#CB4B16",
-                "#586E75",
-                "#657B83",
-                "#839496",
-                "#6C71C4",
-                "#93A1A1",
-                "#FDF6E3"
-            ]
-        },
-        {
-            "name": "Solarized Light",
-            "foreground": "#073642",
-            "background": "#FDF6E3",
-            "colors": [
-                "#073642",
-                "#D30102",
-                "#859900",
-                "#B58900",
-                "#268BD2",
-                "#D33682",
-                "#2AA198",
-                "#EEE8D5",
-                "#002B36",
-                "#CB4B16",
-                "#586E75",
-                "#657B83",
-                "#839496",
-                "#6C71C4",
-                "#93A1A1",
-                "#FDF6E3"
-            ]
+    ]
         }
     ]
 }
