@@ -15,7 +15,7 @@ article_header:
   theme: dark
   background_color: '#ffffff'
   background_image: 
-    gradient: 'linear-gradient(0deg, rgba(0, 0, 0 , .4), rgba(0, 0, 0, .4))'
+    gradient: 'linear-gradient(0deg, rgba(0, 0, 0 , .7), rgba(0, 0, 0, .7))'
     src: assets/background/Terminal.png
 ---
 在Microsoft Build 2019上微软发布了Windows Terminal，我也提前体验了一把，趁此机会配置一下Windows下的终端和shell，另外就是附带了对现阶段的Windows Terminal的配置文件，使其接近宣传图中的效果
