@@ -16,7 +16,7 @@ article_header:
   background_color: '#ffffff'
   background_image:
     gradient: 'linear-gradient(0deg, rgba(0, 0, 0 , .4), rgba(0, 0, 0, .4))'
-    src: assets/background/wall.jpg
+    src: assets/background/flower.jpg
 ---
 
 <!--more-->

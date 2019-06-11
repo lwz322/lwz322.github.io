@@ -16,7 +16,7 @@ article_header:
   theme: dark
   background_color: '#ffffff'
   background_image:
-    src: assets/background/annapurna_dawn.jpg
+    src: assets/background/hua.jpg
     gradient: 'linear-gradient(0deg, rgba(0, 0, 0 , .2), rgba(0, 0, 0, .2))'
 ---
 任何事物都是始于生存，发展于社会秩序，娱乐至死的过程
