@@ -18,7 +18,7 @@ article_header:
     src: https://img.vim-cn.com/00/5be9e38bc749ac02d3a2903294de538ce2f3fd.png
     gradient: 'linear-gradient(0deg, rgba(0, 0, 0 , .7), rgba(0, 0, 0, .7))'
 ---
-源起于2018年[MCM\ICM](https://www.comap.com/undergraduate/contests/mcm/contests/2018/problems/)的D题，缺少数据是很麻烦的，部分数据只能自己爬取了，首先就是Tesla的充电桩的地理信息，以及利用Google Maps的API对周边地区做搜索
+2018年[MCM\ICM](https://www.comap.com/undergraduate/contests/mcm/contests/2018/problems/)的D题探讨了充电桩网络的建设问题，而现阶段的典范之一就是Tesla充电网络了，故需要具体的数据来做可视化，其中主要就是Tesla的充电桩的地理信息，还用到了Google Maps的API对周边地区做搜索
 
 <!--more-->
 
