@@ -7,13 +7,6 @@ header:
     url:        /
 
   - titles:
-      en:       Wiki
-      zh:       Wiki
-      zh-Hans:  Wiki
-      zh-Hant:  Wiki
-    url:        /docs/en/quick-start
-
-  - titles:
       en      : &EN       Archive
       en-GB   : *EN
       en-US   : *EN
@@ -29,13 +22,6 @@ header:
       ko      : &KO       아카이브
       ko-KR   : *KO
     url: /archive.html
-
-  - titles:
-      en:       Oneday
-      zh:       一天
-      zh-Hans:  一天
-      zh-Hant:  一天
-    url:        /oneday.html
 
   - titles:
       en      : &EN       About
