@@ -1,6 +1,6 @@
 ---
 layout: article
-title: 策略路由
+title: OpenWrt下的单路由复用
 mathjax: true
 mermaid: true
 chart: true
@@ -36,7 +36,7 @@ article_header:
 
 ## 原理
 
-使用Linux网络防火墙iptables对虚拟的出的Interface的数据包做标记，再结合一定的规则对标记的数据包进行路由，也就是通过自定的策略路由来实现，而需要实现这种特定需求下的策略路由就必须**自下而上**的对网络重构，具体的网络结构示意图如下：
+使用Linux网络防火墙iptables对虚拟的出的Interface的数据包做标记，再结合一定的规则对标记的数据包进行路由，也就是通过自定的策略路由来实现，而需要实现这种特定需求下的策略路由就必须**自下而上**(此处特指是OpenWrt架构)的对网络重构，具体的网络结构示意图如下：
 
 ![网络结构](https://img.vim-cn.com/b0/c66409bcbbee571fbb9432774a8685ee1d3fcb.png)
 
@@ -59,6 +59,7 @@ Wireless Client0 是桥接自另外一个接入点的无线网络，直接桥接
 
 
 ## 代码
+代码部分仅供参考，因为每个人的设备的情况不一样，但是稍作修改就可以用
 
 ### 添加防火墙空间
 
@@ -281,6 +282,6 @@ uci commit mwan3
 [ "$INTERFACE" = wan_2 ] || exit 0
 [ "$ACTION" = ifup ] || exit 0
 ip route add default via 10.170.72.254 dev pppoe-wan_2 table 300
-logger -t dualroute "wan_2 is ip again,table is upgraded"
+logger -t dualroute "wan_2 is up again,table is upgraded"
 
 ```
