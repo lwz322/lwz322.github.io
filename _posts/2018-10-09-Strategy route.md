@@ -281,6 +281,6 @@ uci commit mwan3
 [ "$INTERFACE" = wan_2 ] || exit 0
 [ "$ACTION" = ifup ] || exit 0
 ip route add default via 10.170.72.254 dev pppoe-wan_2 table 300
-logger -t dualroute "wan_2 is ip again,table is upgraded"
+logger -t dualroute "wan_2 is up again,table is upgraded"
 
 ```
