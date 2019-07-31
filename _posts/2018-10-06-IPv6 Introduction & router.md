@@ -112,6 +112,11 @@ article_header:
 > Interface ID为[Modified EUI-64](http://standards.ieee.org/develop/regauth/tut/eui64.pdf)格式，标准里面提供了如何将48位mac地址转换成EUI-64格式的方法。
 >
 > IPv6标准要求单播地址的子网必须是64位的，主要是为了简化IPv6的管理，同时路由也方便，毕竟现在CPU都是64位的，如果子网号超过64位的话，会给路由造成一定的困难，同时64位的接口ID也比较容易存放一个UUID，比如可以容纳48位的mac地址，为Stateless Auto Configuration的地址分配提供了足够的空间。
+>
+>**IPv6隐私扩展**
+>当一个客户端使用SLAAC配置其IPv6时，它会使用网络前缀和网卡的MAC地址构造地址。这会引起安全问题：计算机的MAC地址可以轻松通过其IPv6地址推算出。为了解决这个问题，提出了“IPv6隐私扩展”标准(RFC 4941)。使用这个隐私扩展，内核会从原本的IPv6地址计算生成一个“临时地址”。在连接远程服务器时，系统会优先选择这个地址以隐藏原来的地址。比较典型的例子就是Windows的ipconfig可以看到一个临时IPv6地址，在IPv6测试网站中显示的就是该IP
+
+
 
 ## 内网配置IPv6的方法
 
