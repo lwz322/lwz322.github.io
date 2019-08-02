@@ -306,6 +306,16 @@ fe80::96db:daff:fe3e:8fcf
 /sbin/ifstatus edu_6 | jsonfilter -e '$.route[1].nexthop'
 ```
 
+另外还有一种写法
+```shell
+ubus call network.interface dump | jsonfilter -e '$.interface[@.interface="edu_6"].route[1].nexthop'
+```
+
+使用Jsonpath的时候如果遇到特殊字符可以给节点名加中括号来处理，获取接口的IPv6地址如下
+```bash
+/sbin/ifstatus wan_6 | jsonfilter -e '$["ipv6-address"][0]["address"]'
+```
+
 由于ubus提供的信息非常的多，对于IPv6 NAT下的负载均衡就兼顾简洁和适用性的写法了，对于没有负载均衡的情况下也可以使用，按照规则保存在hotplug文件夹下即可
 
 ```shell
