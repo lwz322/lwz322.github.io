@@ -35,16 +35,18 @@ article_header:
 - 最后趁舍友国庆出游，用新的负载均衡方法以及HWNAT把汇聚全宿舍端口达到400Mps
 - 接触OpenWrt开发的一些方法，开始根据自己的需求做策略路由
 
-这里的Freedom就是得益于OpenWrt强大的扩展性以及可操作性实现想要的功能，本文介绍了一些OpenWrt实用的软件和功能
+这里的Freedom就是得益于OpenWrt强大的扩展性以及可操作性实现想要的功能，尽管在官网的[Reasons to use OpenWrt](https://openwrt.org/reasons_to_use_openwrt)已经有了一些说明，本文从个人用户的视角介绍一些OpenWrt实用的软件和功能
 
 ## 如何开始
 建议选有官方固件支持，软件支持的路由器（也就是不太建议刷仅有民间固件的那种了，不开源感觉不安全），具体可以参考官方支持的[Hardware Table](https://OpenWrt.org/toh/start)，进入某一款路由器的详情界面就可以看到支持的情况
 
-或者是论坛，一般都会有详细的刷机教程，如国内的[恩山](https://right.com.cn/forum/portal.php),[Koolshare](http://koolshare.cn/portal.php)
+或者是论坛，一般都会有详细的刷机教程，如国内的[恩山](https://right.com.cn/forum/portal.php)，[Koolshare](http://koolshare.cn/portal.php)
 >就刷OpenWrt而言，推荐以高通（QAC）和联发科（MTK）或者软路由为主，博通CPU的因为驱动开源的不太好，所以可能会缺少无线功能
 
 就版本的话，主要是稳定版(写这篇文章的时候最新的是18.06.1)和每日构建的版本(Snapshot)
 >后者没有自带LuCI界面，需要自己安装，又因为版本太新，不是所有的软件都有已经编译好的ipk，优势在于可以体验到最新的驱动之类的
+
+国内也有各种个人修改的版本，比较出名的：[Lean's OpenWrt source](https://github.com/coolsnowwolf/lede)，网上有很多编译好的版本，内置了一些使用的软件，如果不想折腾太多而获得一系列的功能可以考虑，缺点就是自带的配置可能会和要做的配置冲突，比如说默认开启的负载均衡和IPv6功能有冲突
 
 ## 软件推荐
 具体的操作这里就不写了，以后有时间写到博客的WiKi一栏，大部分软件使用也比较简单，官方的说明文档和教程都很好找，特别需要提到的是，因为个人用的OpenWrt改动比较大，一些软件由于可定制性有限，尤其是流量统计、速度监测类的软件，部分功能是失效的
@@ -65,6 +67,9 @@ Aria2本身只是一个命令行下载软件，而OpenWrt提供了以个LuCI的�
 
 [iperf3](https://iperf.fr/iperf-download.php)，这里面还有个软件值得推荐[HE.NET-Network Tools](http://networktools.he.net/)
 
+### luci-app-ddns
+这个我是在做[家用宽带的IPv6配置](https://lwz322.github.io/2019/07/25/IPv6_Home.html)的时候用到的，相比与传统路由器支持数量极为有限的几个DDNS，这个简直强大太多，因为软件本身做好DDNS客户端的外围工作，至于各个DDNS供应商的适配可以由脚本完成，比如说[Sensec](https://github.com/sensec)写的[[分享]适用于OpenWRT/LEDE自带DDNS功能的阿里云脚本，完美嵌入](https://www.right.com.cn/forum/thread-267501-1-1.html)
+
 ### luci-app-nlbwmon
 ![nlbwon](https://img.vim-cn.com/00/f96b33b6c0aacd64d92b54f23b755bb86f58f0.png)
 对设备流量统计工具，而且是分IPv4和IPv6的，在流量统计软件里算是很美观的了
@@ -79,7 +84,7 @@ OpenWrt上少有的分设备的网速监测工具，没有官方的Feed，需要
 算是一个比较好看的性能监测界面了，第一次见到还是印象深刻，然而用处...对个人来说不大，效果可以看[Github](https://github.com/netdata/netdata)，在OpenWrt中直接用``opkg install netdata``就好，之后直接访问LuCI管理IP的19999端口就可以看到了，优点还是信息量大，占用低
 
 ### FRP
-一个用于反向代理的软件，对于没有公网IP的网络接入来说还是挺好用的，一般需要一个拥有公网IP的服务器作为流量的中转，[Github](https://github.com/fatedier/frp)，也有提供FRP服务器的网站可以直接用
+一个用于反向代理的软件，对于没有公网IP的网络接入来说还是挺好用的，一般需要一个拥有公网IP的服务器作为流量的中转，[Github](https://github.com/fatedier/frp)，也有提供FRP服务器的网站可以直接用，值得一提的是，学校的教育网一般是阻挡了传入连接的，如果有在学校里搭建NAS，想要远程访问，直接用地址是行不通的，这个时候FRP就可以通过家里的公网IP服务器中转对学校的NAS进行访问，在学校如果给代理服务器穿透的话就相当于可以使用学校的网络了
 
 ## 实用的功能
 
@@ -336,4 +341,4 @@ do
 done
 ```
 
-其中，ifaces是筛选出协议为ducpv6的所有活动端口的接口名称，比如说wan_6,edu_6，它们的接口状态中是有IPv6的路由信息的，主要就是上级网关，而devices是上述接口的设备名称，用于添加路由表时指定转发出去的接口，加上循环也就可以批量添加路由表条目了
+其中，ifaces是筛选出协议为DHCPv6的所有活动端口的接口名称，比如说wan_6，edu_6，它们的接口状态中是有IPv6的路由信息的，主要就是上级网关，而devices是上述接口的设备名称，用于添加路由表时指定转发出去的接口，加上循环也就可以批量添加路由表条目了（脚本是针对单一的上级网关的）
