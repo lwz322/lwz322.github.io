@@ -1,6 +1,6 @@
 ---
 layout: article
-title: OpenWrt搭建的PPPoE服务器
+title: OpenWrt搭建PPPoE服务器
 author :
 mathjax: true
 mermaid: true
@@ -21,10 +21,10 @@ article_header:
     src: assets/background/sunny.jpg
 ---
 
-OpenWrt有搭建PPPoE服务器的软件，网络上也有教程，但难以满足实际需求，所以就简单写了下，主要是在多WAN接入的情况下，使用PPPoE服务器和策略路由实现用户的分流
+OpenWrt有搭建PPPoE服务器的软件，网络上也有教程，但难以满足实际需求：主要是在多WAN接入的情况下，使用PPPoE服务器和策略路由实现用户的分流
 <!--more--> 
 
-OpenWrt官方软件源的PPPoE服务器包rp-pppoe-server，另外还有一个LuCi APP，但是也没有提供什么实质性的功能，所以维持一个服务的功能都要自己写，如果想要做的深入点的话应该找文档看下更好，这里都是按照个人的感觉来写的，经过短时间测试，拿来简单用下还是可以的
+OpenWrt官方软件源的PPPoE服务器包rp-pppoe-server，另外还有一个LuCi APP，但是也没有提供什么实质性的功能，所以维持一个服务的功能都要自己写，如果想要做的深入点的话应该找文档看下更好，这里都是按照个人的感觉来写的，经过短时间测试，拿来简单用下还是可以的，如果对稳定性和安全性有较高的要求，建议还是买现成的方案
 
 ## RP-PPPoE-Server的特点
 
