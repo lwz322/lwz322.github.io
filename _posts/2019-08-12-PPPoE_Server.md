@@ -73,9 +73,9 @@ pppoe-server -k -T 60 -I br-lan -N 32 -L 10.170.1.1 -R 10.170.1.2
 ```
 参数的意义可以用-h查看
 
-### 核心功能
+## 核心功能
 
-#### 开启PPPoE Server密码认证
+### 开启PPPoE Server密码认证
 
 修改/etc/ppp/pppoe-server-options，主要是require-chap
 
@@ -102,7 +102,7 @@ USER_WAN1_1 * 123456 10.170.1.101
 
 下面的两个小节就是介绍下核心步骤，而实现的代码在周边功能的脚本里面
 
-#### 开启ppp的Forward
+### 开启ppp的Forward
 
 ```
 iptables -I FORWARD -i ppp0 -j ACCEPT
@@ -111,7 +111,7 @@ iptables -I FORWARD -o ppp0 -j ACCEPT
 
 写到自定义规则里去，依次添加pppX（X=0,1,2...11）分别对应在线的PPPoE账号
 
-#### 添加路由规则
+### 添加路由规则
 
 ```bash
 root@Y1:~# echo '521 wan_1'>>/etc/iproute2/rt_tables
@@ -129,11 +129,11 @@ root@Y1:~# ip rule ls
 32767:  from all lookup default
 ```
 
-### 周边功能
+## 周边功能
 
 这部分都是脚本，是维护核心功能正常运行的，按照自己的经验写的，日志和错误处理部分就没怎么写了
 
-#### PPPoE Server开机启动
+### PPPoE Server开机启动
 
 写一个脚本添加到自订的启动项中（如果要求长时间稳定运行的话，需要写守护进程）
 
@@ -155,7 +155,7 @@ chmod +x /etc/init.d/pppoe-server
 ```
 如果在启动项的页面发现还是disable的话就手动启动下，期间我遇到过启动失败的情况，那就添加到Local Startup吧
 
-#### 开机添加路由表
+### 开机添加路由表
 
 因为是固定的本地IP，所以路由表在开机的时候添加就好了，注意修改下Interface的名字（也就是设置的时候的Interface name，注意区分大小写，可以SSH用ifstatus name试下），添加到Local Startup中
 
@@ -187,7 +187,7 @@ exit 0
 ```
 
 
-#### 自订防火墙规则
+### 自订防火墙规则
 添加到Custom Rules中
 
 ```
@@ -198,7 +198,7 @@ iptables -I FORWARD -o ppp$i -j ACCEPT
 done
 ```
 
-#### 使用Hotplug脚本来处理WAN的网关变动
+### 使用Hotplug脚本来处理WAN的网关变动
 
 这里需要把四个WAN的Interface名称替换下，作用就是WAN口重新连接的时候会自动监测和替换路由表中的网关IP
 
