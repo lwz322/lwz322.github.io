@@ -264,11 +264,13 @@ gw=$(ip -6 route show default | grep $iface_route | sed 's/from [^ ]* //' | head
 
 - /sbin目录下的Shell脚本: /sbin/ifstatus
 
-- ubus中的查询命令: ubus call network.interface dump
+- ubus中的查询命令: ubus call network.interface.wan_6 status
+
+或者 ubus call network.interface dump | jsonfilter -e '$.interface[@.interface="wan_6"]'
 
 ```shell
 /sbin/ifstatus edu_6
-ubus call network.interface dump | jsonfilter -e '$.interface[@.interface="edu_6"]'
+ubus call network.interface dump | jsonfilter -e '$.interface[@.interface="wan_6"]'
 ```
 
 因为返回的都是json格式的文本，因而提取信息需要解析，这里又有两种内置的方法
@@ -280,11 +282,11 @@ ubus call network.interface dump | jsonfilter -e '$.interface[@.interface="edu_6
 
 ```shell
 root@LEDE:~# source /usr/share/libubox/jshn.sh
-root@LEDE:~# data=$(/sbin/ifstatus edu_6)
+root@LEDE:~# data=$(/sbin/ifstatus wan_6)
 root@LEDE:~# json_init
 root@LEDE:~# json_load "$data"
 root@LEDE:~# echo $data
-{ "up": true, "pending": false, "available": true, "autostart": true, "dynamic": true, "uptime": 141048, "l3_device": "pppoe-edu", "proto": "dhcpv6", "device": "pppoe-edu", "metric": 0, "dns_metric": 0, "delegation": true, "ipv4-address": [ ], "ipv6-address": [ { "address": "2001:xxx:xxxx:xxxx:xxxx:xxxx:xxxx:xxxx", "mask": 64, "preferred": 171757, "valid": 258157 } ], "ipv6-prefix": [ ], "ipv6-prefix-assignment": [ ], "route": [ { "target": "2001:xxx:xxxx:xxxx::", "mask": 64, "nexthop": "::", "metric": 256, "valid": 258157, "source": "::\/0" }, { "target": "::", "mask": 0, "nexthop": "fe80::96db:daff:fe3e:8fcf", "metric": 512, "valid": 757, "source": "2001:xxx:xxxx:xxxx:xxxx:xxxx:xxxx:xxxx\/64" } ], "dns-server": [ ], "dns-search": [ ], "inactive": { "ipv4-address": [ ], "ipv6-address": [ ], "route": [ ], "dns-server": [ ], "dns-search": [ ] }, "data": { "zone": "wan" } }
+{ "up": true, "pending": false, "available": true, "autostart": true, "dynamic": true, "uptime": 141048, "l3_device": "pppoe-wan", "proto": "dhcpv6", "device": "pppoe-wan", "metric": 0, "dns_metric": 0, "delegation": true, "ipv4-address": [ ], "ipv6-address": [ { "address": "2001:xxx:xxxx:xxxx:xxxx:xxxx:xxxx:xxxx", "mask": 64, "preferred": 171757, "valid": 258157 } ], "ipv6-prefix": [ ], "ipv6-prefix-assignment": [ ], "route": [ { "target": "2001:xxx:xxxx:xxxx::", "mask": 64, "nexthop": "::", "metric": 256, "valid": 258157, "source": "::\/0" }, { "target": "::", "mask": 0, "nexthop": "fe80::96db:daff:fe3e:8fcf", "metric": 512, "valid": 757, "source": "2001:xxx:xxxx:xxxx:xxxx:xxxx:xxxx:xxxx\/64" } ], "dns-server": [ ], "dns-search": [ ], "inactive": { "ipv4-address": [ ], "ipv6-address": [ ], "route": [ ], "dns-server": [ ], "dns-search": [ ] }, "data": { "zone": "wan" } }
 root@LEDE:~# json_get_var iface_up up
 root@LEDE:~# echo $iface_up
 1
@@ -310,12 +312,12 @@ fe80::96db:daff:fe3e:8fcf
 可能是我使用的方法不太对导致代码很长，不过jsonfilter使用jsonpath来解析json，相比之下就要简短的多
 
 ```shell
-/sbin/ifstatus edu_6 | jsonfilter -e '$.route[1].nexthop'
+/sbin/ifstatus wan_6 | jsonfilter -e '$.route[1].nexthop'
 ```
 
 另外还有一种写法
 ```shell
-ubus call network.interface dump | jsonfilter -e '$.interface[@.interface="edu_6"].route[1].nexthop'
+ubus call network.interface dump | jsonfilter -e '$.interface[@.interface="wan_6"].route[1].nexthop'
 ```
 
 使用Jsonpath的时候如果遇到特殊字符可以给节点名加中括号来处理，获取接口的IPv6地址如下
