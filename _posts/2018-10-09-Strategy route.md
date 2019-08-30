@@ -6,7 +6,7 @@ mermaid: true
 chart: true
 toc: true
 mode: immersive
-tags : 网络 IPv6 路由器 OpenWrt 多拨
+tags : 网络 IPv6 OpenWrt 多拨
 key: strategy
 header:
   theme: dark

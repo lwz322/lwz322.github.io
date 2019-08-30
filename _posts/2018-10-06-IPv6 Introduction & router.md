@@ -7,7 +7,7 @@ mermaid: true
 chart: true
 mathjax_autoNumber: true
 toc: true
-tags : 网络 IPv6 路由器
+tags : 网络 IPv6
 key: ipv6
 mode: immersive
 header:

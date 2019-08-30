@@ -7,7 +7,7 @@ mermaid: true
 chart: true
 mathjax_autoNumber: true
 toc: true
-tags : 网络 路由器 OpenWrt
+tags : 网络 OpenWrt
 key: pppoe_server
 mode: immersive
 header:

@@ -6,7 +6,7 @@ mathjax: true
 mermaid: true
 chart: true
 mathjax_autoNumber: true
-tags: 网络 路由器 OpenWrt Howto
+tags: 网络 OpenWrt Howto
 key: milestone
 mode: immersive
 header:
