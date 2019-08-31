@@ -1,6 +1,6 @@
 ---
 layout: article
-title: 编译OpenWrt Snapshot固件For K3
+title: 编译OpenWrt Snapshot固件
 author :
 mathjax: true
 mermaid: true
@@ -146,7 +146,7 @@ docker run --rm -it openwrt_builder
 git clone https://github.com/openwrt/openwrt.git
 ```
 
-再git clone屏幕相关文件到package目录下，回到编译目录更新feeds以及把软件包注册到编译系统中
+再git clone屏幕相关文件到package/k3目录下，回到编译目录更新feeds以及把软件包注册到编译系统中
 ```bash
 mkdir openwrt/package/k3
 cd openwrt/package/k3
@@ -154,8 +154,7 @@ git clone https://github.com/lwz322/luci-app-k3screenctrl.git
 git clone https://github.com/lwz322/k3screenctrl_build.git
 cd ~/openwrt
 
-./scripts/feeds update -a 
-./scripts/feeds install -a
+./scripts/feeds update -a  && ./scripts/feeds install -a
 ```
 之后打开编译选项：
 ```bash
@@ -168,7 +167,7 @@ make menuconfig
 - LuCi->Application中的 luci-app-k3screenctrl
 - snapshot默认没有的web管理界面 LuCi->Collection ->luci
 
-为了避免可能出现的软件包倚赖和网络问题，先检查倚赖和下载源码，如果遇到问题可能需要改为```-j 1```查看具体原因，这一步需要的时间比较长（取决于网速和添加的包的数量，20Mbps大概十分钟），可以开个screen去修改下默认的设置之类的
+为了避免可能出现的软件包倚赖和网络问题，先检查倚赖和下载源码，如果遇到问题可能需要改为```-j 1```查看具体原因，这一步需要的时间比较长（取决于网速和添加的包的数量，20Mbps大概十分钟），可以开个tmux去修改下默认的设置之类的
 
 ```bash
 make defconfig
@@ -187,14 +186,41 @@ make -j 1 V=99
 mkdir ./bin
 docker cp Container_ID:/openwrt/bin/ ./bin
 ```
-### 其他设置的修改
+## 其他设置的修改
 
 #### 修改LAN IP为 192.168.2.1
 修改这个文件 package/base-files/files/bin/config_generate 里的 192.168.1.1 为 192.168.2.1
 ```bash
 sed -i 's/192.168.1.1/192.168.2.1/g' package/base-files/files/bin/config_generate
 ```
+### 默认WIFI设置
+
+由于OpenWrt默认关闭WIFI的，如何一编译好就默认开启WIFI呢？
+
+我们只需要修改配置文件就OK了。方法如下：
+
+打开package/kernel/mac80211/files/lib/wifi/mac80211.sh文件，大约在文件最后有如下代码
+
+```
+config wifi-device  radio$devidx
+        option type     mac80211
+        option channel  ${channel}
+        option hwmode   11${mode_band}
+$dev_id
+$ht_capab
+        # REMOVE THIS LINE TO ENABLE WIFI:
+        #这里↑说的很清楚了，注释掉下面一行就行了
+        option disabled 1
+
+config wifi-iface
+        option device   radio$devidx
+        option network  lan
+        option mode     ap
+        option ssid     OpenWrt    #这里修改默认SSID SSID中不允许有空格
+        option encryption none
+```
 ## 刷机
+
 鉴于TFTP的刷机太过麻烦，参考[自编译说明](https://www.right.com.cn/forum/forum.php?mod=viewthread&tid=419328)，可以使用：
 openwrt/lede中，强刷固件教程（可有效避免web页面刷机的各种问题）：
 1. 上传固件到路由器，/tmp/k3.trx
@@ -203,9 +229,30 @@ openwrt/lede中，强刷固件教程（可有效避免web页面刷机的各种�
 mtd -r write /tmp/k3.trx firmware
 ```
 
+说明中还给了一些技巧：
+- 修改固件的Makefile使其只编译K3的固件
+```bash
+sed -i 's|^TARGET_|# TARGET_|g; s|# TARGET_DEVICES += phicomm-k3|TARGET_DEVICES += phicomm-k3|' target/linux/bcm53xx/image/Makefile
+```
+- 在VPS打包make download之后的文件放到高性能的机器编译以节约时间
+
 如果有需要，固件部分还是手动替换下吧
 
+## OpenWrt下K3的性能
 
+个人的测试以及使用感受
+
+### 无线
+
+当前想要作为无线路由使用的话是肯定要换无线固件的，尽管标称AC3150，参考[简说各种wifi无线协议的传输速率](https://www.acwifi.net/318.html)，K3是 4X4 MIMO + 80MHz + 1020-QAM = 2100Mbps ，结合现在的无线网卡市场（廉价的2X2 160Mhz网卡普及快），信号和速率方面其实已经难以和现在中端以上的路由器（200+）拉开差距了，相比其他的OpenWrt路由，我的结论就是K3只有信号强度有较大的实用价值，剩下的没有绝对的优势（如果不考虑外观的话）
+
+### CPU运算性能
+
+就以专门为ARM设计的ChaCha20算法测试，BCM4709C@1.4G的2C2T加解密的速度在60Mbp左右CPU就已经满载，温度70左右，相比现在主流的MT7621@880MHz的2C4T甚至处于下风，大概是输在了制程上，另外因为K3有块屏幕需要不断刷新，偶尔CPU的占用高，这对网络是很不利的
+
+### Snapshot版本
+
+使用体验取决于编译的情况，因为大部分的软件是没有预编译的IPK可以下载的，我一开始用的master分支的Snapshot版本编译，部分软件都无法正常编译，之后换了19.07的Snapshot版本好一点点，暂时可以用了，使用19.07分支的话我是先Clone仓库，再切换的分支（貌似直接Clone 19.07不行）
 
 ## 参考
 
