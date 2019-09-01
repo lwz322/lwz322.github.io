@@ -39,27 +39,35 @@ K3的无线性能貌似不错，现在也有了Snapshot固件可以下载，但�
 
 很期待一台高性能的，无线强劲的OpenWrt路由器（价格要可以接受才行）
 
-## K3的OpenWrt支持
+## K3的OpenWrt及19.07新特性
 
 我翻了下OpenWrt的Table of Hardware，发现已经有了Snapshot的支持，并且也没有说明硬件不可用之类的，一般来说，也就是下个stable release就支持了，距离18.06也有很长一段时间了，19.07应该发布在即，因为其他的OpenWrt设备都在履行自己的义务，拿这个体验下新系统也不错，首先我是下载了编译好的snapshot固件，感受下19.07版本的新特性：
 
-1. LuCi界面优化
+### LuCi界面优化
 
-首页的风格小改，截图底部的[排版错乱](https://www.jarviswang.me/?p=1119)终于被修复了，另外就是改动了选项卡的风格，在页面内呈现更多的信息
+首页的布局小改，截图底部的[排版错乱](https://www.jarviswang.me/?p=1119)终于被修复了，另外就是改动了选项卡的样式，在页面内呈现更多的信息
 ![](https://img.vim-cn.com/23/de476c3304bf0ff2047dd513fe03cc16b67440.png)
 
-最重要的改动不易察觉，就是优化了移动端的页面布局，解决了之前竖屏修改设置极为不便的问题
+另外改动的还有页面便签的设定，粗看没什么意义
+
+我觉得是最重要的改动————优化了移动端的页面布局，解决了之前竖屏修改设置极为不便的问题
 ![](https://img.vim-cn.com/42/92d9dda00d3962bc209b5d3312dfaeb24a2a2e.png)
 
-2. 无线方面
+其他的变动如Administration界面从之前的一个长网页改成了多标签网页，Firewall的Traffic Rules精简了Open Ports等栏目，改为Add使用悬浮卡片
+
+从LEDE 17到OpenWrt 18，引入更多的色彩，突出重点，界面也变得更活泼，OpenWrt 19界面升级的重点大概是在布局上面，让内容变得更易读，
+
+### 无线方面
 
 现在可以在路由器把连接的客户端断开了
 
 ![](https://img.vim-cn.com/c8/c941036270873b4be3a21e16b59aa2f9622fcd.png)
 
-选项卡里都有了802.11r的选项，另外的惊喜就是发现5G一栏居然有160Mhz的选项!! 然而Intel 9260AC的网卡没有在身边... （默认固件无线基本上不能用的）
+选项卡里默认都有了802.11r的选项，漫游和Mesh大概也是19.07的重要特性，另外的惊喜就是发现5G一栏居然有160Mhz的选项!! 然而Intel 9260AC的网卡没有在身边... （默认固件无线基本上不能用的）
 
 ![](https://img.vim-cn.com/a6/8c6d33d90e84c59457490898fac81c0eed0922.png)
+
+### 存在的问题
 
 看完了一些新特性来说下目前的Snapshot固件存在的问题
 
@@ -73,13 +81,13 @@ K3的无线性能貌似不错，现在也有了Snapshot固件可以下载，但�
 
 2. 自带的软件又太多，K3的发热本来就大，太多软件带来的负担更大
 
-3. 作者的工作相当的出色，但是后续没有更新以及没有公布细节，想自己定制变得很困难（只想要个原生、纯净的版本）
+3. 作者的工作相当的出色，但是后续没有更新以及没有开源公布细节，想自己定制变得很困难（只想要个原生、纯净的版本）
 
 最后还是要自己动手，但是完全可以参考上面的固件来编译，然后我就打开了Github，找K3的屏幕和无线方面可用的资源
 
 ## 框架
 
-主要解决的还是屏幕和无线信号两个问题，因为参考的东西比较杂（东拼西凑），这里做个大致的描述：
+主要解决的还是屏幕和无线信号两个问题，因为参考的东西比较杂（东拼西凑），这里做个大致的描述，相关的代码都在个人的Github仓库下
 
 ### 屏幕的处理
 
@@ -115,11 +123,24 @@ K3的无线性能貌似不错，现在也有了Snapshot固件可以下载，但�
 
 ## 编译经过
 
-这里对网络环境有一定的需求，一般都是推荐在国外的VPS上编译，如果在本地编译需要开代理，安装和设置docker和Git就不说了
+这里对网络环境有一定的需求，一般都是推荐在国外的VPS上编译，如果在本地编译需要开代理，安装Docker和Git就不说了
 
-### Windows下使用Dockerfile构建编译环境
+介绍下硬件环境的要求：
+
+官方给出的[要求](https://openwrt.org/docs/guide-developer/build-system/install-buildsystem)是至少10-15G的存储空间和2G的内存（X86版本需要4G）
+
+我分配了4G内存+**60G磁盘**给Docker，然而当我运行的时候发现空间剩下的只有20G
+```
+Filesystem      Size  Used Avail Use% Mounted on
+/dev/sda1        59G   36G   20G  65% /etc/hosts
+```
+实际单个固件编译的时候内存占用1G左右，编译完成的时候磁盘空间几乎被占满，以至于开另外一个目录编译报错，每个人的情况可能不同，但是运行的时候建议留足空间的余量
+
+### Windows-Dockerfile构建环境
 
 主要是避免环境之间的互相影响，这里也不推荐使用WSL，原因是WSL的文件系统依然是Windows文件系统，需要做些额外的工作，详情见文末的参考部分
+
+这里还可能存在的问题就是OpenWrt官方建议不要使用root用户编译固件，但是实测没有问题，保险起见也可以使用[ p3terx/openwrt-build-env](https://p3terx.com/archives/build-openwrt-with-docker.html)提供的Docker
 
 ```powershell
 git clone https://github.com/lwz322/OpenWrt_build_Docker.git
@@ -127,7 +148,7 @@ cd OpenWrt_build_Docker
 docker build -t openwt_builder .
 ```
 
-这里因为使用的是透明代理，软件源选的中科大的，根据情况可以自行修改
+这里因为使用的是透明代理，软件源选的中科大，根据情况可以自行修改
 ```
 sed  -i 's!http://mirrors.ustc.edu.cn!URL!g' DOCKERFILE
 ```
@@ -139,18 +160,20 @@ docker run --rm -it openwrt_builder
 ```
 > 这里--rm参数，在容器终止运行后自动删除容器文件，要不要添加这个个人，-it是两个参数：-i和-t。前者表示打开并保持stdout，后者表示分配一个终端（pseudo-tty）
 
-### 使用Master分支的源码编译
+### 下载OpenWrt源码
 
 进入容器后clone源码，默认是master分支
 ```bash
 git clone https://github.com/openwrt/openwrt.git
 ```
-如果要切换到其他的分支的话，使用Git checkout，从A分支切换到远程的B分支
+如果要切换到其他的分支的话，在openwrt目录中使用git checkout，例如切换到相对稳定的19.07分支
 ```bash
-git checkout -b A origin/B
+git checkout openwrt-19.07
 ``` 
 
-再git clone屏幕相关文件到package/k3目录下，回到编译目录更新feeds以及把软件包注册到编译系统中
+### 下载软件包源码
+
+git clone屏幕相关文件到package/k3目录下，回到编译目录更新feeds以及把软件包注册到编译系统中
 ```bash
 mkdir openwrt/package/k3
 cd openwrt/package/k3
@@ -160,36 +183,67 @@ cd ~/openwrt
 
 ./scripts/feeds update -a  && ./scripts/feeds install -a
 ```
+
+如果有其他的包要添加到编译目录的话，把源码或者编译目录clone到package的一个文件夹下即可，如果是从其他人的OpenWrt源码中搬来的话要注意下是否有特殊的倚赖
+
+### 编译
+
+先介绍一个技巧：修改固件的Makefile使其只编译K3的固件，大大减少编译需要的时间
+```bash
+sed -i 's|^TARGET_|# TARGET_|g; s|# TARGET_DEVICES += phicomm-k3|TARGET_DEVICES += phicomm-k3|' target/linux/bcm53xx/image/Makefile
+```
+
 之后打开编译选项：
 ```bash
 make menuconfig
 ```
 
 - Target 选 Broadcom BCM47xx/53xx (ARM)
-- Target Profile 选 PHICOMM K3
+- Target Profile 选 PHICOMM K3 （如果用了上述技巧的话就只有K3可选）
 - Utilities 确保 k3screenctrl 选中，倚赖会自动选上
-- LuCi->Application中的 luci-app-k3screenctrl
+- LuCi->Application 中的 luci-app-k3screenctrl
 - snapshot默认没有的web管理界面 LuCi->Collection ->luci
 
-为了避免可能出现的软件包倚赖和网络问题，先检查倚赖和下载源码，如果遇到问题可能需要改为```-j 1```查看具体原因，这一步需要的时间比较长（取决于网速和添加的包的数量，20Mbps大概十分钟），期间可以用tmux分屏去修改下默认的设置之类的
+其他的软件包自选，建议最开始选最可能出错的包编译，选择完成之后一路Exit，也可以保存配置文件，为了避免可能出现的软件包倚赖和网络问题，先检查倚赖和下载选择编译的包的源码
 
 ```bash
 make defconfig
-make -j 10 download
+make download
 ```
+这一步需要的时间比较长（取决于网速和添加的包的数量，20Mbps大概十分钟），期间可以用tmux分屏去[修改默认的设置](https://lwz322.github.io/2019/08/31/Build_OpenWrt_snapshot.html#%E5%85%B6%E4%BB%96%E8%AE%BE%E7%BD%AE%E7%9A%84%E4%BF%AE%E6%94%B9)之类的
 
-选择完成之后一路Exit，也可以保存配置文件，最后编译
+这一步之前的所有步骤也可以在VPS完成，打包编译目录放到本地高性能的机器编译以节约时间
 
 ```bash
 make -j 1 V=99
 ```
--j 1 后面的1是线程数，第一次编译推荐用单线程，需要的时间可能比较长，我是先用多线程编译，出错再用单线程检查
+make的帮助中写到：
 
-使用8700K@4.3G，Docker分配10 CPUs+4G RAM，使用十线程编译的时候需要二十分钟左右，最后生成的固件和ipk在/bin目录下，回到Windows目录下，从容器中拷贝文件就好
+-j [N], --jobs[=N]          Allow N jobs at once; infinite jobs with no arg.
+
+后面的N指的是可并行的任务数，第一次编译推荐用```-j 1```需要的时间可能比较长，，出错时可以查看具体原因，我是先用```-j 10```做最简编译，之后再添加常用的包做二次编译，```V=99``` 生成固件并显示成生的每一个步奏及正确性,另外还有```V=s```:生成固件忽略不影响固件主功能的错误
+
+### 拷贝生成的文件到Windows
+
+使用8700K@4.3G，Docker分配10 CPUs+4G RAM + 60G HDD，使用十线程编译的时候需要二十分钟左右，磁盘占用80%以上，最后生成的固件和ipk在/bin目录下，回到Windows目录下，从容器中拷贝文件就好
 ```
 mkdir ./bin
-docker cp Container_ID:/openwrt/bin/ ./bin
+docker cp Container_ID:/openwrt/bin/ .
 ```
+
+## 刷机
+
+我用OpenWrt...鉴于TFTP的刷机太麻烦，参考[自编译说明](https://www.right.com.cn/forum/forum.php?mod=viewthread&tid=419328)：
+
+openwrt/lede中，强刷固件教程（可有效避免web页面刷机的各种问题）：
+1. 上传固件到路由器，比如：/tmp/k3.trx
+
+2. SSH，执行命令
+
+```bash
+mtd -r write /tmp/k3.trx firmware
+```
+
 ## 其他设置的修改
 
 ### 修改LAN IP为 192.168.2.1
@@ -200,11 +254,9 @@ sed -i 's/192.168.1.1/192.168.2.1/g' package/base-files/files/bin/config_generat
 ```
 ### 默认WIFI设置
 
-由于OpenWrt默认关闭WIFI的，如何一编译好就默认开启WIFI呢？
+OpenWrt默认关闭WIFI的，需要修改配置文件以默认开启WIFI和修改SSID呢（方便刷机后不网线就可以连上路由器）
 
-我们只需要修改配置文件就OK了。方法如下：
-
-打开package/kernel/mac80211/files/lib/wifi/mac80211.sh文件，大约在文件最后有如下代码
+编辑package/kernel/mac80211/files/lib/wifi/mac80211.sh文件，大约在文件最后有如下代码
 
 ```
 config wifi-device  radio$devidx
@@ -224,27 +276,6 @@ config wifi-iface
         option ssid     OpenWrt    #这里修改默认SSID SSID中不允许有空格
         option encryption none
 ```
-## 刷机
-
-我用OpenWrt...鉴于TFTP的刷机太过麻烦，参考[自编译说明](https://www.right.com.cn/forum/forum.php?mod=viewthread&tid=419328)：
-
-openwrt/lede中，强刷固件教程（可有效避免web页面刷机的各种问题）：
-1. 上传固件到路由器，比如：/tmp/k3.trx
-
-2. SSH，执行命令
-
-```bash
-mtd -r write /tmp/k3.trx firmware
-```
-
-说明中还给了一些技巧：
-- 修改固件的Makefile使其只编译K3的固件，大大减少编译需要的时间
-```bash
-sed -i 's|^TARGET_|# TARGET_|g; s|# TARGET_DEVICES += phicomm-k3|TARGET_DEVICES += phicomm-k3|' target/linux/bcm53xx/image/Makefile
-```
-
-- 在VPS打包make download之后的编译目录放到本地高性能的机器编译以节约时间
-
 
 ## 已知的问题
 
@@ -262,7 +293,7 @@ sed -i 's|^TARGET_|# TARGET_|g; s|# TARGET_DEVICES += phicomm-k3|TARGET_DEVICES 
 
 当前想要作为无线路由使用的话是肯定要换无线固件的，我的7260AC网卡在近距离（同一个房间内）使用iperf3测试下载和上传速度，5G的实际传输速度300Mbp左右，5M，相隔两堵墙的情况下200Mbps左右，再远一点100Mbps，三堵墙就GG了，在我使用的OpenWrt的路由器中是最好的（一般隔一墙就GG），据说K3的无线功率相当的高，发热也很大，连接着两台设备的情况下，温度可以到70以上（还是再改了散热的情况下）
 
-尽管标称AC3150，参考[简说各种wifi无线协议的传输速率](https://www.acwifi.net/318.html)，K3是 4X4 MIMO + 80MHz + 1024-QAM = 2100Mbps ，需要达到这个速度需要PCE-AC88这个级别的网卡，结合现在的无线网卡市场（廉价的2X2 160Mhz网卡普及快），信号和速率方面其实已经难以和现在中端以上的路由器（200+）拉开差距了，相比其他的OpenWrt路由，我的结论就是K3只有信号强度有较大的实用价值，剩下的没有绝对的优势（如果不考虑外观的话）
+尽管标称AC3150，参考[简说各种wifi无线协议的传输速率](https://www.acwifi.net/318.html)，K3是 4X4 MIMO + 80MHz + 1024-QAM = 2100Mbps ，需要达到这个速度需要PCE-AC88这个级别的网卡，结合现在的无线网卡市场（2X2 160Mhz网卡廉价且产品多），信号和速率方面其实已经难以和现在中端以上的路由器（200+）拉开差距了，相比其他的OpenWrt路由，K3只有信号强度有较大的实用价值，剩下的没有绝对的优势（如果不考虑外观的话）
 
 ### CPU运算性能
 
