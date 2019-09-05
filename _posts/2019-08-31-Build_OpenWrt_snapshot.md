@@ -53,7 +53,7 @@ K3的无线性能貌似不错，现在也有了Snapshot固件可以下载，但�
 我觉得是最重要的改动————优化了移动端的页面布局，解决了之前竖屏修改设置极为不便的问题
 ![](https://img.vim-cn.com/42/92d9dda00d3962bc209b5d3312dfaeb24a2a2e.png)
 
-其他的变动如Administration界面从之前的一个长网页改成了多标签网页，Firewall的Traffic Rules精简了Open Ports等栏目，改为Add使用悬浮卡片
+其他的变动如Administration界面从之前的一个长网页改成了多标签网页，Firewall的Traffic Rules精简了Open Ports等栏目，改为Add的悬浮窗
 
 从LEDE 17到OpenWrt 18，引入更多的色彩，突出重点，界面也变得更活泼，OpenWrt 19界面升级的重点大概是在布局上面，让内容变得更易读，
 
@@ -283,7 +283,7 @@ config wifi-iface
 
 - 屏幕路由网速监测基于默认的WAN的流量
 
-- 无线偶尔会出现Not associate的情况，需要重启（用过的OpenWrt都有这个问题）
+- 无线偶尔会出现Not Associate的情况，需要重启（用过的OpenWrt都有这个问题）
 
 - 看无线连接部分都只有20MHz的频宽
 
@@ -330,9 +330,9 @@ src/gz openwrt_telephony http://mirrors.ustc.edu.cn/lede/releases/18.06.4/packag
 >
 > docker run --rm -it -v $(pwd)/data:/root openwt_builder
 >
-> 因为powershell对$(pwd)/data不支持，需要替换成绝对路径(echo "$(pwd)\data")
+> powershell对$(pwd)/data不支持，需要替换成绝对路径(echo "$(pwd)\data")
 >
-> 因为OpenWrt只能构建在区分大小写的文件系统上（Build dependency: OpenWrt can only be built on a case-sensitive filesystem），所以如果Docker挂载了Windows的目录的话需要设置下：
+> OpenWrt只能构建在区分大小写的文件系统上（Build dependency: OpenWrt can only be built on a case-sensitive filesystem），所以如果Docker挂载了Windows的目录的话需要设置下：
 >
 > fsutil.exe file setCaseSensitiveInfo <path> enable
 >
