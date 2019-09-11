@@ -285,7 +285,7 @@ config wifi-iface
 
 - 无线偶尔会出现Not Associate的情况，需要重启（用过的OpenWrt都有这个问题）
 
-- 看无线连接部分都只有20MHz的频宽
+- 查看无线连接部分都只有20MHz的频宽（实测发现是80MHz）
 
 ## OpenWrt下使用感受
 
