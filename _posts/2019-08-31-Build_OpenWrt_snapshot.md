@@ -293,13 +293,27 @@ config wifi-iface
 
 当前想要作为无线路由使用的话是肯定要换无线固件的，我的7260AC网卡在近距离（同一个房间内）使用iperf3测试下载和上传速度，5G的实际传输速度300Mbp左右，5M，相隔两堵墙的情况下200Mbps左右，再远一点100Mbps，三堵墙就GG了，在我使用的OpenWrt的路由器中是最好的（一般隔一墙就GG），据说K3的无线功率相当的高，发热也很大，连接着两台设备的情况下，温度可以到70以上（还是再改了散热的情况下）
 
-尽管标称AC3150，参考[简说各种wifi无线协议的传输速率](https://www.acwifi.net/318.html)，K3是 4X4 MIMO + 80MHz + 1024-QAM = 2100Mbps ，需要达到这个速度需要PCE-AC88这个级别的网卡，结合现在的无线网卡市场（2X2 160Mhz网卡廉价且产品多），信号和速率方面其实已经难以和现在中端以上的路由器（200+）拉开差距了，相比其他的OpenWrt路由，K3只有信号强度有较大的实用价值，剩下的没有绝对的优势（如果不考虑外观的话）
+尽管标称AC3150，参考[简说各种wifi无线协议的传输速率](https://www.acwifi.net/318.html)，K3是 4X4 MIMO + 80MHz + 1024-QAM = 2100Mbps ，单设备连接下达到这个速度需要PCE-AC88这个级别的网卡，结合现在的无线网卡市场（2X2 160Mhz网卡廉价且产品多），信号和速率方面其实已经难以和现在中端以上的路由器（200+）拉开差距了，相比其他的OpenWrt路由，K3只有信号强度有较大的实用价值，剩下的没有绝对的优势（如果不考虑外观的话）
+
+注：多设备连接的MU-MIMO的情形，现在的OpenWrt还不支持，从这方面来说OpenWrt路由器不适合做AP
 
 ### CPU运算性能
 
-就以专门为ARM设计的ChaCha20算法测试，BCM4709@1.4G的2C2T加解密的速度在60Mbp左右CPU就已经满载，温度70左右，相比现在主流的MT7621@880MHz的2C4T甚至处于下风，大概是输在了制程上，另外因为K3有块屏幕需要不断刷新，偶尔CPU的占用高，这对网络是很不利的
-
-从华硕的AC88U的介绍页面得知BCM4709可以支持到1800Mbps的转发，但是K3在没开启HWNAT转发200Mbps的时候CPU就占去了一半，开启HWNAT时有没有做到像MT7261的几乎0占用
+就以专门为ARM设计的ChaCha20算法以及常用的AES-256-CBC测试，BCM4709@1.4G的单线程openssl加解密速度测试结果如下
+```bash
+root@K3:~# openssl speed -elapsed -evp chacha20
+ type             16 bytes     64 bytes    256 bytes   1024 bytes   8192 bytes  16384 bytes
+ chacha20         41251.72k    88523.18k    93098.98k    98190.37k    92384.53k    93584.75k
+root@K3:~# openssl speed -elapsed -evp aes-256-cbc
+ type             16 bytes     64 bytes    256 bytes   1024 bytes   8192 bytes  16384 bytes                                         aes-256-cbc      24429.85k    27700.11k    30198.27k    30665.23k    29156.44k    29420.67k    
+```
+对比这几年主流的MT7621@880MHz(18.06的OpenSSL 1.0.2暂时不支持chacha20，其他加解密库的实测结果在80Mb/s左右)
+```bash
+root@K2P:~# openssl speed -elapsed -evp aes-256-cbc 
+type             16 bytes     64 bytes    256 bytes   1024 bytes   8192 bytes
+aes-256 cbc       8070.20k     8686.78k     8830.38k     8386.25k     8766.26k  
+```
+AES的测试结果大幅领先应该是得益于架构上的优势（BCM4709是ARMv7架构，不支持AES硬件加速，但是相比MIPS还是有优势的），就是日常使用温度比较高（40nm制程落后）
 
 ### Snapshot安装软件
 
