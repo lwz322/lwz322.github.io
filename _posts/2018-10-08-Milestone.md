@@ -52,7 +52,7 @@ article_header:
 当然也可以自己编译，因为受限与路由器的存储空间和性能，固件的Linux内核被精简，部分软件也被精简了，比如说某些功能的实现就依赖于完全体的dnsmasq-full，推荐在编译时就处理好这个倚赖，对于Snapshot版本而言，官方仓库里没有预编译软件包或者系统不支持ipk安装，又或者发行版的软件仓库中收录的软件版本不合适，这些都需要自行编译解决，这里可以参考[编译OpenWrt Snapshot固件](https://lwz322.github.io/2019/08/31/Build_OpenWrt_snapshot.html)
 
 ## OpenWrt软件推荐
-具体的操作这里就不写了，以后有时间写到博客的WiKi一栏，大部分软件使用也比较简单，官方的说明文档和教程都很好找，特别需要提到的是，因为个人用的OpenWrt改动比较大，一些软件由于可定制性有限，尤其是流量统计、速度监测类的软件，部分功能是失效的
+官方的[Ueser Guide](https://openwrt.org/docs/guide-user/start)以及[Old Wiki](https://oldwiki.archive.openwrt.org/doc/howto/start)(看起来简洁一些)从功能上对软件划分，相当全面和详细的介绍了OpenWrt的功能及其实现的软件，这里主要是推荐一下个人用过的，体验还OK的一部分
 
 ### Aria2
 这是一个跨平台的多线程下载软件，主要是支持BT，在路由器性能允许的情况下能够做到全天挂PT，并且可以通过网络共享做一个简易的NAS
@@ -83,7 +83,7 @@ aria2c --enable-rpc --rpc-listen-all=true --rpc-allow-origin-all -c -D
 mtr是ping和traceroute的结合，网络问题排查的利器
 
 ### luci-app-ddns
-这个我是在做[家用宽带的IPv6配置](https://lwz322.github.io/2019/07/25/IPv6_Home.html)的时候用到的，相比与传统路由器支持数量极为有限的几个DDNS，这个简直强大太多，因为软件本身做好DDNS客户端的外围工作，至于各个DDNS供应商的适配可以由脚本完成，比如说[Sensec](https://github.com/sensec)写的[[分享]适用于OpenWRT/LEDE自带DDNS功能的阿里云脚本，完美嵌入](https://www.right.com.cn/forum/thread-267501-1-1.html)
+这个我是在做[家用宽带的IPv6配置](https://lwz322.github.io/2019/07/25/IPv6_Home.html)的时候用到的，相比与传统路由器支持数量极为有限的几个DDNS，这个简直强大太多，因为软件本身做好DDNS客户端的外围工作，至于各个DDNS供应商的适配可以由脚本完成，比如说[Sensec](https://github.com/sensec)写的[[分享]适用于OpenWRT/LEDE自带DDNS功能的阿里云脚本](https://www.right.com.cn/forum/thread-267501-1-1.html)
 
 ### luci-app-nlbwmon
 ![nlbwon](https://img.vim-cn.com/00/f96b33b6c0aacd64d92b54f23b755bb86f58f0.png)
