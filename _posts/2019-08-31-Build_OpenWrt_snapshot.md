@@ -55,7 +55,7 @@ K3的无线性能貌似不错，现在也有了Snapshot固件可以下载，但�
 
 其他的变动如Administration界面从之前的一个长网页改成了多标签网页，Firewall的Traffic Rules精简了Open Ports等栏目，改为Add的悬浮窗
 
-从LEDE 17到OpenWrt 18，引入更多的色彩，突出重点，界面也变得更活泼，OpenWrt 19界面升级的重点大概是在布局上面，让内容变得更易读，
+从LEDE 17到OpenWrt 18，引入更多的色彩，突出重点，界面也变得更活泼，OpenWrt 19界面升级的重点大概是在布局上面，让内容变得更易读
 
 ### 无线方面
 
@@ -305,7 +305,8 @@ root@K3:~# openssl speed -elapsed -evp chacha20
  type             16 bytes     64 bytes    256 bytes   1024 bytes   8192 bytes  16384 bytes
  chacha20         41251.72k    88523.18k    93098.98k    98190.37k    92384.53k    93584.75k
 root@K3:~# openssl speed -elapsed -evp aes-256-cbc
- type             16 bytes     64 bytes    256 bytes   1024 bytes   8192 bytes  16384 bytes                                         aes-256-cbc      24429.85k    27700.11k    30198.27k    30665.23k    29156.44k    29420.67k    
+ type             16 bytes     64 bytes    256 bytes   1024 bytes   8192 bytes  16384 bytes                                         
+ aes-256-cbc      24429.85k    27700.11k    30198.27k    30665.23k    29156.44k    29420.67k    
 ```
 对比这几年主流的MT7621@880MHz(18.06的OpenSSL 1.0.2暂时不支持chacha20，其他加解密库的实测结果在80Mb/s左右)
 ```bash
@@ -341,13 +342,13 @@ src/gz openwrt_telephony http://mirrors.ustc.edu.cn/lede/releases/18.06.4/packag
 [OpenWrt 编译失败的原因及解决方案](https://p3terx.com/archives/reasons-and-solutions-for-openwrt-compilation-failure-3.html)
 
 > 因为Windows文件系统与Linux不同，是默认不区分大小写的，推荐不挂载，如果挂载的话
->
+>```
 > docker run --rm -it -v $(pwd)/data:/root openwt_builder
->
-> powershell对$(pwd)/data不支持，需要替换成绝对路径(echo "$(pwd)\data")
+>```
+> powershell对```$(pwd)/data```不支持，需要替换成绝对路径```(echo "$(pwd)\data")```
 >
 > OpenWrt只能构建在区分大小写的文件系统上（Build dependency: OpenWrt can only be built on a case-sensitive filesystem），所以如果Docker挂载了Windows的目录的话需要设置下：
->
+>```
 > fsutil.exe file setCaseSensitiveInfo <path> enable
->
+>```
 > 但是设置完成之后git clone又不可用了（尴尬，所以一般还是用docker cp拷贝文件出来方便些）
