@@ -63,7 +63,7 @@ K3的无线性能貌似不错，现在也有了Snapshot固件可以下载，但�
 
 ![](https://img.vim-cn.com/c8/c941036270873b4be3a21e16b59aa2f9622fcd.png)
 
-选项卡里默认都有了802.11r的选项，漫游和Mesh大概也是19.07的重要特性，另外的惊喜就是发现5G一栏居然有160Mhz的选项!! 然而Intel 9260AC的网卡没有在身边... （默认固件无线基本上不能用的）
+选项卡里默认都有了802.11r的选项，漫游和Mesh大概也是19.07的重要特性，另外的惊喜就是发现5G一栏居然有160Mhz的选项!! 使用Intel 9260AC的网卡实测，默认的无线固件下只有300Mbps的协商速率
 
 ![](https://img.vim-cn.com/a6/8c6d33d90e84c59457490898fac81c0eed0922.png)
 
@@ -73,7 +73,7 @@ K3的无线性能貌似不错，现在也有了Snapshot固件可以下载，但�
 
 1. K3的屏幕信息显示不支持而且只能常亮，据说添加了[补丁](https://www.right.com.cn/forum/forum.php?mod=viewthread&tid=419328)，应该还是要自行编译安装k3screenctrl的
 
-2. 开源的驱动的信号，可以说几乎没有，即使是在路由器旁边都只有10Mbps的速度
+2. 开源的驱动的信号，可以说几乎没有，即使是在路由器旁边都只有10Mbps的速度，但是在调节频段之后勉强可用，就是协商速度不高，LuCi的无线界面显示的频宽仅有20MHz，考虑到稳定性一般还是不适合日常使用
 
 [社区](https://www.right.com.cn/forum/thread-466672-1-1.html)有人已经针对snapshot做了修改和编译，解决了以上两个问题，作为路由器基本上已经可以用了，但是有以下遗憾：
 
@@ -145,7 +145,7 @@ Filesystem      Size  Used Avail Use% Mounted on
 ```powershell
 git clone https://github.com/lwz322/OpenWrt_build_Docker.git
 cd OpenWrt_build_Docker
-docker build -t openwt_builder .
+docker build -t openwrt_builder .
 ```
 
 这里因为使用的是透明代理，软件源选的中科大，根据情况可以自行修改
@@ -291,11 +291,11 @@ config wifi-iface
 
 ### 无线
 
-当前想要作为无线路由使用的话是肯定要换无线固件的，我的7260AC网卡在近距离（同一个房间内）使用iperf3测试下载和上传速度，5G的实际传输速度300Mbp左右，5M，相隔两堵墙的情况下200Mbps左右，再远一点100Mbps，三堵墙就GG了，在我使用的OpenWrt的路由器中是最好的（一般隔一墙就GG），据说K3的无线功率相当的高，发热也很大，连接着两台设备的情况下，温度可以到70以上（还是再改了散热的情况下）
+当前想要作为无线路由使用的话是肯定要换无线固件的，我的7260AC网卡在近距离（同一个房间内）使用iperf3测试下载和上传速度，5G的实际传输速度300Mbp左右，5M，相隔两堵墙的情况下200Mbps左右，再远一点100Mbps，三堵墙就GG了，在我使用的OpenWrt的路由器中是最好的（一般隔一墙就GG），对比之前家里用的荣耀路由Pro（当时比较迷信华为的产品），在同样的位置K3可以满速，而前者已经是没有信号了，据说K3的无线功率相当的高（超出国标的那种），发热也很大，连接着两台设备的情况下，温度可以到70以上（还是改了散热的情况下）
 
 尽管标称AC3150，参考[简说各种wifi无线协议的传输速率](https://www.acwifi.net/318.html)，K3是 4X4 MIMO + 80MHz + 1024-QAM = 2100Mbps ，单设备连接下达到这个速度需要PCE-AC88这个级别的网卡，结合现在的无线网卡市场（2X2 160Mhz网卡廉价且产品多），信号和速率方面其实已经难以和现在中端以上的路由器（200+）拉开差距了，相比其他的OpenWrt路由，K3只有信号强度有较大的实用价值，剩下的没有绝对的优势（如果不考虑外观的话）
 
-注：多设备连接的MU-MIMO的情形，现在的OpenWrt还不支持，从这方面来说OpenWrt路由器不适合做AP
+注：多设备连接的MU-MIMO的情形，现在的OpenWrt还不支持，从这方面来说OpenWrt路由器不适合做高性能的AP
 
 ### CPU运算性能
 
@@ -318,7 +318,7 @@ AES的测试结果大幅领先应该是得益于架构上的优势（BCM4709是A
 
 ### Snapshot安装软件
 
-使用体验取决于编译的情况，因为大部分的软件是没有预编译的IPK可以下载的，我一开始用的master分支的Snapshot版本编译，部分软件都无法正常编译，之后换了19.07的Snapshot版本好一点点(kmod之类的模块还是要要预编译好)，添加部分18.06的软件源勉强可以用
+使用体验取决于编译的情况，因为大部分的软件是没有预编译的IPK可以下载的，我一开始用的master分支的Snapshot版本编译，部分软件都无法正常编译，之后换了19.07的Snapshot版本好一点点(kmod之类的模块还是要要预编译好)，添加部分18.06的软件源勉强可以用(依赖版本可能会遇到严重的问题)
 ```
 src/gz openwrt_core http://downloads.openwrt.org/releases/19.07-SNAPSHOT/targets/bcm53xx/generic/packages
 src/gz openwrt_base http://downloads.openwrt.org/releases/19.07-SNAPSHOT/packages/arm_cortex-a9/base
