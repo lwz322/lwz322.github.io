@@ -52,7 +52,7 @@ article_header:
 当然也可以自己编译，因为受限与路由器的存储空间和性能，固件的Linux内核被精简，部分软件也被精简了，比如说某些功能的实现就依赖于完全体的dnsmasq-full，推荐在编译时就处理好这个倚赖，对于Snapshot版本而言，官方仓库里没有预编译软件包或者系统不支持ipk安装，又或者发行版的软件仓库中收录的软件版本不合适，这些都需要自行编译解决，这里可以参考[编译OpenWrt Snapshot固件](https://lwz322.github.io/2019/08/31/Build_OpenWrt_snapshot.html)
 
 ## OpenWrt软件推荐
-官方的[Ueser Guide](https://openwrt.org/docs/guide-user/start)以及[Old Wiki](https://oldwiki.archive.openwrt.org/doc/howto/start)(看起来简洁一些)从功能上对软件划分，相当全面和详细的介绍了OpenWrt的功能及其实现的软件，这里主要是推荐一下个人用过的，体验还OK的一部分
+官方的[Ueser Guide](https://openwrt.org/docs/guide-user/start)以及[Old Wiki](https://oldwiki.archive.openwrt.org/doc/howto/start)(看起来简洁一些)从功能上对软件划分，相当全面和详细的介绍了OpenWrt的功能及其实现的软件，这里主要是推荐一下个人用过的，体验还OK的部分软件
 
 ### Aria2
 这是一个跨平台的多线程下载软件，主要是支持BT，在路由器性能允许的情况下能够做到全天挂PT，并且可以通过网络共享做一个简易的NAS
@@ -77,7 +77,9 @@ aria2c --enable-rpc --rpc-listen-all=true --rpc-allow-origin-all -c -D
 ### iperf3
 跨平台的网络测试工具，主要是拿来测速的，测试一下就知道路由器的性能是什么情况了，比如说5G-5G的传输速度，LAN-5G的传输速度
 
-[iperf3](https://iperf.fr/iperf-download.php)，这里面还有个移动端软件值得推荐[HE.NET-Network Tools](http://networktools.he.net/)，其中也包含了iperf3网络测速
+[iperf3](https://iperf.fr/iperf-download.php)，这里面还有个移动端软件值得推荐[HE.NET-Network Tools](http://networktools.he.net/)，其中也包含了iperf3网络测速感觉
+
+至于要测试路由器到互联网的上下行速度可以参考附录中的命令行Speedtest
 
 ### mtr
 mtr是ping和traceroute的结合，网络问题排查的利器
@@ -91,7 +93,10 @@ mtr是ping和traceroute的结合，网络问题排查的利器
 
 ### luci-wrtbwmon
 ![mac](https://img.vim-cn.com/92/1b76c51f4991fd5b82f1d7c88a58efd33a917d.jpg)
-OpenWrt上少有的分设备的网速监测工具，没有官方的Feed，需要自己去[Github](https://github.com/Kiougar/luci-wrtbwmon)上面下载ipk
+OpenWrt上少有的分设备的LuCi界面下的网速监测工具，没有官方的Feed，需要自己去[Github](https://github.com/Kiougar/luci-wrtbwmon)上面下载ipk
+
+### iftop
+在Linux用于监测网卡/接口的网络连接情况，在路由器上可以显示内外网连接的地址，以及连接的速度，相比上面的LuCi界面的网速监控简直强大太多了
 
 ### Netdata
 ![netdata](https://img.vim-cn.com/e3/44f5fa92845bda4dc5c31193badd6c2da0f87c.jpg)
@@ -271,6 +276,14 @@ $ scp username@remotehost:/path/directory/\{foo.txt,bar.txt\} .
 ```
 
 ## 附录
+
+### 命令行Speedtest网络测速（需要Python）
+偶尔有这种需求，OpenWrt安装Python要注意空间占用
+```shell
+curl -s https://raw.githubusercontent.com/sivel/speedtest-cli/master/speedtest.py | python -
+```
+
+### 脚本
 夜间断网切换脚本，针对的是夜间宿舍断电，UPS只能给一台路由器供电，此时需要把另外一台路由器的PPPoE账号转移到UPS的路由上，如果中途另外一台路由器恢复网络则会断开之前切换而来的PPPoE拨号
 ```shell
 #!/bin/sh
