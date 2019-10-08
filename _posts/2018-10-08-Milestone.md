@@ -38,6 +38,8 @@ article_header:
 
 这里的Freedom就是得益于OpenWrt强大的扩展性以及可操作性实现想要的功能，尽管在官网的[Reasons to use OpenWrt](https://openwrt.org/reasons_to_use_openwrt)已经有了一些说明，本文从个人用户的视角介绍一些OpenWrt实用的软件和功能
 
+> 关于开源的路由器系统的稳定性问题，众说纷纭，OpenWrt支持的硬件多，针对某一特定的硬件的稳定性是比较随缘的，尤其是部分路由器的硬件设计上的稳定性就一般，如果准备在稳定性要求较高的环境使用，要谨慎（使用的工具越简单越好）
+
 ## 如何开始
 建议选有官方固件支持，软件支持的路由器（也就是不太建议刷仅有民间固件的那种了，不开源感觉不安全），具体可以参考官方支持的[Hardware Table](https://OpenWrt.org/toh/start)，进入某一款路由器的详情界面就可以看到支持的情况
 
@@ -78,6 +80,8 @@ aria2c --enable-rpc --rpc-listen-all=true --rpc-allow-origin-all -c -D
 跨平台的网络测试工具，主要是拿来测速的，测试一下就知道路由器的性能是什么情况了，比如说5G-5G的传输速度，LAN-5G的传输速度
 
 [iperf3](https://iperf.fr/iperf-download.php)，这里面还有个移动端软件值得推荐[HE.NET-Network Tools](http://networktools.he.net/)，其中也包含了iperf3网络测速感觉
+
+如果要测试较为极限的吞吐能力可以用参数```-P 10```
 
 至于要测试路由器到互联网的上下行速度可以参考附录中的命令行Speedtest
 
