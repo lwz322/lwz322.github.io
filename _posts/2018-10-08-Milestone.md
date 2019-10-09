@@ -126,8 +126,8 @@ OpenWrt上少有的分设备的LuCi界面下的网速监测工具，没有官方
 
 LuCI的System->Scheduled Tasks中就是了，和Linux中的Crontab差不多，所以查下就好，算是简单实用的东西了，用来做个定时重启、运行某个脚本都是可以的,下面这个就是定时断开和连接一个PPPoE拨号
 ```shell
-6 * * * * /sbin/ifdown wan
-23 40 * * * /sbin/ifup wan
+* 6 * * * /sbin/ifdown wan
+40 23 * * * /sbin/ifup wan
 ```
 需要注意的是初次运行要在启动项界面重启下cron
 
@@ -136,7 +136,7 @@ Hotplug功能实际上是相当的实用的，涉及到接口的热插拔时就�
 ```bash
 #!/bin/sh
 [ "$ACTION" = ifup ] || exit 0
-ip route add 10.173.0.0/16 via  10.170.72.254 dev pppoe-VWAN31 table 173
+ip route add 10.173.0.0/16 via 10.170.72.254 dev pppoe-VWAN31 table 173
 ip route add 10.170.0.0/16 via 10.170.72.254 dev pppoe-VWAN22 table 173
 ip route add 10.177.0.0/16 via 10.170.72.254 dev pppoe-VWAN22 table 173
 ```
