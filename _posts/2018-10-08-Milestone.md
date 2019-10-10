@@ -164,7 +164,7 @@ gw=$(ip -6 route show default | grep $iface_route | sed 's/from [^ ]* //' | head
 
 - ubus中的查询命令: ubus call network.interface.wan_6 status
 
-或者 ubus call network.interface dump | jsonfilter -e '$.interface[@.interface="wan_6"]'
+或者 ```ubus call network.interface dump | jsonfilter -e '$.interface[@.interface="wan_6"]'```
 
 ```shell
 /sbin/ifstatus edu_6
