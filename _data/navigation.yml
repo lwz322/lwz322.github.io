@@ -48,14 +48,12 @@ header:
     children:
       - title:  快速开始
         url:    /2018/10/08/Milestone.html#如何开始
-
   - title:      软件与功能
     children:
       - title:  软件推荐
         url:    /2018/10/08/Milestone.html#软件推荐
       - title:  实用功能
         url:    /2018/10/08/Milestone.html#实用功能
-
   - title:      网络相关
     children:
       - title:  IPv6 NAT
