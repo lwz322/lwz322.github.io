@@ -8,8 +8,6 @@ chart: true
 mathjax_autoNumber: true
 tags: 网络 OpenWrt Howto
 key: milestone
-sidebar:
-  nav: /2018/10/08/Milestone.html
 mode: immersive
 header:
   theme: dark
@@ -32,7 +30,7 @@ article_header:
 从OpenWrt Logo下面的那个Wireless Freedom讲起吧，几个里程碑
 - 让无线设备用上IPv6网络，畅通的使用Google，Youtube，IPv6 PT
 - 通过IPv6代理实现免流量高速上网
-- 用Aria2挂PT，攒下了可以用几年的上传量
+- 用Aria2挂PT，攒下了可以用几年的上传量（可能导致封号）
 - 在学校限速1Mbps的情况下把网速多拨叠加到6Mbps，逐步改进后又达到了40Mbps,60Mbps
 - 最后趁舍友国庆出游，用新的负载均衡方法以及HWNAT把汇聚全宿舍端口达到400Mps
 - 使用策略路由和iptables灵活地配置Linux路由
@@ -43,33 +41,40 @@ article_header:
 > 关于开源的路由器系统的稳定性问题，众说纷纭，OpenWrt支持的硬件多，针对某一特定的硬件的稳定性是比较随缘的，尤其是部分路由器的硬件设计上的稳定性就一般，如果准备在稳定性要求较高的环境使用，要谨慎（使用的工具越简单越好）
 
 ## 如何开始
+### 硬件
 建议选有官方固件支持，软件支持的路由器（也就是不太建议刷仅有民间固件的那种了，不开源感觉不安全），具体可以参考官方支持的[Hardware Table](https://OpenWrt.org/toh/start)，进入某一款路由器的详情界面就可以看到支持的情况
 
 或者是论坛，一般都会有详细的刷机教程，如国内的[恩山](https://right.com.cn/forum/portal.php)，[Koolshare](http://koolshare.cn/portal.php)
 >就刷OpenWrt而言，推荐以高通（QAC）和联发科（MTK）或者软路由为主，博通CPU的因为驱动开源的不太好，所以可能会缺少无线功能
-
-就版本的话，主要是稳定版(写这篇文章的时候最新的是18.06.4)和每日构建的版本(Snapshot)
+### 版本
+官方版本的话，主要是稳定版(写这篇文章的时候最新的是18.06.4)和每日构建的版本(Snapshot)
 >后者没有自带LuCI界面，需要自己安装，又因为版本太新，不是所有的软件都有已经编译好的ipk，优势在于可以体验到最新的驱动之类的
 
-国内也有各种个人修改的版本，比较出名的：[Lean's OpenWrt source](https://github.com/coolsnowwolf/lede)，作者现在只提供源码，网上有很多编译好的版本，内置了一些常用的软件以及“魔改”，如果不想折腾太多而获得一系列的功能可以考虑，缺点就是自带的配置可能会和要做的配置冲突，因为为了统一标准，大多数人都会以原生的OpenWrt上配置，比如说一些多拨固件默认开启的负载均衡和IPv6功能有冲突
+国内也有各种个人修改的版本，比较出名的：[Lean's OpenWrt source](https://github.com/coolsnowwolf/lede)，作者现在只提供源码，网上有很多编译好的版本，内置了一些常用的软件以及“魔改”，如果不想折腾太多而获得一系列的功能可以考虑，缺点就是自带的配置可能会和要做的配置冲突
+
+因为为了统一标准，大多数教程都会以在官方的OpenWrt上配置为准，比如说一些多拨固件默认开启的负载均衡和自带的IPv6功能有冲突，虽然一步步分析可以解决，但是这种折腾的必要性不大
 
 当然也可以自己编译，因为受限与路由器的存储空间和性能，固件的Linux内核被精简，部分软件也被精简了，比如说某些功能的实现就依赖于完全体的dnsmasq-full，推荐在编译时就处理好这个倚赖，对于Snapshot版本而言，官方仓库里没有预编译软件包或者系统不支持ipk安装，又或者发行版的软件仓库中收录的软件版本不合适，这些都需要自行编译解决，这里可以参考[编译OpenWrt Snapshot固件](https://lwz322.github.io/2019/08/31/Build_OpenWrt_snapshot.html)
 
-## OpenWrt软件推荐
+## 软件推荐
 官方的[Ueser Guide](https://openwrt.org/docs/guide-user/start)以及[Old Wiki](https://oldwiki.archive.openwrt.org/doc/howto/start)(看起来简洁一些)从功能上对软件划分，相当全面和详细的介绍了OpenWrt的功能及其实现的软件，这里主要是推荐一下个人用过的，体验还OK的部分软件
 
 ### Aria2
 这是一个跨平台的多线程下载软件，主要是支持BT，在路由器性能允许的情况下能够做到全天挂PT，并且可以通过网络共享做一个简易的NAS
 >之前有一段时间官方源下载的Aria2是不支持BT的，需要自己动手编译，而1.34之后又自带BT支持了
+注：大部分的PT不支持使用Aria2作为BT客户端使用，而Aria2也自带了伪装功能，可以伪装成为被允许的客户端，然而部分PT站是可以检测出来的（因为会涉及到流量作弊的问题），所以在PT使用Aria2是可能**被封号**的（PT账号的价值不必多说）
 
-Aria2本身只是一个命令行下载软件，而OpenWrt提供了以个LuCI的配置APP(只能拿来做些设置)luci-app-aria2，所以如果不想用命令行的话就需要一个前端界面，推荐一个[AiraNG](https://github.com/mayswind/AriaNg)
+实测北邮人可以检测伪装，北洋园PT也加入了相关代码，参考自：[Pt 站点禁用 Aria2 客户端方法分析](https://blog.rhilip.info/archives/1010/)
+
+Aria2本身只是一个命令行下载软件，而OpenWrt提供了一个LuCI的配置APP(只能拿来做些设置)luci-app-aria2
 
 最近的OpenWrt使用luci-app-aria2启动不了Aria2，需要输入下面的命令才会在后台运行
 ```bash
 aria2c --enable-rpc --rpc-listen-all=true --rpc-allow-origin-all -c -D
 ```
+所以如果不想用命令行的话就需要一个前端界面，推荐[AiraNG](https://github.com/mayswind/AriaNg)，通过RPC与服务端通信，既可以安装到路由器上（貌似不安全），也可以放到终端上（客户端或者HTML）
 
-至于网页打开的那种AriaNg，OpenWrt的仓库那个比较老了，可以先安装一个AraiNg的IPK，之后再到AriaNG的release下载一个新版的html文件替换掉，但是如果是打开外网访问的话，AriaNg是没有什么安全措施的
+OpenWrt的仓库那个AriaNG版本比较老了，可以先安装一个AraiNg的IPK，之后再到AriaNG的release下载一个新版的html文件替换掉，但是如果是打开外网访问的话，AriaNg是没有什么安全措施的
 
 另外一点就是Aria2的内存消耗太恐怖了，大量的内存被用于缓存，这对主路由是极为不利的
 
@@ -102,7 +107,7 @@ mtr是ping和traceroute的结合，网络问题排查的利器
 OpenWrt上少有的分设备的LuCi界面下的网速监测工具，没有官方的Feed，需要自己去[Github](https://github.com/Kiougar/luci-wrtbwmon)上面下载ipk
 
 ### iftop
-在Linux用于监测网卡/接口的网络连接情况，在路由器上可以显示内外网连接的地址，以及连接的速度，相比上面的LuCi界面的网速监控简直强大太多了
+在Linux用于监测网卡/接口的网络连接情况，在路由器上可以显示内外网连接的IP地址，以及连接的速度；个人的一个重要的用途就是用来查看多WAN接入的负载均衡的效果
 
 ### Netdata
 ![netdata](https://img.vim-cn.com/e3/44f5fa92845bda4dc5c31193badd6c2da0f87c.jpg)
@@ -251,7 +256,7 @@ done
 
 其中，ifaces是筛选出协议为DHCPv6的所有活动端口的接口名称，比如说wan_6，edu_6，它们的接口状态中是有IPv6的路由信息的，主要就是上级网关，而devices是上述接口的设备名称，用于添加路由表时指定转发出去的接口，加上循环也就可以批量添加路由表条目了（脚本是针对单一的上级网关的）
 
-## 方便的外部管理工具
+## SSH与文件传输
 
 ### SSH使用私钥认证
 在版本较新的Windows 10中已经内置了OpenSSH，可以用SSH和SCP，linux发行版基本上是自带了，使用私钥登陆可以免去输密码，也方便写脚本
