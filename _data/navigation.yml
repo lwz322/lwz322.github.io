@@ -44,7 +44,7 @@ header:
     url:        https://github.com/lwz322
 
 /2018/10/08/Milestone.html:
- - title:       关于OpenWrt
+  - title:      关于OpenWrt
     children:
       - title:  快速开始
         url:    /2018/10/08/Milestone.html#如何开始
