@@ -8,6 +8,8 @@ chart: true
 mathjax_autoNumber: true
 tags: 网络 OpenWrt Howto
 key: milestone
+sidebar:
+  nav: /2018/10/08/Milestone.html
 mode: immersive
 header:
   theme: dark
