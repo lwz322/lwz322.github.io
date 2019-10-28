@@ -123,7 +123,8 @@ K3的无线性能貌似不错，现在也有了Snapshot固件可以下载，但�
 
 ## 编译经过
 
-这里对网络环境有一定的需求，一般都是推荐在国外的VPS上编译，如果在本地编译需要开代理，安装Docker和Git就不说了
+这里对网络环境有一定的需求，一般都是推荐在国外的VPS上编译，如果在本地编译需要开代理，安装Docker和Git就不说了，如果觉得Docker和SSH的命令行
+对修改源码体验不好，可以使用VSCode加上Remote-Docker/SSH插件，再安装一个Terminal插件就很舒服了
 
 介绍下硬件环境的要求：
 
@@ -170,6 +171,7 @@ git clone https://github.com/openwrt/openwrt.git
 ```bash
 git checkout openwrt-19.07
 ``` 
+对于18.06.4这种小分支，可以在release下载源码或者直接根据18.06.4的commit hash来切换
 
 ### 下载软件包源码
 
