@@ -77,7 +77,7 @@ K3的无线性能貌似不错，现在也有了Snapshot固件可以下载，但�
 
 [社区](https://www.right.com.cn/forum/thread-466672-1-1.html)有人已经针对snapshot做了修改和编译，解决了以上两个问题，作为路由器基本上已经可以用了，但是有以下遗憾：
 
-1. 固件基于uclibc的c库编译，官方源软件部分不能使用，我尝试的Opkg安装的大部分软件不能用
+1. 固件基于uclibc的c库编译，官方源软件部分不能使用，我尝试的opkg安装的大部分软件不能用
 
 2. 自带的软件又太多，K3的发热本来就大，太多软件带来的负担更大
 
@@ -308,26 +308,32 @@ root@K3:~# openssl speed -elapsed -evp aes-256-cbc
  type             16 bytes     64 bytes    256 bytes   1024 bytes   8192 bytes  16384 bytes                                         
  aes-256-cbc      24429.85k    27700.11k    30198.27k    30665.23k    29156.44k    29420.67k    
 ```
-对比这几年主流的MT7621@880MHz(18.06的OpenSSL 1.0.2暂时不支持chacha20，其他加解密库的实测结果在80Mb/s左右)
+对比这几年主流的MT7621@880MHz单线程openssl加解密速度测试结果
 ```bash
+type             16 bytes     64 bytes    256 bytes   1024 bytes   8192 bytes  16384 bytes
+chacha20         15635.27k    25852.26k    29409.89k    30429.13k    30748.58k    30835.67k
+
 root@K2P:~# openssl speed -elapsed -evp aes-256-cbc 
-type             16 bytes     64 bytes    256 bytes   1024 bytes   8192 bytes
-aes-256 cbc       8070.20k     8686.78k     8830.38k     8386.25k     8766.26k  
+type             16 bytes     64 bytes    256 bytes   1024 bytes   8192 bytes  16384 bytes
+aes-256-cbc       7234.99k     8504.77k     8930.74k     9059.51k     9071.08k     9090.13k
 ```
 AES的测试结果大幅领先应该是得益于架构上的优势（BCM4709是ARMv7架构，不支持AES硬件加速，但是相比MIPS还是有优势的），就是日常使用温度比较高（40nm制程落后）
 
 ### Snapshot安装软件
 
-使用体验取决于编译的情况，因为大部分的软件是没有预编译的IPK可以下载的，我一开始用的master分支的Snapshot版本编译，部分软件都无法正常编译，之后换了19.07的Snapshot版本好一点点(kmod之类的模块还是要要预编译好)，添加部分18.06的软件源勉强可以用(依赖版本可能会遇到严重的问题)
+Snapshot版本的源码是滚动更新的（包括内核版本），而官方的仓库[releases/19.07-SNAPSHOT/](https://downloads.openwrt.org/releases/19.07-SNAPSHOT/)中的软件分为package和kmod，前者一般对内核版本的倚赖不多，但是后者对内核版本是有比较严格的要求的，这就导致，即使是官方仓库中有的软件，都会出现无法安装的情况：
+
+比如安装的Snapshot固件的内核版本是4.14.145，而滚动更新的仓库中的固件内核版本已经是4.14.149，如果安装某些软件，就会出现下面的错误
+```shell
+Installing openvpn-openssl (2.4.7-2) to root...
+Collected errors:
+ * satisfy_dependencies_for: Cannot satisfy the following dependencies for openvpn-openssl:
+ *      kernel (= 4.14.149-1-9b3f4da08295392b7d7eca715b1ee0b8)
+ * opkg_install_cmd: Cannot install package openvpn-openssl.
 ```
-src/gz openwrt_core http://downloads.openwrt.org/releases/19.07-SNAPSHOT/targets/bcm53xx/generic/packages
-src/gz openwrt_base http://downloads.openwrt.org/releases/19.07-SNAPSHOT/packages/arm_cortex-a9/base
-src/gz openwrt_kmods http://downloads.openwrt.org/snapshots/targets/bcm53xx/generic/kmods/4.14.141-1-00c18b6fcb948d22e18e11dd117cf04c/
-src/gz openwrt_luci http://mirrors.ustc.edu.cn/lede/releases/18.06.4/packages/arm_cortex-a9/luci
-src/gz openwrt_packages http://mirrors.ustc.edu.cn/lede/releases/18.06.4/packages/arm_cortex-a9/packages
-src/gz openwrt_routing http://mirrors.ustc.edu.cn/lede/releases/18.06.4/packages/arm_cortex-a9/routing
-src/gz openwrt_telephony http://mirrors.ustc.edu.cn/lede/releases/18.06.4/packages/arm_cortex-a9/telephony
-```
+这个时候只有使用之前编译4.14.145内核的版本的Git版本再去做一次编译了(或者编译的时候留下的SDK)，反正比较麻烦
+
+所以Snapshot版本并不适合经常需要加装软件的情况
 
 ### 功耗
 
