@@ -325,7 +325,7 @@ AES的测试结果大幅领先应该是得益于架构上的优势（BCM4709是A
 
 Snapshot版本的源码是滚动更新的（包括内核版本），而官方的仓库[releases/19.07-SNAPSHOT/](https://downloads.openwrt.org/releases/19.07-SNAPSHOT/)中的软件分为package和kmod，前者一般对内核版本的倚赖不多，但是后者对内核版本是有比较严格的要求的，这就导致，即使是官方仓库中有的软件，都会出现无法安装的情况：
 
-比如安装的Snapshot固件的内核版本是4.14.145，而滚动更新的仓库中的固件内核版本已经是4.14.149，如果安装某些软件，就会出现下面的错误
+比如安装的Snapshot固件的内核版本是4.14.145，而滚动更新的仓库中的固件内核版本已经是4.14.149，如果安装某些软件，就会出现下面的错误：
 ```shell
 Installing openvpn-openssl (2.4.7-2) to root...
 Collected errors:
@@ -333,7 +333,9 @@ Collected errors:
  *      kernel (= 4.14.149-1-9b3f4da08295392b7d7eca715b1ee0b8)
  * opkg_install_cmd: Cannot install package openvpn-openssl.
 ```
-这个时候只有使用之前编译4.14.145内核的版本的Git版本再去做一次编译了(或者编译的时候留下的SDK)，反正比较麻烦
+其中也不仅仅是内核版本的问题，后面的一串生成自内核的编译参数校验，也就是说只有使用之前编译4.14.145内核的版本的Git版本再去做一次编译了(或者编译的时候留下的SDK)，反正比较麻烦
+
+因为只有一串md5码，所以另辟蹊径也是可以的：[编译Openwrt固件安装软件内核版本不一致问题解决](https://www.haiyun.me/archives/1075.html)
 
 所以Snapshot版本并不适合经常需要加装软件的情况
 

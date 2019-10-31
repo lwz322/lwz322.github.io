@@ -45,19 +45,22 @@ article_header:
 建议选有官方固件支持，软件支持的路由器（也就是不太建议刷仅有民间固件的那种了，不开源感觉不安全），具体可以参考官方支持的[Hardware Table](https://OpenWrt.org/toh/start)，进入某一款路由器的详情界面就可以看到支持的情况
 
 或者是论坛，一般都会有详细的刷机教程，如国内的[恩山](https://right.com.cn/forum/portal.php)，[Koolshare](http://koolshare.cn/portal.php)
->就刷OpenWrt而言，推荐以高通（QAC）和联发科（MTK）或者软路由为主，博通CPU的因为驱动开源的不太好，所以可能会缺少无线功能
+>就刷OpenWrt而言，推荐以高通（QAC）和联发科（MTK）或者软路由为主，博通CPU的因为驱动开源的不太好，所以可能会缺少无线功能，对于MTK平台有开源的MT76项目驱动，部分无线芯片依然运行情况不太好，总之不对OpenWrt的无线期望太高
+
 ### 版本
 官方版本的话，主要是稳定版(写这篇文章的时候最新的是18.06.4)和每日构建的版本(Snapshot)
 >后者没有自带LuCI界面，需要自己安装，又因为版本太新，不是所有的软件都有已经编译好的ipk，优势在于可以体验到最新的驱动之类的
 
-国内也有各种个人修改的版本，比较出名的：[Lean's OpenWrt source](https://github.com/coolsnowwolf/lede)，作者现在只提供源码，网上有很多编译好的版本，内置了一些常用的软件以及“魔改”，如果不想折腾太多而获得一系列的功能可以考虑，缺点就是自带的配置可能会和要做的配置冲突
+国内也有各种个人修改的版本，比较出名的：[Lean's OpenWrt source](https://github.com/coolsnowwolf/lede)，作者现在只提供源码，网上有很多编译好的版本，内置了一些常用的软件以及“魔改”，还有些软件是特有的，极大的拓展了OpenWrt路由的实用性和便捷性，如果不想折腾太多而获得一系列的功能可以考虑，缺点就是他人编译的版本的自带的配置可能会和要做的配置冲突
 
 因为为了统一标准，大多数教程都会以在官方的OpenWrt上配置为准，比如说一些多拨固件默认开启的负载均衡和自带的IPv6功能有冲突，虽然一步步分析可以解决，但是这种折腾的必要性不大
 
-当然也可以自己编译，因为受限与路由器的存储空间和性能，固件的Linux内核被精简，部分软件也被精简了，比如说某些功能的实现就依赖于完全体的dnsmasq-full，推荐在编译时就处理好这个倚赖，对于Snapshot版本而言，官方仓库里没有预编译软件包或者系统不支持ipk安装，又或者发行版的软件仓库中收录的软件版本不合适，这些都需要自行编译解决，这里可以参考[编译OpenWrt Snapshot固件](https://lwz322.github.io/2019/08/31/Build_OpenWrt_snapshot.html)
+当然也可以自己编译，因为受限与路由器的存储空间和性能，固件的Linux内核被精简，部分软件也被精简了，比如说某些功能的实现就依赖于完全体的dnsmasq-full，推荐在编译时就处理好这个倚赖，对于Snapshot版本而言，官方仓库里没有预编译软件包或者系统不支持ipk安装，又或者发行版的软件仓库中收录的软件版本不合适，这些都需要自行编译解决，这里可以参考[编译OpenWrt Snapshot固件](https://lwz322.github.io/2019/08/31/Build_OpenWrt_snapshot.html)，不过不推荐Snapshot版本日常使用，因为后续安装软件相对不便
 
 ## 软件推荐
 官方的[Ueser Guide](https://openwrt.org/docs/guide-user/start)以及[Old Wiki](https://oldwiki.archive.openwrt.org/doc/howto/start)(看起来简洁一些)从功能上对软件划分，相当全面和详细的介绍了OpenWrt的功能及其实现的软件，这里主要是推荐一下个人用过的，体验还OK的部分软件
+
+前半部分主要是OpenWrt下常用的Linux平台下的命令行工具：
 
 ### Aria2
 这是一个跨平台的多线程下载软件，主要是支持BT，在路由器性能允许的情况下能够做到全天挂PT，并且可以通过网络共享做一个简易的NAS
@@ -78,11 +81,6 @@ OpenWrt的仓库那个AriaNG版本比较老了，可以先安装一个AraiNg的I
 
 另外一点就是Aria2的内存消耗太恐怖了，大量的内存被用于缓存，这对主路由是极为不利的
 
-### luci-app-statistics
-![collectd](https://img.vim-cn.com/66/cce412e04be5032bddb4aa14a0845f07241647.jpg)
-强大的统计软件，和其他的包组合收集各种数据，个人的主要作用就是拿来监测网络延迟，可以提一下的就是能够结合防火墙数据收集实现复杂的流量监控，下面附上官方的WiKi
-[luci-app-statistics](https://oldwiki.archive.OpenWrt.org/doc/howto/luci_app_statistics)
-
 ### iperf3
 跨平台的网络测试工具，主要是拿来测速的，测试一下就知道路由器的性能是什么情况了，比如说5G-5G的传输速度，LAN-5G的传输速度
 
@@ -95,6 +93,17 @@ OpenWrt的仓库那个AriaNG版本比较老了，可以先安装一个AraiNg的I
 ### mtr
 mtr是ping和traceroute的结合，网络问题排查的利器
 
+### iftop
+在Linux用于监测网卡/接口的网络连接情况，在路由器上可以显示内外网连接的IP地址，以及连接的速度；个人的一个重要的用途就是用来查看多WAN接入的负载均衡的效果
+
+### FRP
+一个用于反向代理的软件，对于没有公网IP的网络接入来说还是挺好用的，一般需要一个拥有公网IP的服务器作为流量的中转，具体的用法以及ipk下载（包括luci-app-frpc）可以参考[Github](https://github.com/fatedier/frp)，也有提供FRP服务器的网站可以直接用，值得一提的是，学校的教育网一般是阻挡了传入连接的，如果有在学校里搭建NAS，想要远程访问，直接用地址是行不通的，这个时候FRP就可以通过家里的公网IP服务器中转对学校的NAS进行访问，在学校如果给代理服务器穿透的话就相当于可以使用学校的网络了
+
+### luci-app-statistics
+![collectd](https://img.vim-cn.com/66/cce412e04be5032bddb4aa14a0845f07241647.jpg)
+强大的统计软件，和其他的包组合收集各种数据，个人的主要作用就是拿来监测网络延迟，可以提一下的就是能够结合防火墙数据收集实现复杂的流量监控，下面附上官方的WiKi
+[luci-app-statistics](https://oldwiki.archive.OpenWrt.org/doc/howto/luci_app_statistics)
+
 ### luci-app-ddns
 这个我是在做[家用宽带的IPv6配置](https://lwz322.github.io/2019/07/25/IPv6_Home.html)的时候用到的，相比与传统路由器支持数量极为有限的几个DDNS，这个简直强大太多，因为软件本身做好DDNS客户端的外围工作，至于各个DDNS供应商的适配可以由脚本完成，比如说[Sensec](https://github.com/sensec)写的[[分享]适用于OpenWRT/LEDE自带DDNS功能的阿里云脚本](https://www.right.com.cn/forum/thread-267501-1-1.html)
 
@@ -106,15 +115,9 @@ mtr是ping和traceroute的结合，网络问题排查的利器
 ![mac](https://img.vim-cn.com/92/1b76c51f4991fd5b82f1d7c88a58efd33a917d.jpg)
 OpenWrt上少有的分设备的LuCi界面下的网速监测工具，没有官方的Feed，需要自己去[Github](https://github.com/Kiougar/luci-wrtbwmon)上面下载ipk
 
-### iftop
-在Linux用于监测网卡/接口的网络连接情况，在路由器上可以显示内外网连接的IP地址，以及连接的速度；个人的一个重要的用途就是用来查看多WAN接入的负载均衡的效果
-
 ### Netdata
 ![netdata](https://img.vim-cn.com/e3/44f5fa92845bda4dc5c31193badd6c2da0f87c.jpg)
 算是一个比较好看的性能监测界面了，第一次见到还是印象深刻，然而用处...对个人来说不大，效果可以看[Github](https://github.com/netdata/netdata)，在OpenWrt中直接用``opkg install netdata``就好，之后直接访问LuCI管理IP的19999端口就可以看到了，优点还是信息量大，占用低
-
-### FRP
-一个用于反向代理的软件，对于没有公网IP的网络接入来说还是挺好用的，一般需要一个拥有公网IP的服务器作为流量的中转，具体的用法，以及ipk下载可以参考[Github](https://github.com/fatedier/frp)，也有提供FRP服务器的网站可以直接用，值得一提的是，学校的教育网一般是阻挡了传入连接的，如果有在学校里搭建NAS，想要远程访问，直接用地址是行不通的，这个时候FRP就可以通过家里的公网IP服务器中转对学校的NAS进行访问，在学校如果给代理服务器穿透的话就相当于可以使用学校的网络了
 
 ## 实用的功能
 脱离了简单的应用软件层面，多多少少需要点shell编程
@@ -154,6 +157,8 @@ ip route add 10.177.0.0/16 via 10.170.72.254 dev pppoe-VWAN22 table 173
 使用```logger -t IPv6 "Add good IPv6 route..."```
 
 就可以添加log并且打上标签，打标签的方便之处在于调取日志的时候可以根据标签来筛选```logread | grep IPv6```
+
+因为OpenWrt路由器往往内存和存储空间有限，日志文件可以发到远程的机器上以供调试
 
 ### 消息通信 ubus
 
@@ -293,6 +298,15 @@ $ scp username@remotehost:/path/directory/\{foo.txt,bar.txt\} .
 ```shell
 curl -s https://raw.githubusercontent.com/sivel/speedtest-cli/master/speedtest.py | python -
 ```
+安装完成python之后，如果经常要用的话可以放到用户文件夹中
+```shell
+wget -O /usr/bin/speedtest https://raw.githubusercontent.com/sivel/speedtest-cli/master/speedtest.py
+chmod +x /usr/bin/speedtest
+speedtest
+```
+
+### 命令行的besttrace
+电脑上的很好用，可以方便的查看路由的路径（实际地点），路由器上有ARM平台的Linux版本，实测BCM4709的K3是可以运行的
 
 ### 脚本
 夜间断网切换脚本，针对的是夜间宿舍断电，UPS只能给一台路由器供电，此时需要把另外一台路由器的PPPoE账号转移到UPS的路由上，如果中途另外一台路由器恢复网络则会断开之前切换而来的PPPoE拨号
