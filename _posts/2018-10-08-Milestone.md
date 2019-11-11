@@ -120,10 +120,16 @@ OpenWrt上少有的分设备的LuCi界面下的网速监测工具，没有官方
 算是一个比较好看的性能监测界面了，第一次见到还是印象深刻，然而用处...对个人来说不大，效果可以看[Github](https://github.com/netdata/netdata)，在OpenWrt中直接用``opkg install netdata``就好，之后直接访问LuCI管理IP的19999端口就可以看到了，优点还是信息量大，占用低
 
 ## 实用的功能
-脱离了简单的应用软件层面，多多少少需要点shell编程
+脱离了简单的应用软件层面，部分需要shell编程
 
 ### 交换机 Switch
-这个的用途就是当路由器做路由，占用掉了墙壁内嵌的网口，但是这个时候又有设备需要直接拨号，从前的话可能就需要使用交换机了，但是考虑到现在的路由器都是通过VLAN来划分网口的，而OpenWrt对此是可以自定义的，所以只需要改下网口的VLAN ID就好，因为设备之间有差别，所以这里建议参考[OpenWrt Guide](https://OpenWrt.org/docs/guide-user/network/vlan/switch_configuration)，然后根据自己的需求做设置
+先说一个用途：当路由器做路由，占用掉了墙壁内嵌的网口，但是这个时候又有设备需要直接拨号，从前的话可能就需要使用交换机了，但是现在的大部分路由器都是通过VLAN来划分网口的，而OpenWrt对此是可以自定义的，所以只需要改下网口的VLAN ID就好，比如像下面这样，WAN口和LAN4就相当于“桥接”了，任意一口作为接入的时候，另外一个网口也可以连接电脑拨号
+![](https://i.loli.net/2019/11/09/keOTDbEr3oYfc6S.png)
+
+因为设备之间有差别，所以这里建议参考[OpenWrt Guide](https://OpenWrt.org/docs/guide-user/network/vlan/switch_configuration)，然后根据自己的需求做设置
+
+VLAN可以实现相对高级的交换机/路由器的级联，常见的比如：
+- IPTV和宽带的单线复用，单臂路由
 
 ### 定时任务 Cron
 > **cron** is the general name for the service that runs scheduled actions. 
@@ -293,7 +299,7 @@ $ scp username@remotehost:/path/directory/\{foo.txt,bar.txt\} .
 
 ## 附录
 
-### 命令行Speedtest网络测速（需要Python）
+### Speedtest网络测速
 偶尔有这种需求，OpenWrt安装Python要注意空间占用
 ```shell
 curl -s https://raw.githubusercontent.com/sivel/speedtest-cli/master/speedtest.py | python -
@@ -305,8 +311,8 @@ chmod +x /usr/bin/speedtest
 speedtest
 ```
 
-### 命令行的besttrace
-电脑上的很好用，可以方便的查看路由的路径（实际地点），路由器上有ARM平台的Linux版本，实测BCM4709的K3是可以运行的
+### besttrace
+电脑上的很好用，可以方便的查看路由的路径（实际地名），路由器上有ARM平台的Linux版本，实测BCM4709的K3是可以运行的
 
 ### 脚本
 夜间断网切换脚本，针对的是夜间宿舍断电，UPS只能给一台路由器供电，此时需要把另外一台路由器的PPPoE账号转移到UPS的路由上，如果中途另外一台路由器恢复网络则会断开之前切换而来的PPPoE拨号
