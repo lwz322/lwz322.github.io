@@ -245,24 +245,28 @@ ubus call network.interface dump | jsonfilter -e '$.interface[@.interface="wan_6
 /sbin/ifstatus wan_6 | jsonfilter -e '$["ipv6-address"][0]["address"]'
 ```
 
-由于ubus提供的信息非常的多，对于IPv6 NAT下的负载均衡就兼顾简洁和适用性的写法了，对于没有负载均衡的情况下也可以使用，按照规则保存在hotplug文件夹下即可
+由于ubus提供的信息非常的多，对于IPv6 NAT下的负载均衡就兼顾简洁和适用性的写法了（一般情况下也可用）
 
 ```shell
+#!/bin/sh
 #!/bin/sh
 [ "$ACTION" = ifup ] || exit 0
 ifaces=$(ubus call network.interface dump | jsonfilter -e '$.interface[@.proto="dhcpv6" && @.up=true].interface')
 for iface_6 in $ifaces
 do
   [ "$INTERFACE" = $iface_6 ]  || continue
-  devices=$(ubus call network.interface dump | jsonfilter -e '$.interface[@.proto="dhcpv6" && @.up=true].device')
-  ipv6_gw=$(ifstatus $iface_6 | jsonfilter -e '$.route[1].nexthop')
-  for ipv6_dev in $devices
+  ipv6_devices=$(ubus call network.interface dump | jsonfilter -e '$.interface[@.proto="dhcpv6" && @.up=true].device')
+  nexthops=""
+  for ipv6_dev in $ipv6_devices
   do
-    status=$(route -A inet6 add 2000::/3 gw $ipv6_gw dev $ipv6_dev 2>$1)
-    logger -t NAT6 "Gateway: $ipv6_dev: Done $status"
+    VAR=$(echo '$.interface[@.device="'$ipv6_dev'"].route[1].nexthop')
+    ipv6_gw=$(ubus call network.interface dump | jsonfilter -e $VAR)
+    nexthops=${nexthops}"nexthop via $ipv6_gw  dev $ipv6_dev "
   done
-  exit 0
+  status=$(ip -6 route replace default metric 1 $nexthops 2>&1)
+  break
 done
+logger -t ECMPv6 "Done $ipv6_devices $status"
 ```
 
 其中，ifaces是筛选出协议为DHCPv6的所有活动端口的接口名称，比如说wan_6，edu_6，它们的接口状态中是有IPv6的路由信息的，主要就是上级网关，而devices是上述接口的设备名称，用于添加路由表时指定转发出去的接口，加上循环也就可以批量添加路由表条目了（脚本是针对单一的上级网关的）
@@ -299,8 +303,8 @@ $ scp username@remotehost:/path/directory/\{foo.txt,bar.txt\} .
 
 ## 附录
 
-### Speedtest网络测速
-偶尔有这种需求，OpenWrt安装Python要注意空间占用
+### Speedtest
+偶尔有网络测速需求，OpenWrt安装Python要注意空间占用
 ```shell
 curl -s https://raw.githubusercontent.com/sivel/speedtest-cli/master/speedtest.py | python -
 ```
@@ -314,7 +318,7 @@ speedtest
 ### besttrace
 电脑上的很好用，可以方便的查看路由的路径（实际地名），路由器上有ARM平台的Linux版本，实测BCM4709的K3是可以运行的
 
-### 脚本
+### hotplug脚本
 夜间断网切换脚本，针对的是夜间宿舍断电，UPS只能给一台路由器供电，此时需要把另外一台路由器的PPPoE账号转移到UPS的路由上，如果中途另外一台路由器恢复网络则会断开之前切换而来的PPPoE拨号
 ```shell
 #!/bin/sh
