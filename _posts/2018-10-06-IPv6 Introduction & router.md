@@ -18,13 +18,13 @@ article_header:
   background_color: '#ffffff'
   background_image:
     gradient: 'linear-gradient(0deg, rgba(0, 0, 0 , .7), rgba(0, 0, 0, .7))'
-    src: assets/background/IPv6r.png
+    src: assets/background/morning.jpg
 ---
 
 主要介绍了之后使用的到的IPv6基础知识以及内网配置IPv6方法的思路，以及一种接入IPv6的简单方法
 <!--more-->
 
-## 前言
+# 前言
 
 来到大学之前看到关于学校网络一句这样的话
 
@@ -38,7 +38,7 @@ article_header:
 
 本文的内容以上主要是参考Koolshare论坛的帖子，原帖主要针对的是路由器的merlin固件，但是其中所述的原理部分写的很详细，原帖链接：[【进阶类教程】多种无PD的情况下给内网配置IPv6的方法](http://koolshare.cn/forum.php?mod=viewthread&tid=46415&extra=&highlight=ipv6&page=1)
 
-## IPv6基础
+# IPv6基础
 
 回到正题，IPv4的地址早已枯竭，公网IP难求，平时我们所获得的IPv4地址都是通过层层NAT（Network Address Transfer）而来的，而IPv6完全有能力为每个设备分配一个公网IP，于是我们可以不再需要NAT，从而非常方便的实现点到点的直接通信。
 
@@ -50,9 +50,9 @@ article_header:
 
 其次，即使刷机或者换设备，就部分学校的IPv6接入方式又决定了配置上的不便，要搞清楚这个问题，需要一点计算机网络的基础知识
 
-### IPv6地址
+## IPv6地址
 
-#### 地址类型
+### 地址类型
 
 IPv6里面有三种地址类型；
 
@@ -90,12 +90,12 @@ Interface ID为[Modified EUI-64](http://standards.ieee.org/develop/regauth/tut/e
 
 IPv6标准要求单播地址的子网必须是64位的，主要是为了简化IPv6的管理，同时路由也方便，毕竟现在CPU都是64位的，如果子网号超过64位的话，会给路由造成一定的困难，同时64位的接口ID也比较容易存放一个UUID，比如可以容纳48位的mac地址，为Stateless Auto Configuration的地址分配提供了足够的空间。
 
-#### IPv6隐私扩展
+### IPv6隐私扩展
 当一个客户端使用SLAAC配置其IPv6时，它会使用网络前缀和网卡的MAC地址构造地址。这会引起安全问题：计算机的MAC地址可以轻松通过其IPv6地址推算出。为了解决这个问题，提出了“IPv6隐私扩展”标准(RFC 4941)。使用这个隐私扩展，内核会从原本的IPv6地址计算生成一个“临时地址”。在连接远程服务器时，系统会优先选择这个地址以隐藏原来的地址。比较典型的例子就是Windows的ipconfig可以看到一个临时IPv6地址，在IPv6测试网站中显示的就是该IP
 
-### IPv6地址分配方式
+## IPv6地址分配方式
 
-#### SLAAC
+### SLAAC
 
 IPv6有一个功能叫 **SLAAC**（无状态自动分配:[Stateless Auto Configuration](https://tools.ietf.org/html/rfc2462)），简单点说，就是可以不借助DHCP服务器实现IP地址的分配，插上网线就能上网。
 
@@ -109,7 +109,7 @@ IPv6有一个功能叫 **SLAAC**（无状态自动分配:[Stateless Auto Configu
 >
 > PPPoE拨号在发起连接的时候采用的MAC地址和设备网卡的地址可能没有关联，如linux使用的pppd工具建立PPPoE连接的时候采用的随机MAC，Windows经过测试应该和拨号的账号有关，故每次拨号所获得的IPv6地址的后缀也会不一样
 
-#### DHCPv6
+### DHCPv6
 
 当然IP地址也可以由**DHCPv6**服务器来分配，这种方式分配叫做有状态分配（Stateful Auto Configuration），使用DHCP可以向下级设备分配任意的地址，但是前提是服务器本身（在这里也就是路由器）获得的是一个**子网**。
 
@@ -117,7 +117,7 @@ IPv6其实是带有用于解决“客户端需要一个子网，而不是单个�
 
 路由的官方固件都是需要上级设备有DHCP-PD才能为子网配置IPv6的。而校园网的上级设备没有这个功能，因此路由自带的IPv6功能不能用。
 
-### IPv6 NDP
+## IPv6 NDP
 
 IPV6除了显著增加了地址空间外，另一个最显著的特征就是它的**即插即用性**，如上面的SLAAC，邻居发现协议(Neighbor Discovery Protocol，**NDP**)通过**NDP消息**建立起从地址到通信的桥梁，NDP定义了5种ICMPv6报文类型，简介如下：
 
@@ -143,11 +143,11 @@ IPV6除了显著增加了地址空间外，另一个最显著的特征就是它�
 
 
 
-## 校园网配置的困难
+# 校园网配置的困难
 
 校园网为什么配置起来这么麻烦？
 
-### 无PD
+## 无PD
 
 按照IPv6的规范，路由器获得的应该是一个子网范围而不是单独的一个地址，在获得子网范围的情况下就可以通过有状态或者无状态分配的方式使得下层设备获得IPv6地址；
 
@@ -155,7 +155,7 @@ IPV6除了显著增加了地址空间外，另一个最显著的特征就是它�
 
 那能不能把路由器当作交换机使用，让所有接入路由器的设备全部通过SLAAC获得地址呢？没有认证的情况当然可以，但是现实是大部分学校都是需要认证的
 
-### 认证
+## 认证
 
 一些学校获得IPv6连接是需要**认证**的，就文章开始所提到的：
 
@@ -163,7 +163,7 @@ IPV6除了显著增加了地址空间外，另一个最显著的特征就是它�
 
 是本校其他宿舍楼才有的待遇，本宿舍楼的必须通过PPPoE拨号，才会下发IPv6地址，一次认证只会获得一个IPv6地址，而且多是基于设备网卡的MAC的，认证之后，上级的交换机就会接受来自该MAC的通信，并且会分配一个IP地址与之**绑定**，这样一来，如果上级设备接收到的数据包的地址和MAC**不匹配**就不会被转发
 
-### 实例
+## 实例
 
 这部分是在个人所在的学校的OpenWrt路由器上得到的：输入命令`` ifconfig ``就会得到面的输出
 
@@ -196,13 +196,13 @@ default from 2409:xxxx:xxxx:xxxx::/60 via fe80::466a:2eff:fe56:25 dev pppoe-wan 
 
 多了一条/60的条目，源于DHCP-PD，也就是路由器会转发下级设备的数据包到上级设备
 
-## 无PD情况下内网配置IPv6
+# 无PD情况下内网配置IPv6
 
 经过一代代人的探索，方法非常多，可以用“ 路由器/路由器系统 + 校园网/学校名称 + IPv6” 这种方法搜索
 
 就IPv6转发部分，归结到原理，方法可以分为以下几类，前面提到的[Koolshare文章](http://koolshare.cn/forum.php?mod=viewthread&tid=46415&extra=&highlight=ipv6&page=1)有一个全面的总结，各有优缺，比较如下：
 
-### 中继(Relay)
+## 中继(Relay)
 基于6relayd，把WAN的IPv6数据包改MAC代理到LAN里面来，再把LAN的数据包改MAC代理到WAN去
 
 优势：
@@ -219,7 +219,7 @@ default from 2409:xxxx:xxxx:xxxx::/60 via fe80::466a:2eff:fe56:25 dev pppoe-wan 
 - 在用户空间转发数据包，开销比内核直接转发大（一点点？）若路由支持IPv6硬件转发或者CTF，差距就大了
 - 在访问以前未访问过的IPv6地址时会有一个迷の卡顿
 
-### 穿透(Passthrough)
+## 穿透(Passthrough)
 在WAN和LAN之间架一个只允许IPv6数据包通过的桥
 
 优势：
@@ -234,7 +234,7 @@ default from 2409:xxxx:xxxx:xxxx::/60 via fe80::466a:2eff:fe56:25 dev pppoe-wan 
 - 打破了内外网的分隔，外网IPv6一旦出现NS风暴一类的问题，内网也要遭殃
 - 也是软件转发的，效率比不上硬件转发或者CTF加速（但是比用户空间好一点吧）
 
-### IPv6 NAT
+## IPv6 NAT
 类似于对IPv4的处理方法
 
 优势：
@@ -249,7 +249,7 @@ default from 2409:xxxx:xxxx:xxxx::/60 via fe80::466a:2eff:fe56:25 dev pppoe-wan 
 - 梅林用的内核版本没有IPv6 NAT功能（需要Linux 3.9以上，而博通也不知道在想什么居然还用Linux 2.6）直接pass掉
 - 对部分基于Linux的路由器，通过MASQUERADE设置的NAT的类型为Symmetry，连接性比较差（安全性高）
 
-### 子网划分
+## 子网划分
 
 基于Ndppd+Radvd，在学校给的子网里，强行给自己划一个更小的子网
 
@@ -269,19 +269,19 @@ default from 2409:xxxx:xxxx:xxxx::/60 via fe80::466a:2eff:fe56:25 dev pppoe-wan 
 
 以上方法也有在OpenWrt路由器上面的实现，最常用的三种可以参考[OpenWRT IPv6 三种配置方式](http://blog.kompaz.win/2017/02/22/OpenWRT%20IPv6%20%E9%85%8D%E7%BD%AE/)，考虑到省事，个人还是用的IPv6 NAT（NAT6），基于NAT6还可以做些其他的操作，详情可见博客其他的文章
 
-## 认证问题
+# 认证问题
 
 主要是为了“方便”学生使用，部分学校使用了网页认证或者客户端认证的方法，相较于传统的PPPoE，优势在于统一了单个设备的各种使用情况，但是对使用路由器来说并不方便，对此人民群众总是有办法的
 
-### MentoHUST
+## MentoHUST
 
 [MentoHUST](https://wiki.archlinux.org/index.php/MentoHUST_(%E7%AE%80%E4%BD%93%E4%B8%AD%E6%96%87))是由华中科技大学首先是在[Linux](https://baike.baidu.com/item/Linux)系统下开发出来，而后扩展到支持Windows、Linux、Mac OS下的锐捷认证的程序（附带支持赛尔认证），部分路由器也有相应的插件和脚本
 
-### 登陆脚本
+## 登陆脚本
 
 这里就是把浏览器的网页认证过程中的请求过程换用脚本来实现，先使用Chrome或者Wireshare之类的软件分析认证登陆的流程，再编写脚本，最后添加到启动项或者计划任务来实现自动认证
 
-## IPv4下获得IPv6连接的方法
+# 获得IPv6连接的方法
 
 什么情况下IPv6是刚需呢？
 
@@ -295,11 +295,11 @@ default from 2409:xxxx:xxxx:xxxx::/60 via fe80::466a:2eff:fe56:25 dev pppoe-wan 
 
 另外，在连接仅支持IPv6访问的网站的时候，比如在外访问家里使用DDNS的NAS
 
-### 代理
+## 代理
 
 需要一台拥有公网IPv4地址的IPv4/IPv6双栈的服务器
 
-### 手机热点
+## 手机热点
 
 截至2019年，我所到的地方的4G网络都支持了IPv6，看地址的格式应该是SLAAC得到的，并且手机开热点的时候，下级设备又可以获得地址（还是SLAAC），这是最简单的临时使用IPv6的方法
 
@@ -321,7 +321,7 @@ config dhcp lan
 ```
 可能需要关闭IPv6防火墙，删除ULA前缀，具体问题可以参考于[LEDE中继PPPoE拨号下获取的IPv6](https://koolshare.cn/thread-115210-1-1.html)，最后再指定宽带作为IPv4的默认网关即可
 
-### 6plat
+## 6plat
 这种方法使用的是OpenVPN在IPv4环境下获取UPv6连接，速度貌似被限制在了1Mbps，也是临时解决方案，之前还可以用来下载北邮人上的资源（1Mbps的速度连接Tracker足够，点对点传输还是走的IPv4，后来北邮人屏蔽了这段IP就不能用了）
 
 1. 注册一个v4转v6的OpenVPN的账号http://6plat.org/

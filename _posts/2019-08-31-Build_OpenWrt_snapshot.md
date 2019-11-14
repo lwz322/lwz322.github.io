@@ -22,7 +22,7 @@ article_header:
 
 K3的无线性能貌似不错，现在也有了Snapshot固件可以下载，但是官方对屏幕做的适配不多，网络上的个人编译版本多是按照个人喜好来编译的，屏幕控制，无线信号，插件，各有优缺，那为什么不自己编译一个呢
 <!--more-->
-**Update**:截至2019年11月14日，OpenWrt 19.07rc1已经发布了，另外还有18.06.5
+**Update**:截至2019年11月14日，OpenWrt 19.07rc1已经发布了，另外还有18.06.5，这次更新应该还是会修复不少问题吧（因为上个版本的问题实在是比较多）
 ## 硬件
 
 斐讯K3 A1版
@@ -39,7 +39,7 @@ K3的无线性能貌似不错，现在也有了Snapshot固件可以下载，但�
 
 很期待一台高性能的，无线强劲的OpenWrt路由器（价格要可以接受才行）
 
-## K3的OpenWrt及19.07新特性
+## 19.07新特性
 
 我翻了下OpenWrt的Table of Hardware，发现已经有了Snapshot的支持，并且也没有说明硬件不可用之类的，一般来说，也就是下个stable release就支持了，距离18.06也有很长一段时间了，19.07应该发布在即，因为其他的OpenWrt设备都在履行自己的义务，拿这个体验下新系统也不错，首先我是下载了编译好的snapshot固件，感受下19.07版本的新特性：
 
@@ -120,6 +120,8 @@ K3的无线性能貌似不错，现在也有了Snapshot固件可以下载，但�
 直接使用了[社区](https://www.right.com.cn/forum/thread-466672-1-1.html)的无线固件，貌似和lean的仓库中的[k3-brcmfmac4366c-firmware](https://github.com/coolsnowwolf/lede/tree/master/package/lean/k3-brcmfmac4366c-firmware)一样，
 
 其他的固件可以参考[/Hill-98/phicommk3-firmware](https://github.com/Hill-98/phicommk3-firmware)做替换，固件在OpenWrt的```/lib/firmware/brcm/ ```目录下
+
+这里插一句...前段时间编译K2P的19.07的Snapshot时发现有MT7615e的驱动，K2P貌似只有一颗MT7615e，编译勾选之后也就可以用用2.4G频段，适当设置下速度还是有80Mbps的，5G有但是不能用
 
 ## 编译经过
 
@@ -227,7 +229,7 @@ make的帮助中写到：
 
 ### 拷贝生成的文件到Windows
 
-使用8700K@4.3G，Docker分配10 CPUs+4G RAM + 60G HDD，使用十线程编译的时候需要二十分钟左右，磁盘占用80%以上，最后生成的固件和ipk在/bin目录下，回到Windows目录下，从容器中拷贝文件就好
+使用8700K@4.3G，Docker分配10 CPUs + 4G RAM + 60G HDD，使用十线程编译的时候需要二十分钟左右，磁盘占用80%以上，最后生成的固件和ipk在/bin目录下，回到Windows目录下，从容器中拷贝文件就好
 ```
 mkdir ./bin
 docker cp Container_ID:/openwrt/bin/ .
@@ -278,9 +280,14 @@ config wifi-iface
         option ssid     OpenWrt    #这里修改默认SSID SSID中不允许有空格
         option encryption none
 ```
+### 修改内核版本
+在后面 Snapshot安装软件 部分也有提到，有一个这样的概括
+- 如果要回滚repo到之前的某个commit，请参阅git使用指南
+- 如果你要修改内核发行版本，比如4.9改到4.4，请修改对应target的Makefile中的KERNEL_PATCHVER
+- 如果你要修改指定内核发行版本的修订版本，比如4.9.111改到4.9.110，请修改include/kernel-version.mk
 
 ## 已知的问题
-
+K3方面
 - 屏幕流量统计基于iptable的IPv4 Forward，然而再开启硬件转发的时候是统计不到的
 
 - 屏幕路由网速监测基于默认的WAN的流量
@@ -288,6 +295,9 @@ config wifi-iface
 - 无线偶尔会出现Not Associate的情况，需要重启（用过的OpenWrt都有这个问题）
 
 - 查看无线连接部分都只有20MHz的频宽（实测发现是80MHz）
+
+对19.07的mater分支
+- 默认的PPPoE貌似没有设置掉线检测
 
 ## OpenWrt下使用感受
 
