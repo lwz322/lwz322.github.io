@@ -45,7 +45,7 @@ article_header:
 建议选有官方固件支持，软件支持的路由器（也就是不太建议刷仅有民间固件的那种了，不开源感觉不安全），具体可以参考官方支持的[Hardware Table](https://OpenWrt.org/toh/start)，进入某一款路由器的详情界面就可以看到支持的情况
 
 或者是论坛，一般都会有详细的刷机教程，如国内的[恩山](https://right.com.cn/forum/portal.php)，[Koolshare](http://koolshare.cn/portal.php)
->就刷OpenWrt而言，推荐以高通（QAC）和联发科（MTK）或者软路由为主，博通CPU的因为驱动开源的不太好，所以可能会缺少无线功能，对于MTK平台有开源的MT76项目驱动，部分无线芯片依然运行情况不太好，总之不对OpenWrt的无线期望太高
+> 就刷OpenWrt而言，推荐以高通（QAC）和联发科（MTK）或者软路由为主，博通CPU的因为驱动开源的不太好，所以可能会缺少无线功能（如果有能用的闭源驱动也不错），对于MTK平台有开源的MT76项目驱动，部分无线芯片依然运行情况不太好，总之不对OpenWrt的无线期望太高
 
 ### 版本
 官方版本的话，主要是稳定版(写这篇文章的时候最新的是18.06.4)和每日构建的版本(Snapshot)
@@ -89,6 +89,8 @@ OpenWrt的仓库那个AriaNG版本比较老了，可以先安装一个AraiNg的I
 如果要测试较为极限的吞吐能力可以用参数```-P 10```
 
 至于要测试路由器到互联网的上下行速度可以参考附录中的命令行Speedtest
+
+在最新的OpenWrt的package仓库中新加入了一个测试网络性能的命令行工具：[Netperf](https://github.com/openwrt/packages/tree/master/net/speedtest-netperf/files)
 
 ### mtr
 mtr是ping和traceroute的结合，网络问题排查的利器
