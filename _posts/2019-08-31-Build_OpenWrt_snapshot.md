@@ -23,11 +23,17 @@ article_header:
 K3的无线性能貌似不错，现在也有了Snapshot固件可以下载，但是官方对屏幕做的适配不多，网络上的个人编译版本多是按照个人喜好来编译的，屏幕控制，无线信号，插件，各有优缺，那为什么不自己编译一个呢
 
 <!--more-->
+
+# 前言
+我翻了下OpenWrt的Table of Hardware，发现K3已经有了Snapshot的支持，并且也没有说明硬件不可用之类的，一般来说，下个stable release就完全可以拿来用了；因为其他的OpenWrt设备都在履行自己的义务，拿这个体验下新系统也不错，首先我是下载了编译好的snapshot固件，感受下19.07版本的新特性
+
 本文的编译工作基于OpenWrt官方的19.07分支的源码，参考了部分已有的K3固件，加入了屏幕组件以及闭源无线驱动，因为GPL协议，所以不提供固件
 
 另外使用了个人修改的屏幕组件的有恩山论坛的[K3 openwrt固件](https://www.right.com.cn/forum/thread-1275902-1-1.html)，基于的lean的lede，做的很细致，感兴趣可以试试
 
-**Update**:2019年11月，OpenWrt 19.07 rc1发布了，明显的变化：
+# OpenWrt 19.07
+
+2019年11月，OpenWrt 19.07 rc1发布了，明显的变化：
 
 - 大幅更新了LuCi界面
  - 扁平 + 卡片式二级设置，更多的标签
@@ -42,24 +48,6 @@ K3的无线性能貌似不错，现在也有了Snapshot固件可以下载，但�
 其他的可见于[Release Notes](https://openwrt.org/releases/19.07/notes-19.07.0-rc1)，后文也提供了几张截图作为参考
 
 另外还有18.06.5，修复了之前Web界面上status界面错位的问题，整体风格上部分和19.07同步
-
-# 硬件
-
-斐讯K3 A1版
-- CPU: BCM4709C Cortex A9 1.4GHz 40nm制程
-- RAM: 512MB DDR3-1600
-- flash: 128MB NAND Flash
-- 无线芯片: BMC4366 * 2, 4×4 MU-MIMO
-- 功放: SKY2623L + PA5542
-- 接口: 千兆 wan 口 + 千兆 lan 口 * 3 + USB 3.0
-
-硬件上跟华硕的AC88U差不多，信号在acwifi的测试中相当强悍，做AP的效果不错，遗憾是K3没有160MHz的频宽，无法适配市场上现有的一批廉价的2x2的1.7G网卡；硬件上明显的缺点是芯片的制程太过落后，发热感人
-
-一直很期待一台高性能的，无线强劲的OpenWrt路由器（价格要可以接受才行），所幸“漏油”问题已经通过更换铜片+硅脂的解决了
-
-# 19.07新特性
-
-我翻了下OpenWrt的Table of Hardware，发现K3已经有了Snapshot的支持，并且也没有说明硬件不可用之类的，一般来说，下个stable release就完全可以拿来用了；因为其他的OpenWrt设备都在履行自己的义务，拿这个体验下新系统也不错，首先我是下载了编译好的snapshot固件，感受下19.07版本的新特性：
 
 ## LuCi界面优化
 
@@ -85,7 +73,30 @@ K3的无线性能貌似不错，现在也有了Snapshot固件可以下载，但�
 
 ![](https://img.vim-cn.com/a6/8c6d33d90e84c59457490898fac81c0eed0922.png)
 
-# K3在OpenWrt下的问题
+## 其他
+
+前段时间编译K2P的19.07的Snapshot时发现有MT7615e的驱动，K2P貌似只有一颗MT7615e，编译勾选之后也就可以用用2.4G频段，适当设置下速度还是有80Mbps的，5G有但是不能用
+
+另外小米路由3G（R3G）从18.06升级19.07的时候发现无论使用mtd还是sysupgrade都不行，前者提示can't open device，后者则是format not support，即使是升级到可能的国度版本18.06.5还是不行，后面我查了下mt7621.mk的commit log，发现R3G自一次[commit](https://github.com/openwrt/openwrt/commit/7f00123d63584e8d7da717c89fd1df610a161983)默认不再编译tar格式的sysupgrade
+
+故这里需要先修改下mk文件为之前的版本才可以通过bin文件做sysupgrade
+
+# K3相关
+## 硬件
+
+斐讯K3 A1版
+- CPU: BCM4709C Cortex A9 1.4GHz 40nm制程
+- RAM: 512MB DDR3-1600
+- flash: 128MB NAND Flash
+- 无线芯片: BMC4366 * 2, 4×4 MU-MIMO
+- 功放: SKY2623L + PA5542
+- 接口: 千兆 wan 口 + 千兆 lan 口 * 3 + USB 3.0
+
+硬件上跟华硕的AC88U差不多，信号在acwifi的测试中相当强悍，做AP的效果不错，遗憾是K3没有160MHz的频宽，无法适配市场上现有的一批廉价的2x2的1.7G网卡；硬件上明显的缺点是芯片的制程太过落后，发热感人
+
+一直很期待一台高性能的，无线强劲的OpenWrt路由器（价格要可以接受才行），所幸“漏油”问题已经通过更换铜片+硅脂的解决了
+
+## K3在OpenWrt下的问题
 
 看完了一些新特性来说下目前的Snapshot固件存在的问题
 
@@ -103,11 +114,11 @@ K3的无线性能貌似不错，现在也有了Snapshot固件可以下载，但�
 
 最后还是要自己动手，但是完全可以参考上面的固件来编译，然后我就打开了Github，找K3的屏幕和无线方面可用的资源
 
-# 解决方案
+## 解决方案
 
 主要解决的还是屏幕和无线信号两个问题，因为参考的东西比较杂（东拼西凑），这里做个大致的描述，相关的代码都在个人的Github仓库下
 
-## 屏幕的处理
+### 屏幕的处理
 
 屏幕包括几个部分：屏幕控制的源码，luci-app设置界面，屏幕界面信息更新脚本以及综合以上的编译设置文件
 
@@ -117,29 +128,21 @@ K3的无线性能貌似不错，现在也有了Snapshot固件可以下载，但�
 
 最后使用修改自 [lean/lede](https://github.com/lean/lede) 中的编译文件 [lwz322/k3screenctrl_build](https://github.com/lwz322/k3screenctrl_build) 编译
 
-## 屏幕界面的情况
+### 屏幕界面的情况
 
-第一屏：升级界面
+- 第一屏：升级界面
+- 第二屏：型号，温度，MAC，软件版本
+- 第三屏：接口
+- 第四屏：网速以及2.4G和5G WiFi的接入客户端数量
+- 第五屏：天气，时间
+- 第六屏：WiFi信息：SSID和密码（可选隐藏）
+- 第七屏：已接入终端和网速
 
-第二屏：型号，温度，MAC，软件版本
-
-第三屏：接口
-
-第四屏：网速以及2.4G和5G WiFi的接入客户端数量
-
-第五屏：天气，时间
-
-第六屏：WiFi信息：SSID和密码（可选隐藏）
-
-第七屏：已接入终端和网速
-
-## 无线固件部分
+### 无线固件部分
 
 直接使用了[社区](https://www.right.com.cn/forum/thread-466672-1-1.html)的无线固件，貌似和lean的仓库中的[k3-brcmfmac4366c-firmware](https://github.com/coolsnowwolf/lede/tree/master/package/lean/k3-brcmfmac4366c-firmware)一样，
 
 其他的固件可以参考[/Hill-98/phicommk3-firmware](https://github.com/Hill-98/phicommk3-firmware)做替换，固件在OpenWrt的```/lib/firmware/brcm/ ```目录下
-
-这里插一句...前段时间编译K2P的19.07的Snapshot时发现有MT7615e的驱动，K2P貌似只有一颗MT7615e，编译勾选之后也就可以用用2.4G频段，适当设置下速度还是有80Mbps的，5G有但是不能用
 
 # 编译固件
 
