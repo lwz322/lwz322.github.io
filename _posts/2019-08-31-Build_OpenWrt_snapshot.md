@@ -1,6 +1,6 @@
 ---
 layout: article
-title: 编译OpenWrt Snapshot固件
+title: 编译OpenWrt固件
 author :
 mathjax: true
 mermaid: true
@@ -21,20 +21,31 @@ article_header:
 ---
 
 K3的无线性能貌似不错，现在也有了Snapshot固件可以下载，但是官方对屏幕做的适配不多，网络上的个人编译版本多是按照个人喜好来编译的，屏幕控制，无线信号，插件，各有优缺，那为什么不自己编译一个呢
+
 <!--more-->
-**Update**:2019年11月，OpenWrt 19.07 rc1发布了：
+本文的编译工作基于OpenWrt官方的19.07分支的源码，参考了部分已有的K3固件，加入了屏幕组件以及闭源无线驱动，因为GPL协议，所以不提供固件
+
+另外使用了个人修改的屏幕组件的有恩山论坛的[K3 openwrt固件](https://www.right.com.cn/forum/thread-1275902-1-1.html)，基于的lean的lede，做的很细致，感兴趣可以试试
+
+**Update**:2019年11月，OpenWrt 19.07 rc1发布了，明显的变化：
+
 - 大幅更新了LuCi界面
  - 扁平 + 卡片式二级设置，更多的标签
- - 移动端网页自适应布局，提高响应速度
+ - 移动端网页自适应布局
+ - 通过客户端渲染提高响应速度
+- 放弃了对部分8M设备的支持，默认有更完整的功能体验，包括但不限于
  - 安装软件方面支持网页查看依赖树以及上传ipk安装
-- 替换了Favcion，内核的基线全部到4.14
+ - 8M以上的设备默认使用wpad-basic，支持802.11r无线漫游
+- 替换了网页的Favcion，内核的基线全部到4.14
+- 其他的就是一些Bug修复，包括讨论的比较多的openssl，DHCPv6
 
-另外还有18.06.5，修复了之前status界面错位的问题，风格上部分和19.07同步
+其他的可见于[Release Notes](https://openwrt.org/releases/19.07/notes-19.07.0-rc1)，后文也提供了几张截图作为参考
 
-## 硬件
+另外还有18.06.5，修复了之前Web界面上status界面错位的问题，整体风格上部分和19.07同步
+
+# 硬件
 
 斐讯K3 A1版
-
 - CPU: BCM4709C Cortex A9 1.4GHz 40nm制程
 - RAM: 512MB DDR3-1600
 - flash: 128MB NAND Flash
@@ -42,16 +53,15 @@ K3的无线性能貌似不错，现在也有了Snapshot固件可以下载，但�
 - 功放: SKY2623L + PA5542
 - 接口: 千兆 wan 口 + 千兆 lan 口 * 3 + USB 3.0
 
-硬件上跟华硕的AC88U差不多，信号在acwifi的测试中相当强悍，做AP的效果也不错，无线方面的相差的是不支持160MHz的频宽，无法适配市场上现有的一批廉价的2x2的1.7G网卡，以及开源驱动太弱
-，“漏油”问题已经通过更换铜片+硅脂的解决了，由于芯片的制程太过落后，发热感人
+硬件上跟华硕的AC88U差不多，信号在acwifi的测试中相当强悍，做AP的效果不错，遗憾是K3没有160MHz的频宽，无法适配市场上现有的一批廉价的2x2的1.7G网卡；硬件上明显的缺点是芯片的制程太过落后，发热感人
 
-很期待一台高性能的，无线强劲的OpenWrt路由器（价格要可以接受才行）
+一直很期待一台高性能的，无线强劲的OpenWrt路由器（价格要可以接受才行），所幸“漏油”问题已经通过更换铜片+硅脂的解决了
 
-## 19.07新特性
+# 19.07新特性
 
-我翻了下OpenWrt的Table of Hardware，发现已经有了Snapshot的支持，并且也没有说明硬件不可用之类的，一般来说，也就是下个stable release就支持了，距离18.06也有很长一段时间了，19.07应该发布在即，因为其他的OpenWrt设备都在履行自己的义务，拿这个体验下新系统也不错，首先我是下载了编译好的snapshot固件，感受下19.07版本的新特性：
+我翻了下OpenWrt的Table of Hardware，发现K3已经有了Snapshot的支持，并且也没有说明硬件不可用之类的，一般来说，下个stable release就完全可以拿来用了；因为其他的OpenWrt设备都在履行自己的义务，拿这个体验下新系统也不错，首先我是下载了编译好的snapshot固件，感受下19.07版本的新特性：
 
-### LuCi界面优化
+## LuCi界面优化
 
 首页的布局小改，截图底部的[排版错乱](https://www.jarviswang.me/?p=1119)终于被修复了，另外就是改动了选项卡的样式，在页面内呈现更多的信息
 ![](https://img.vim-cn.com/23/de476c3304bf0ff2047dd513fe03cc16b67440.png)
@@ -65,7 +75,7 @@ K3的无线性能貌似不错，现在也有了Snapshot固件可以下载，但�
 
 从LEDE 17到OpenWrt 18，引入更多的色彩，突出重点，界面也变得更活泼，OpenWrt 19界面升级的重点大概是在布局上面，让内容变得更易读
 
-### 无线方面
+## 无线方面
 
 现在可以在路由器把连接的客户端断开了
 
@@ -75,7 +85,7 @@ K3的无线性能貌似不错，现在也有了Snapshot固件可以下载，但�
 
 ![](https://img.vim-cn.com/a6/8c6d33d90e84c59457490898fac81c0eed0922.png)
 
-### 存在的问题
+# K3在OpenWrt下的问题
 
 看完了一些新特性来说下目前的Snapshot固件存在的问题
 
@@ -93,11 +103,11 @@ K3的无线性能貌似不错，现在也有了Snapshot固件可以下载，但�
 
 最后还是要自己动手，但是完全可以参考上面的固件来编译，然后我就打开了Github，找K3的屏幕和无线方面可用的资源
 
-## 框架
+# 解决方案
 
 主要解决的还是屏幕和无线信号两个问题，因为参考的东西比较杂（东拼西凑），这里做个大致的描述，相关的代码都在个人的Github仓库下
 
-### 屏幕的处理
+## 屏幕的处理
 
 屏幕包括几个部分：屏幕控制的源码，luci-app设置界面，屏幕界面信息更新脚本以及综合以上的编译设置文件
 
@@ -107,7 +117,7 @@ K3的无线性能貌似不错，现在也有了Snapshot固件可以下载，但�
 
 最后使用修改自 [lean/lede](https://github.com/lean/lede) 中的编译文件 [lwz322/k3screenctrl_build](https://github.com/lwz322/k3screenctrl_build) 编译
 
-### 屏幕界面的情况
+## 屏幕界面的情况
 
 第一屏：升级界面
 
@@ -123,7 +133,7 @@ K3的无线性能貌似不错，现在也有了Snapshot固件可以下载，但�
 
 第七屏：已接入终端和网速
 
-### 无线固件部分
+## 无线固件部分
 
 直接使用了[社区](https://www.right.com.cn/forum/thread-466672-1-1.html)的无线固件，貌似和lean的仓库中的[k3-brcmfmac4366c-firmware](https://github.com/coolsnowwolf/lede/tree/master/package/lean/k3-brcmfmac4366c-firmware)一样，
 
@@ -131,10 +141,11 @@ K3的无线性能貌似不错，现在也有了Snapshot固件可以下载，但�
 
 这里插一句...前段时间编译K2P的19.07的Snapshot时发现有MT7615e的驱动，K2P貌似只有一颗MT7615e，编译勾选之后也就可以用用2.4G频段，适当设置下速度还是有80Mbps的，5G有但是不能用
 
-## 编译经过
+# 编译固件
 
-这里对网络环境有一定的需求，一般都是推荐在国外的VPS上编译，如果在本地编译需要开代理，安装Docker和Git就不说了，如果觉得Docker和SSH的命令行
-对修改源码体验不好，可以使用VSCode加上Remote-Docker/SSH插件，再安装一个Terminal插件就很舒服了
+这里对网络环境有一定的需求，一般都是推荐在国外的VPS上编译，如果在本地编译需要开代理，安装Docker和Git就不说了，如果觉得Docker和SSH的命令行对修改源码体验不好，可以使用VSCode加上Remote-Docker/SSH插件，再安装一个Terminal插件就很舒服了
+
+## 准备工作
 
 介绍下硬件环境的要求：
 
@@ -151,7 +162,7 @@ Filesystem      Size  Used Avail Use% Mounted on
 
 主要是避免环境之间的互相影响，这里也不推荐使用WSL，原因是WSL的文件系统依然是Windows文件系统，需要做些额外的工作，详情见文末的参考部分
 
-这里还可能存在的问题就是OpenWrt官方建议不要使用root用户编译固件，但是实测没有问题，保险起见也可以使用[ p3terx/openwrt-build-env](https://p3terx.com/archives/build-openwrt-with-docker.html)提供的Docker
+这里还可能存在的问题就是OpenWrt官方建议不要使用root用户Git和编译固件，但是实测没有问题，保险起见也可以使用[p3terx/openwrt-build-env](https://p3terx.com/archives/build-openwrt-with-docker.html)提供的Docker，这里就从简了
 
 ```powershell
 git clone https://github.com/lwz322/OpenWrt_build_Docker.git
@@ -165,7 +176,6 @@ sed  -i 's!http://mirrors.ustc.edu.cn!URL!g' DOCKERFILE
 ```
 
 image构建完成之后运行
-
 ```powershell
 docker run --rm -it openwrt_builder
 ```
@@ -198,12 +208,13 @@ cd ~/openwrt
 
 如果有其他的包要添加到编译目录的话，把源码或者编译目录clone到package的一个文件夹下即可，如果是从其他人的OpenWrt源码中搬来的话要注意下是否有特殊的倚赖
 
-### 编译
+## 编译与刷机
 
 先介绍一个技巧：修改固件的Makefile使其只编译K3的固件，大大减少编译需要的时间
 ```bash
 sed -i 's|^TARGET_|# TARGET_|g; s|# TARGET_DEVICES += phicomm-k3|TARGET_DEVICES += phicomm-k3|' target/linux/bcm53xx/image/Makefile
 ```
+### 编译选项
 
 之后打开编译选项：
 ```bash
@@ -216,7 +227,7 @@ make menuconfig
 - LuCi->Application 中的 luci-app-k3screenctrl
 - snapshot默认没有的web管理界面 LuCi -> Collection -> luci
 
-其他的软件包自选，建议最开始选最可能出错的包编译，选择完成之后一路Exit，也可以保存配置文件，为了避免可能出现的软件包倚赖和网络问题，先检查倚赖和下载选择编译的包的源码
+其他的软件包自选，选择完成之后一路Exit，保存配置文件，为了避免可能出现的软件包倚赖和网络问题，先检查倚赖和下载选择编译的包的源码，建议最开始选最基本的包编译，成功之后的编译可以用到之前编译的中间文件
 
 ```bash
 make defconfig
@@ -225,6 +236,8 @@ make download
 这一步需要的时间比较长（取决于网速和添加的包的数量，20Mbps大概十分钟），期间可以用tmux分屏去[修改默认的设置](https://lwz322.github.io/2019/08/31/Build_OpenWrt_snapshot.html#%E5%85%B6%E4%BB%96%E8%AE%BE%E7%BD%AE%E7%9A%84%E4%BF%AE%E6%94%B9)之类的
 
 这一步之前的所有步骤也可以在VPS完成，打包编译目录放到本地高性能的机器编译以节约时间
+
+### Make
 
 ```bash
 make -j 1 V=99
@@ -237,10 +250,10 @@ make的帮助中写到：
 
 我是先用```-j10```做最简编译，之后再添加常用的包做二次编译，如果不需要生成完整的固件的话，单独编译包也是可以的
 
-### 拷贝生成的文件到Windows
+### 拷贝文件到Windows
 
-使用8700K@4.3G，Docker分配10 CPUs + 4G RAM + 60G HDD，使用十线程编译的时候需要二十分钟左右，磁盘占用80%以上，最后生成的固件和ipk在/bin目录下，回到Windows目录下，从容器中拷贝文件就好
-```
+使用8700K@4.3G，Docker分配10 CPUs + 4G RAM + 60G HDD，使用十线程编译的时候需要二十分钟左右，磁盘占用80%以上，最后生成的固件和ipk在/bin目录下，回到Windows目录下，从容器中拷贝文件就好（VSCode Remote右键Download即可）
+```shell
 mkdir ./bin
 docker cp Container_ID:/openwrt/bin/ .
 ```
@@ -299,19 +312,16 @@ config wifi-iface
 ## 已知的问题
 K3方面
 - 屏幕流量统计基于iptable的IPv4 Forward，然而再开启硬件转发的时候是统计不到的
-
 - 屏幕路由网速监测基于默认的WAN的流量
-
 - 无线偶尔会出现Not Associate的情况，需要重启（用过的OpenWrt都有这个问题）
-
 - 查看无线连接部分都只有20MHz的频宽（实测发现是80MHz）
 
-对19.07的mater分支
+对19.07
 - 默认的PPPoE貌似没有设置掉线检测
 
-## OpenWrt下使用感受
+# OpenWrt下使用感受
 
-### 无线
+## 无线
 
 当前想要作为无线路由使用的话是肯定要换无线固件的，我的7260AC网卡在近距离（同一个房间内）使用iperf3测试下载和上传速度，5G的实际传输速度300Mbp左右，5M，相隔两堵墙的情况下200Mbps左右，再远一点100Mbps，三堵墙就GG了，在我使用的OpenWrt的路由器中是最好的（一般隔一墙就GG），对比之前家里用的荣耀路由Pro（当时比较迷信华为的产品），在同样的位置K3可以满速，而前者已经是没有信号了，据说K3的无线功率相当的高（超出国标的那种），发热也很大，连接着两台设备的情况下，温度可以到70以上（还是改了散热的情况下）
 
@@ -319,7 +329,7 @@ K3方面
 
 注：多设备连接的MU-MIMO的情形，现在的OpenWrt还不支持，从这方面来说OpenWrt路由器不适合做高性能的AP
 
-### CPU运算性能
+## CPU运算性能
 
 就以专门为ARM设计的ChaCha20算法以及常用的AES-256-CBC测试，BCM4709@1.4G的单线程openssl加解密速度测试结果如下
 ```bash
@@ -344,7 +354,7 @@ aes-256-cbc       4877.62k     5635.73k     5527.98k     6159.36k     5644.29k  
 
 AES的测试结果大幅领先应该是得益于架构上的优势（BCM4709是ARMv7架构，不支持AES硬件加速，但是相比MIPS还是有优势的），就是日常使用温度比较高（40nm制程落后）
 
-### Snapshot安装软件
+## Snapshot安装软件
 
 Snapshot版本的源码是滚动更新的（包括内核版本），而官方的仓库[releases/19.07-SNAPSHOT/](https://downloads.openwrt.org/releases/19.07-SNAPSHOT/)中的软件分为package和kmod，前者一般对内核版本的倚赖不多，但是后者对内核版本是有比较严格的要求的，这就导致，即使是官方仓库中有的软件，都会出现无法安装的情况：
 
@@ -362,7 +372,7 @@ Collected errors:
 
 所以Snapshot版本并不适合经常需要加装软件的情况
 
-### 功耗
+## 功耗
 
 先说个有趣的事情，因为自带的电源适配器太占插座了，我使用了 QC2.0的手机充电器+诱骗器+USB-DC线 供电，然而诱骗失效了，5V的电压下，路由器居然可以正常的工作，这意味着可以使用USB-DC线接到高输出的USB插座上给K3供电，这个也和功耗有关：
 
@@ -370,7 +380,7 @@ Collected errors:
 
 对比MT7261的K2P，峰值功耗15W，但是平时使用就只有6W左右，K3的电费有些不太划算
 
-## 参考
+# 参考
 
 [OpenWrt 编译失败的原因及解决方案](https://p3terx.com/archives/reasons-and-solutions-for-openwrt-compilation-failure-3.html)
 
