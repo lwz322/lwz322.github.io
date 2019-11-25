@@ -24,7 +24,7 @@ article_header:
 
 <!--more-->
 
-## 关于OpenWrt
+# 关于OpenWrt
 ![Wireless Freedom](https://openwrt.org/lib/tpl/openwrt/images/logo.png)
 
 从OpenWrt Logo下面的那个Wireless Freedom讲起吧，几个里程碑
@@ -40,24 +40,33 @@ article_header:
 
 > 关于开源的路由器系统的稳定性问题，众说纷纭，OpenWrt支持的硬件多，针对某一特定的硬件的稳定性是比较随缘的，尤其是部分路由器的硬件设计上的稳定性就一般，如果准备在稳定性要求较高的环境使用，要谨慎（使用的工具越简单越好）
 
-## 如何开始
-### 硬件
+# 如何开始
+## 硬件
 建议选有官方固件支持，软件支持的路由器（也就是不太建议刷仅有民间固件的那种了，不开源感觉不安全），具体可以参考官方支持的[Hardware Table](https://OpenWrt.org/toh/start)，进入某一款路由器的详情界面就可以看到支持的情况
 
 或者是论坛，一般都会有详细的刷机教程，如国内的[恩山](https://right.com.cn/forum/portal.php)，[Koolshare](http://koolshare.cn/portal.php)
 > 就刷OpenWrt而言，推荐以高通（QAC）和联发科（MTK）或者软路由为主，博通CPU的因为驱动开源的不太好，所以可能会缺少无线功能（如果有能用的闭源驱动也不错），对于MTK平台有开源的MT76项目驱动，部分无线芯片依然运行情况不太好，总之不对OpenWrt的无线期望太高
 
-### 版本
-官方版本的话，主要是稳定版(写这篇文章的时候最新的是18.06.4)和每日构建的版本(Snapshot)
->后者没有自带LuCI界面，需要自己安装，又因为版本太新，不是所有的软件都有已经编译好的ipk，优势在于可以体验到最新的驱动之类的
+## 固件
+### 官方固件
+官方编译的版本主要是稳定版(写这篇文章的时候最新的是18.06.4)和每日构建的版本(Snapshot)，前者用的最广泛，后者没有自带LuCI界面，需要自己安装，又因为版本太新，不是所有的软件都有已经编译好的ipk
 
-国内也有各种个人修改的版本，比较出名的：[Lean's OpenWrt source](https://github.com/coolsnowwolf/lede)，作者现在只提供源码，网上有很多编译好的版本，内置了一些常用的软件以及“魔改”，还有些软件是特有的，极大的拓展了OpenWrt路由的实用性和便捷性，如果不想折腾太多而获得一系列的功能可以考虑，缺点就是他人编译的版本的自带的配置可能会和要做的配置冲突
+### 第三方固件
+在各种论坛里面推广的多是这一种，如果不想折腾太多就获得一系列的功能可以考虑
 
-因为为了统一标准，大多数教程都会以在官方的OpenWrt上配置为准，比如说一些多拨固件默认开启的负载均衡和自带的IPv6功能有冲突，虽然一步步分析可以解决，但是这种折腾的必要性不大
+比较出名的：[Lean's OpenWrt source](https://github.com/coolsnowwolf/lede)，作者现在只提供源码，主要特点：
+- 内置了部分实用的软件，如多拨助手
+- 功能性的“魔改”，如Full Cone NAT，DNS加速
+- 更新速度比官方快，紧跟民间的OpenWrt前沿
 
-当然也可以自己编译，因为受限与路由器的存储空间和性能，固件的Linux内核被精简，部分软件也被精简了，比如说某些功能的实现就依赖于完全体的dnsmasq-full，推荐在编译时就处理好这个倚赖，对于Snapshot版本而言，官方仓库里没有预编译软件包或者系统不支持ipk安装，又或者发行版的软件仓库中收录的软件版本不合适，这些都需要自行编译解决，这里可以参考[编译OpenWrt Snapshot固件](https://lwz322.github.io/2019/08/31/Build_OpenWrt_snapshot.html)，不过不推荐Snapshot版本日常使用，因为后续安装软件相对不便
+另外还有pandorabox，据说多拨比较厉害
 
-## 软件推荐
+第三方固件的缺点是自带的配置可能会和要做的配置冲突，而为了统一标准，大多数教程都会以在官方的OpenWrt上配置为准，比如说一些多拨固件默认开启的负载均衡和自带的IPv6功能有冲突，虽然一步步分析可以解决，但是这种折腾的必要性不大
+
+### 自编译
+当然也可以自己编译，因为受限与路由器的存储空间和性能，固件的Linux内核被精简，部分软件也被精简了，比如说某些功能的实现就依赖于完全体的dnsmasq-full，推荐在编译时就处理好这个倚赖，对于Snapshot版本，官方仓库里缺少部分预编译软件包，又或者软件依赖不匹配，这些都需要自行编译解决，这里可以参考[编译OpenWrt Snapshot固件](https://lwz322.github.io/2019/08/31/Build_OpenWrt_snapshot.html)，一般还是推荐使用稳定版的源码编译
+
+# 软件推荐
 官方的[Ueser Guide](https://openwrt.org/docs/guide-user/start)以及[Old Wiki](https://oldwiki.archive.openwrt.org/doc/howto/start)(看起来简洁一些)从功能上对软件划分，相当全面和详细的介绍了OpenWrt的功能及其实现的软件，这里主要是推荐一下个人用过的，体验还OK的部分软件
 
 前半部分主要是OpenWrt下常用的Linux平台下的命令行工具：
@@ -121,7 +130,7 @@ OpenWrt上少有的分设备的LuCi界面下的网速监测工具，没有官方
 ![netdata](https://img.vim-cn.com/e3/44f5fa92845bda4dc5c31193badd6c2da0f87c.jpg)
 算是一个比较好看的性能监测界面了，第一次见到还是印象深刻，然而用处...对个人来说不大，效果可以看[Github](https://github.com/netdata/netdata)，在OpenWrt中直接用``opkg install netdata``就好，之后直接访问LuCI管理IP的19999端口就可以看到了，优点还是信息量大，占用低
 
-## 实用的功能
+# 实用的功能
 脱离了简单的应用软件层面，部分需要shell编程
 
 ### 交换机 Switch
@@ -142,7 +151,7 @@ VLAN可以实现相对高级的交换机/路由器的级联，常见的比如：
 
 >There are various implementations of cron. Commonly there will be per-user crontab files (accessed with the command crontab -e) as well as system crontabs in /etc/cron.daily, /etc/cron.hourly, etc.
 
-LuCI的System->Scheduled Tasks中就是了，和Linux中的Crontab差不多，所以查下就好，算是简单实用的东西了，用来做个定时重启、运行某个脚本都是可以的,下面这个就是定时断开和连接一个PPPoE拨号
+LuCI的System -> Scheduled Tasks中就是了，和Linux中的Crontab差不多，所以查下就好，算是简单实用的东西了，用来做个定时重启、运行某个脚本都是可以的,下面这个就是定时断开和连接一个PPPoE拨号
 ```shell
 * 6 * * * /sbin/ifdown wan
 40 23 * * * /sbin/ifup wan
@@ -303,7 +312,7 @@ $ scp foo.txt bar.txt username@remotehost:/path/directory/
 $ scp username@remotehost:/path/directory/\{foo.txt,bar.txt\} .
 ```
 
-## 附录
+# 附录
 
 ### Speedtest
 偶尔有网络测速需求，OpenWrt安装Python要注意空间占用

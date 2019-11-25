@@ -20,26 +20,23 @@ article_header:
     gradient: 'linear-gradient(0deg, rgba(0, 0, 0 , .7), rgba(0, 0, 0, .7))'
 ---
 
-K3的无线性能貌似不错，现在也有了Snapshot固件可以下载，但是官方对屏幕做的适配不多，网络上的个人编译版本多是按照个人喜好来编译的，屏幕控制，无线信号，插件，各有优缺，那为什么不自己编译一个呢
+K3的无线性能貌似不错，现在也有了Snapshot固件可以下载，但是官方对屏幕做的适配不多，网络上的个人编译版本多是按照个人喜好来编译的，屏幕控制，无线信号，插件，各有优缺，那为什么不自己编译一个呢；本文介绍了19.07版本的新特性，并在windows下使用Docker编译了K3的编译
 
 <!--more-->
 
 # 前言
 我翻了下OpenWrt的Table of Hardware，发现K3已经有了Snapshot的支持，并且也没有说明硬件不可用之类的，一般来说，下个stable release就完全可以拿来用了；因为其他的OpenWrt设备都在履行自己的义务，拿这个体验下新系统也不错，首先我是下载了编译好的snapshot固件，感受下19.07版本的新特性
 
-本文的编译工作基于OpenWrt官方的19.07分支的源码，参考了部分已有的K3固件，加入了屏幕组件以及闭源无线驱动，因为GPL协议，所以不提供固件
-
-另外使用了个人修改的屏幕组件的有恩山论坛的[K3 openwrt固件](https://www.right.com.cn/forum/thread-1275902-1-1.html)，基于的lean的lede，做的很细致，感兴趣可以试试
+本文的编译工作基于OpenWrt官方的19.07分支的源码，参考了部分已有的K3固件，加入了屏幕组件以及闭源无线驱动，因为GPL协议，所以不提供固件，但是使用了个人修改的屏幕组件的有恩山论坛的[K3 openwrt固件](https://www.right.com.cn/forum/thread-1275902-1-1.html)，基于的lean的lede，感兴趣可以试试
 
 # OpenWrt 19.07
 
 2019年11月，OpenWrt 19.07 rc1发布了，明显的变化：
-
 - 大幅更新了LuCi界面
  - 扁平 + 卡片式二级设置，更多的标签
  - 移动端网页自适应布局
  - 通过客户端渲染提高响应速度
-- 放弃了对部分8M设备的支持，默认有更完整的功能体验，包括但不限于
+- 默认提供更完整的功能体验，包括但不限于
  - 安装软件方面支持网页查看依赖树以及上传ipk安装
  - 8M以上的设备默认使用wpad-basic，支持802.11r无线漫游
 - 替换了网页的Favcion，内核的基线全部到4.14
@@ -77,9 +74,9 @@ K3的无线性能貌似不错，现在也有了Snapshot固件可以下载，但�
 
 前段时间编译K2P的19.07的Snapshot时发现有MT7615e的驱动，K2P貌似只有一颗MT7615e，编译勾选之后也就可以用用2.4G频段，适当设置下速度还是有80Mbps的，5G有但是不能用
 
-另外小米路由3G（R3G）从18.06升级19.07的时候发现无论使用mtd还是sysupgrade都不行，前者提示can't open device，后者则是format not support，即使是升级到可能的国度版本18.06.5还是不行，后面我查了下mt7621.mk的commit log，发现R3G自一次[commit](https://github.com/openwrt/openwrt/commit/7f00123d63584e8d7da717c89fd1df610a161983)默认不再编译tar格式的sysupgrade
+另外小米路由3G（R3G）从18.06升级19.07的时候发现无论使用mtd还是sysupgrade都不行，前者提示can't open device，后者则是format not support，即使是升级到可能的国度版本18.06.5还是不行，后面我查了下mt7621.mk的commit log，发现R3G自一次[commit](https://github.com/openwrt/openwrt/commit/7f00123d63584e8d7da717c89fd1df610a161983)默认不再编译tar格式的sysupgrade，故这里需要先回滚mk文件中定义r3g固件格式的几行才可以编译得到tar文件做sysupgrade
 
-故这里需要先修改下mk文件为之前的版本才可以通过bin文件做sysupgrade
+对19.07，暂时发现了默认的PPPoE貌似没有设置掉线检测，也就是实际上掉线之后不会重拨
 
 # K3相关
 ## 硬件
@@ -96,7 +93,7 @@ K3的无线性能貌似不错，现在也有了Snapshot固件可以下载，但�
 
 一直很期待一台高性能的，无线强劲的OpenWrt路由器（价格要可以接受才行），所幸“漏油”问题已经通过更换铜片+硅脂的解决了
 
-## K3在OpenWrt下的问题
+## OpenWrt下的问题
 
 看完了一些新特性来说下目前的Snapshot固件存在的问题
 
@@ -118,7 +115,7 @@ K3的无线性能貌似不错，现在也有了Snapshot固件可以下载，但�
 
 主要解决的还是屏幕和无线信号两个问题，因为参考的东西比较杂（东拼西凑），这里做个大致的描述，相关的代码都在个人的Github仓库下
 
-### 屏幕的处理
+### 屏幕组件
 
 屏幕包括几个部分：屏幕控制的源码，luci-app设置界面，屏幕界面信息更新脚本以及综合以上的编译设置文件
 
@@ -128,8 +125,7 @@ K3的无线性能貌似不错，现在也有了Snapshot固件可以下载，但�
 
 最后使用修改自 [lean/lede](https://github.com/lean/lede) 中的编译文件 [lwz322/k3screenctrl_build](https://github.com/lwz322/k3screenctrl_build) 编译
 
-### 屏幕界面的情况
-
+具体的界面：
 - 第一屏：升级界面
 - 第二屏：型号，温度，MAC，软件版本
 - 第三屏：接口
@@ -138,7 +134,7 @@ K3的无线性能貌似不错，现在也有了Snapshot固件可以下载，但�
 - 第六屏：WiFi信息：SSID和密码（可选隐藏）
 - 第七屏：已接入终端和网速
 
-### 无线固件部分
+### 无线固件
 
 直接使用了[社区](https://www.right.com.cn/forum/thread-466672-1-1.html)的无线固件，貌似和lean的仓库中的[k3-brcmfmac4366c-firmware](https://github.com/coolsnowwolf/lede/tree/master/package/lean/k3-brcmfmac4366c-firmware)一样，
 
@@ -261,7 +257,7 @@ mkdir ./bin
 docker cp Container_ID:/openwrt/bin/ .
 ```
 
-## 刷机
+### 刷机
 
 我用OpenWrt...鉴于TFTP的刷机太麻烦，参考[自编译说明](https://www.right.com.cn/forum/forum.php?mod=viewthread&tid=419328)：
 
@@ -312,17 +308,13 @@ config wifi-iface
 - 如果你要修改内核发行版本，比如4.9改到4.4，请修改对应target的Makefile中的KERNEL_PATCHVER
 - 如果你要修改指定内核发行版本的修订版本，比如4.9.111改到4.9.110，请修改include/kernel-version.mk
 
+# 使用体验
 ## 已知的问题
-K3方面
+
 - 屏幕流量统计基于iptable的IPv4 Forward，然而再开启硬件转发的时候是统计不到的
 - 屏幕路由网速监测基于默认的WAN的流量
 - 无线偶尔会出现Not Associate的情况，需要重启（用过的OpenWrt都有这个问题）
 - 查看无线连接部分都只有20MHz的频宽（实测发现是80MHz）
-
-对19.07
-- 默认的PPPoE貌似没有设置掉线检测
-
-# OpenWrt下使用感受
 
 ## 无线
 
@@ -337,10 +329,9 @@ K3方面
 就以专门为ARM设计的ChaCha20算法以及常用的AES-256-CBC测试，BCM4709@1.4G的单线程openssl加解密速度测试结果如下
 ```bash
 root@K3:~# openssl speed -elapsed -evp chacha20
+#k3
  type             16 bytes     64 bytes    256 bytes   1024 bytes   8192 bytes  16384 bytes
- chacha20         41251.72k    88523.18k    93098.98k    98190.37k    92384.53k    93584.75k
-root@K3:~# openssl speed -elapsed -evp aes-256-cbc
- type             16 bytes     64 bytes    256 bytes   1024 bytes   8192 bytes  16384 bytes                                         
+ chacha20         41251.72k    88523.18k    93098.98k    98190.37k    92384.53k    93584.75k          
  aes-256-cbc      24429.85k    27700.11k    30198.27k    30665.23k    29156.44k    29420.67k    
 ```
 对比近几年主流的MT7621@880MHz以及MT7620@580MHz单线程测试结果
@@ -373,17 +364,17 @@ Collected errors:
 
 因为只有一串md5码，所以另辟蹊径也是可以的：[编译Openwrt固件安装软件内核版本不一致问题解决](https://www.haiyun.me/archives/1075.html)
 
-所以Snapshot版本并不适合经常需要加装软件的情况
+所以Snapshot版本并不适合经常需要加装软件的情况，但是现在有19.07 rc1可用，其软件仓库是有官方更新的
 
 ## 功耗
 
-先说个有趣的事情，因为自带的电源适配器太占插座了，我使用了 QC2.0的手机充电器+诱骗器+USB-DC线 供电，然而诱骗失效了，5V的电压下，路由器居然可以正常的工作，这意味着可以使用USB-DC线接到高输出的USB插座上给K3供电，这个也和功耗有关：
+先说个有趣的事情，因为自带的电源适配器太占插座了，我使用了 QC2.0的手机充电器 + 诱骗器 + USB-DC线 提供一个12V的供电，然而诱骗失效了，5V的电压下，路由器居然可以正常的工作，这意味着可以使用USB-DC线接到高输出的USB插座上给K3供电，这个也和功耗有关：
 
 实测，开机及待机状态下功率在10W左右，如果遇到CPU占用较高或者高速无线传输峰值功耗可以到18W（360插座依然强而有力），使用5V和12V USB-DC的时候出现过几次无法开机的情况，所以稳定性还是一般的
 
 对比MT7261的K2P，峰值功耗15W，但是平时使用就只有6W左右，K3的电费有些不太划算
 
-# 参考
+**参考**
 
 [OpenWrt 编译失败的原因及解决方案](https://p3terx.com/archives/reasons-and-solutions-for-openwrt-compilation-failure-3.html)
 
