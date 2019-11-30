@@ -22,13 +22,13 @@ article_header:
 
 <!--more-->
 
-## 环境
+# 环境
 
 python3环境即可，不过这里可以提的一点是网络环境，大概是我所在的地方访问Tesla的速度比较慢，爬取数据需要几个小时，后面我就把代码放到了Google云上面运行，几分钟就可以跑出结果，而且也不需要特别高的配置，因为这里用到基本的requests和正则匹配
 
 **声明**：因为个人学识有限，对多线程编程以及减轻对服务器的压力没有做过多的处理，可能会带来一些问题，所以只提供以一种解决问题的思路，顺带贴下的代码，仅供学习研究使用
 
-## 分析
+# 分析
 
 这里需要的主要是
 
@@ -58,11 +58,11 @@ python3环境即可，不过这里可以提的一点是网络环境，大概是�
 
 
 
-## 代码
+# 代码
 
-这里因为程序是单线程的，索性就把两种充电桩的代码分开写和分开运行了（假装是多线程....），不同的部分主要是网页url和匹配的规则
+这里因为程序是单线程的，索性就把两种充电桩的代码分开写和分开运行了，不同的部分主要是网页url和匹配的规则
 
-### Supercharger
+## Supercharger
 
 ```python
 #!/usr/bin/env python
@@ -141,18 +141,18 @@ print('Finished,totally got %d Charging Station,and %d Error'% (data_got,data_er
 
 ```
 
-## 结果
+# 结果
 
 程序大概要跑几分钟，爬下来的数据大概是4000+条，最后在[Google MAP](https://drive.google.com/open?id=15hRhkZiVIw3mHJHJEQ00SQHQJBDaHsWV&usp=sharing)画出来就是下面这样， 这里也把即将建成的充电站画了进来，不过充电桩数目为0![1544247339926](https://img.vim-cn.com/00/5be9e38bc749ac02d3a2903294de538ce2f3fd.png)
 其中Super Chargers为蓝色，Destination Chargers为红色
 
-### ECharts.js可视化
+## ECharts.js可视化
 
 这里用了下[ScatterGL](https://www.echartsjs.com/examples/editor.html?c=scatterGL-gps&gl=1)，点的数量不多，但是可以看出密度越高的部分也就越亮
 
 ![US](https://img.vim-cn.com/dc/7c180c409d8786a3360fdf7ec17c11f515bf32.png)
 
-### 附近搜索功能
+## 附近搜索功能
 
 常用的一个功能：返回一个地点的周围的搜索结果，可以用Google Map的API实现，这里用的是Python的googlemaps库
 详细的使用方法可见：[reference documentation](https://googlemaps.github.io/google-maps-services-python/docs/)
@@ -198,6 +198,6 @@ book.save(filename)
 
 ```
 
-### 推一下舍友的工作
+## 推一下舍友的工作
 
 [Equations.online](https://equationliu.github.io/2018-12-9-chargebar/)上面是从北汽爬取的数据，复杂度更高，数据量也要大很多
