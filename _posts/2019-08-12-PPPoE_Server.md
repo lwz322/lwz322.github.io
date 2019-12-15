@@ -71,7 +71,7 @@ default         192.168.10.1    0.0.0.0         UG    0      0        0 wlan1
 
 ### 开启PPPoE Server密码认证
 
-修改/etc/ppp/pppoe-server-options，主要是require-chap
+修改/etc/ppp/pppoe-server-options，主要是require-chap（具体自行查一下PPPoE的认证过程）
 
 ```
 # PPP options for the PPPoE server                                                       
