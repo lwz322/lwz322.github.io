@@ -348,6 +348,14 @@ aes-256-cbc       4877.62k     5635.73k     5527.98k     6159.36k     5644.29k  
 
 AES的测试结果大幅领先应该是得益于架构上的优势（BCM4709是ARMv7架构，不支持AES硬件加速，但是相比MIPS还是有优势的），就是日常使用温度比较高（40nm制程落后）
 
+这里顺带提一下ARMv8架构的斐讯N1，Amlogic S905，ARM Cortex-A53 x 4@1.51Ghz
+```shell
+type             16 bytes     64 bytes    256 bytes   1024 bytes   8192 bytes  16384 bytes
+chacha20         62175.16k   129886.44k   258250.75k   283707.39k   298423.64k   299641.51k
+aes-256-cbc      90619.15k   257628.35k   466210.05k   598629.38k   655471.96k   659952.98k
+```
+有AES硬件加速，对比上面就是吊打了
+
 ## Snapshot安装软件
 
 Snapshot版本的源码是滚动更新的（包括内核版本），而官方的仓库[releases/19.07-SNAPSHOT/](https://downloads.openwrt.org/releases/19.07-SNAPSHOT/)中的软件分为package和kmod，前者一般对内核版本的倚赖不多，但是后者对内核版本是有比较严格的要求的，这就导致，即使是官方仓库中有的软件，都会出现无法安装的情况：

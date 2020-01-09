@@ -120,9 +120,13 @@ tcpdump -U -s 0 -i br-lan -w -
 之后在Wireshark的图形化界面中就可以实时看到抓包的情况了
 
 ### FRP
-一个用于反向代理的软件，对于没有公网IP的网络接入来说还是挺好用的，一般需要一个拥有公网IP的服务器作为流量的中转，具体的用法以及ipk下载（包括luci-app-frpc）可以参考[Github](https://github.com/fatedier/frp)，也有提供FRP服务器的网站可以直接用，值得一提的是，学校的教育网一般是阻挡了传入连接的，如果有在学校里搭建NAS，想要远程访问，直接用地址是行不通的，这个时候FRP就可以通过家里的公网IP服务器中转对学校的NAS进行访问，在学校如果给代理服务器穿透的话就相当于可以使用学校的网络了
+一个用于反向代理的软件，在无公网IP的情况下也可以做到远程访问，一般需要一个拥有公网IP的服务器作为流量的中转，具体的用法可以参考[Github](https://github.com/fatedier/frp)，其中也提供了各个平台架构的二进制文件
 
-> 即将被加入官方仓库
+更加推荐的是：[kuoruan/openwrt-frp](https://github.com/kuoruan/openwrt-frp)，其提供的ipk文件安装后的空间占用更小，更加适合在小存储空间的路由器中使用，另外作者还编写了[kuoruan/luci-app-frpc](https://github.com/kuoruan/luci-app-frpc)
+
+因为[作者觉得没有必要](https://github.com/kuoruan/luci-app-frpc/issues/4)，所以没有写frps的luci-app，因为个人的学校的教育网阻挡了传入连接的，偶尔需要远程访问校内的资源，所以就使用FRP连接家里的公网IPv6路由器中转对学校的资源进行访问，一开始用 screen + crontab 写了一个“守护进程”，在路由器和VPS都可以用
+
+但是还是不太优雅的，刚好看了下上面的luci-app-frpc的代码，发现用到了OpenWrt内建的procd，于是就本着学习的目的写了一个[lwz322/luci-app-frps](https://github.com/lwz322/luci-app-frps)，欢迎提issue和PR
 
 ### luci-app-statistics
 ![collectd](https://img.vim-cn.com/66/cce412e04be5032bddb4aa14a0845f07241647.jpg)
@@ -273,7 +277,6 @@ ubus call network.interface dump | jsonfilter -e '$.interface[@.interface="wan_6
 由于ubus提供的信息非常的多，对于IPv6 NAT下的负载均衡就兼顾简洁和适用性的写法了（一般情况下也可用）
 
 ```shell
-#!/bin/sh
 #!/bin/sh
 [ "$ACTION" = ifup ] || exit 0
 ifaces=$(ubus call network.interface dump | jsonfilter -e '$.interface[@.proto="dhcpv6" && @.up=true].interface')
