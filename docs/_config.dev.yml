@@ -142,6 +142,8 @@ comments:
     app_id      : # LeanCloud App id
     app_key     : # LeanCloud App key
     placeholder : # Prompt information
+    visitor     : # false (default)
+    meta        : # "[nick, mail, link]" (default) nickname, E-mail, Personal-site
 
 
 ## => Pageview
@@ -288,9 +290,9 @@ defaults:
 ## => Plugins
 ##############################
 plugins:
-  - jekyll-feed
+  # - jekyll-feed
   - jekyll-paginate
-  - jekyll-sitemap
+  # - jekyll-sitemap
   - jemoji
 
 data_dir: /docs/_data
