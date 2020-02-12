@@ -78,71 +78,11 @@ K3的无线性能貌似不错，现在也有了Snapshot固件可以下载，但�
 
 对19.07，暂时发现了默认的PPPoE貌似没有设置掉线检测，也就是实际上掉线之后不会重拨
 
-# K3相关
-## 硬件
-
-斐讯K3 A1版
-- CPU: BCM4709C Cortex A9 1.4GHz 40nm制程
-- RAM: 512MB DDR3-1600
-- flash: 128MB NAND Flash
-- 无线芯片: BMC4366 * 2, 4×4 MU-MIMO
-- 功放: SKY2623L + PA5542
-- 接口: 千兆 wan 口 + 千兆 lan 口 * 3 + USB 3.0
-
-硬件上跟华硕的AC88U差不多，信号在acwifi的测试中相当强悍，做AP的效果不错，遗憾是K3没有160MHz的频宽，无法适配市场上现有的一批廉价的2x2的1.7G网卡；硬件上明显的缺点是芯片的制程太过落后，发热感人
-
-一直很期待一台高性能的，无线强劲的OpenWrt路由器（价格要可以接受才行），所幸“漏油”问题已经通过更换铜片+硅脂的解决了
-
-## OpenWrt下的问题
-
-看完了一些新特性来说下目前的Snapshot固件存在的问题
-
-1. K3的屏幕信息显示不支持而且只能常亮，据说添加了[补丁](https://www.right.com.cn/forum/forum.php?mod=viewthread&tid=419328)，应该还是要自行编译安装k3screenctrl的
-
-2. 开源的驱动的信号，可以说几乎没有，即使是在路由器旁边都只有10Mbps的速度，但是在调节频段之后勉强可用，就是协商速度不高，LuCi的无线界面显示的频宽仅有20MHz，考虑到稳定性一般还是不适合日常使用
-
-[社区](https://www.right.com.cn/forum/thread-466672-1-1.html)有人已经针对snapshot做了修改和编译，解决了以上两个问题，作为路由器基本上已经可以用了，但是有以下遗憾：
-
-1. 固件基于uclibc的c库编译，官方源软件部分不能使用，我尝试的opkg安装的大部分软件不能用
-
-2. 自带的软件又太多，K3的发热本来就大，太多软件带来的负担更大
-
-3. 作者的工作相当的出色，但是后续没有更新以及没有开源公布细节，想自己定制变得很困难（只想要个原生、纯净的版本）
-
-最后还是要自己动手，但是完全可以参考上面的固件来编译，然后我就打开了Github，找K3的屏幕和无线方面可用的资源
-
-## 解决方案
-
-主要解决的还是屏幕和无线信号两个问题，因为参考的东西比较杂（东拼西凑），这里做个大致的描述，相关的代码都在个人的Github仓库下
-
-### 屏幕组件
-
-屏幕包括几个部分：屏幕控制的源码，luci-app设置界面，屏幕界面信息更新脚本以及综合以上的编译设置文件
-
-在 [zxlhhyccc/Hill-98-k3screenctrl](https://github.com/zxlhhyccc/Hill-98-k3screenctrl) 已经给K3屏幕开启了7屏的基础上，使用 [K3 openwrt18.06.02](https://www.right.com.cn/forum/thread-466672-1-1.html) 固件中的```/lib/k3screenctrl/```下的sh文件做了替换
-
-搭配的 luci-app 是根据固件的LuCi文件修改的 [lwz322/luci-app-k3screenctrl](https://github.com/lwz322/luci-app-k3screenctrl)
-
-最后使用修改自 [lean/lede](https://github.com/lean/lede) 中的编译文件 [lwz322/k3screenctrl_build](https://github.com/lwz322/k3screenctrl_build) 编译
-
-具体的界面：
-- 第一屏：升级界面
-- 第二屏：型号，温度，MAC，软件版本
-- 第三屏：接口
-- 第四屏：网速以及2.4G和5G WiFi的接入客户端数量
-- 第五屏：天气，时间
-- 第六屏：WiFi信息：SSID和密码（可选隐藏）
-- 第七屏：已接入终端和网速
-
-### 无线固件
-
-直接使用了[社区](https://www.right.com.cn/forum/thread-466672-1-1.html)的无线固件，貌似和lean的仓库中的[k3-brcmfmac4366c-firmware](https://github.com/coolsnowwolf/lede/tree/master/package/lean/k3-brcmfmac4366c-firmware)一样，
-
-其他的固件可以参考[/Hill-98/phicommk3-firmware](https://github.com/Hill-98/phicommk3-firmware)做替换，固件在OpenWrt的```/lib/firmware/brcm/ ```目录下
-
 # 编译固件
 
 这里对网络环境有一定的需求，一般都是推荐在国外的VPS上编译，如果在本地编译需要开代理，安装Docker和Git就不说了，如果觉得Docker和SSH的命令行对修改源码体验不好，可以使用VSCode加上Remote-Docker/SSH插件，再安装一个Terminal插件就很舒服了
+
+部分表述还是以OpenWrt官方的[文档](https://openwrt.org/docs/guide-developer/build-system/use-buildsystem)为准
 
 ## 准备工作
 
@@ -190,7 +130,10 @@ git clone https://github.com/openwrt/openwrt.git
 ```bash
 git checkout openwrt-19.07
 ``` 
-对于18.06.4这种小分支，可以在release下载源码或者直接根据18.06.4的commit hash来切换
+对于18.06.4之类的发行版，可以在release下载源码或者切换到相应的tag，如：
+```bash
+git checkout v18.06.4
+```
 
 ### 下载软件包源码
 
@@ -232,6 +175,7 @@ make menuconfig
 make defconfig
 make download
 ```
+
 这一步需要的时间比较长（取决于网速和添加的包的数量，20Mbps大概十分钟），期间可以用tmux分屏去[修改默认的设置](https://lwz322.github.io/2019/08/31/Build_OpenWrt_snapshot.html#%E5%85%B6%E4%BB%96%E8%AE%BE%E7%BD%AE%E7%9A%84%E4%BF%AE%E6%94%B9)之类的
 
 这一步之前的所有步骤也可以在VPS完成，打包编译目录放到本地高性能的机器编译以节约时间
@@ -269,6 +213,7 @@ openwrt/lede中，强刷固件教程（可有效避免web页面刷机的各种�
 ```bash
 mtd -r write /tmp/k3.trx firmware
 ```
+如果之前刷过OpenWrt系统仅作小版本的升级的话，使用luci升级也是可以的
 
 ## 其他设置的修改
 
@@ -308,54 +253,6 @@ config wifi-iface
 - 如果你要修改内核发行版本，比如4.9改到4.4，请修改对应target的Makefile中的KERNEL_PATCHVER
 - 如果你要修改指定内核发行版本的修订版本，比如4.9.111改到4.9.110，请修改include/kernel-version.mk
 
-# 使用体验
-## 已知的问题
-
-- 屏幕流量统计基于iptable的IPv4 Forward，然而再开启硬件转发的时候是统计不到的
-- 屏幕路由网速监测基于默认的WAN的流量
-- 无线偶尔会出现Not Associate的情况，需要重启（用过的OpenWrt都有这个问题）
-- 查看无线连接部分都只有20MHz的频宽（实测发现是80MHz）
-
-## 无线
-
-当前想要作为无线路由使用的话是肯定要换无线固件的，我的7260AC网卡在近距离（同一个房间内）使用iperf3测试下载和上传速度，5G的实际传输速度300Mbp左右，5M，相隔两堵墙的情况下200Mbps左右，再远一点100Mbps，三堵墙就GG了，在我使用的OpenWrt的路由器中是最好的（一般隔一墙就GG），对比之前家里用的荣耀路由Pro（当时比较迷信华为的产品），在同样的位置K3可以满速，而前者已经是没有信号了，据说K3的无线功率相当的高（超出国标的那种），发热也很大，连接着两台设备的情况下，温度可以到70以上（还是改了散热的情况下）
-
-尽管标称AC3150，参考[简说各种wifi无线协议的传输速率](https://www.acwifi.net/318.html)，K3是 4X4 MIMO + 80MHz + 1024-QAM = 2100Mbps ，单设备连接下达到这个速度需要PCE-AC88这个级别的网卡，结合现在的无线网卡市场（2X2 160Mhz网卡廉价且产品多），信号和速率方面其实已经难以和现在中端以上的路由器（200+）拉开差距了，相比其他的OpenWrt路由，K3只有信号强度有较大的实用价值，剩下的没有绝对的优势（如果不考虑外观的话）
-
-注：多设备连接的MU-MIMO的情形，现在的OpenWrt还不支持，从这方面来说OpenWrt路由器不适合做高性能的AP
-
-## CPU运算性能
-
-就以专门为ARM设计的ChaCha20算法以及常用的AES-256-CBC测试，BCM4709@1.4G的单线程openssl加解密速度测试结果如下
-```bash
-root@K3:~# openssl speed -elapsed -evp chacha20
-#k3
- type             16 bytes     64 bytes    256 bytes   1024 bytes   8192 bytes  16384 bytes
- chacha20         41251.72k    88523.18k    93098.98k    98190.37k    92384.53k    93584.75k          
- aes-256-cbc      24429.85k    27700.11k    30198.27k    30665.23k    29156.44k    29420.67k    
-```
-对比近几年主流的MT7621@880MHz以及MT7620@580MHz单线程测试结果
-```bash
-#K2P
-type             16 bytes     64 bytes    256 bytes   1024 bytes   8192 bytes  16384 bytes
-chacha20         15635.27k    25852.26k    29409.89k    30429.13k    30748.58k    30835.67k
-aes-256-cbc       7234.99k     8504.77k     8930.74k     9059.51k     9071.08k     9090.13k
-#Y1
-type             16 bytes     64 bytes    256 bytes   1024 bytes   8192 bytes  16384 bytes
-chacha20         10284.77k    17029.01k    19675.48k    18671.27k    20179.63k    20025.49k
-aes-256-cbc       4877.62k     5635.73k     5527.98k     6159.36k     5644.29k     6100.31k
-```
-
-AES的测试结果大幅领先应该是得益于架构上的优势（BCM4709是ARMv7架构，不支持AES硬件加速，但是相比MIPS还是有优势的），就是日常使用温度比较高（40nm制程落后）
-
-这里顺带提一下ARMv8架构的斐讯N1，Amlogic S905，ARM Cortex-A53 x 4@1.51Ghz
-```shell
-type             16 bytes     64 bytes    256 bytes   1024 bytes   8192 bytes  16384 bytes
-chacha20         62175.16k   129886.44k   258250.75k   283707.39k   298423.64k   299641.51k
-aes-256-cbc      90619.15k   257628.35k   466210.05k   598629.38k   655471.96k   659952.98k
-```
-有AES硬件加速，对比上面就是吊打了
-
 ## Snapshot安装软件
 
 Snapshot版本的源码是滚动更新的（包括内核版本），而官方的仓库[releases/19.07-SNAPSHOT/](https://downloads.openwrt.org/releases/19.07-SNAPSHOT/)中的软件分为package和kmod，前者一般对内核版本的倚赖不多，但是后者对内核版本是有比较严格的要求的，这就导致，即使是官方仓库中有的软件，都会出现无法安装的情况：
@@ -368,19 +265,43 @@ Collected errors:
  *      kernel (= 4.14.149-1-9b3f4da08295392b7d7eca715b1ee0b8)
  * opkg_install_cmd: Cannot install package openvpn-openssl.
 ```
-其中也不仅仅是内核版本的问题，后面的一串生成自内核的编译参数校验，也就是说只有使用之前编译4.14.145内核的版本的Git版本再去做一次编译了(或者编译的时候留下的SDK)，反正比较麻烦
+其中```4.14.149-1-9b3f4da08295392b7d7eca715b1ee0b8```是 Kernel_version + vermagic ;不仅仅与内核版本有关，还与内核的编译参数有关
 
-因为只有一串md5码，所以另辟蹊径也是可以的：[编译Openwrt固件安装软件内核版本不一致问题解决](https://www.haiyun.me/archives/1075.html)
+这个问题当时我找到：[编译Openwrt固件安装软件内核版本不一致问题解决](https://www.haiyun.me/archives/1075.html)，其中就给出了vermagic的由来，在新版本中就是：
+```bash
+grep '=[ym]' $(LINUX_DIR)/.config.set | LC_ALL=C sort | mkhash md5 > $(LINUX_DIR)/.vermagic
+```
+其中给出的解决方法就是强行替换和官方仓库一致的vermagic，感觉不够优雅
 
-所以Snapshot版本并不适合经常需要加装软件的情况，但是现在有19.07 rc1可用，其软件仓库是有官方更新的
+之后翻了下OpenWrt官方论坛，找到了维护者的一次回复：
 
-## 功耗
+  > vermagic is a hash calculated from
+  >
+  > - all compilation options related to kernel, and
+  > - names of all kernel modules enabled in the kernel compilation .config (either =y or =m)
+  >
+  > In practice, any change to the config makes the modules officially incompatible.
+  >
+  > - It is possible to compile individual modules later for a firmware if you have also compiled the static SDK and use that SDK for the kmod compilation (like eduperez does not mwlwifi driver kmods here in the forum)
+  > - It is practically impossible to compile a new kernel or full firmware and then try to use older kmods with opkg. The vermagic will differ
 
-先说个有趣的事情，因为自带的电源适配器太占插座了，我使用了 QC2.0的手机充电器 + 诱骗器 + USB-DC线 提供一个12V的供电，然而诱骗失效了，5V的电压下，路由器居然可以正常的工作，这意味着可以使用USB-DC线接到高输出的USB插座上给K3供电，这个也和功耗有关：
+说的算是比较清楚了，最后在一篇不久前更新的博文中找到了较为满意的方法：
 
-实测，开机及待机状态下功率在10W左右，如果遇到CPU占用较高或者高速无线传输峰值功耗可以到18W（360插座依然强而有力），使用5V和12V USB-DC的时候出现过几次无法开机的情况，所以稳定性还是一般的
+[How to compile OpenWrt and still use the official repository](https://hamy.io/post/0015/how-to-compile-openwrt-and-still-use-the-official-repository/)的说法就是
 
-对比MT7261的K2P，峰值功耗15W，但是平时使用就只有6W左右，K3的电费有些不太划算
+> As part of building kernel, *.config.set* file is created. This file includes all the applied kernel settings.
+>
+> To get the same `vermagic` value, not only we need to use the same exact OpenWrt source version, but also build our image with the same exact set of kernel settings and modules.
+>
+> In a nutshell, `config.seed` includes all the required changes for building the same image again. In other words, it contains all the changes that’s been applied to an image compared to the default configuration.
+
+```config.seed```文件在新版的仓库中就是```config.buildinfo```，暂时没尝试，因为即使是编译所有的内核模块但是不安装，编译一次固件也需要太久的时间了；鉴于偶尔需要改内核设置，这个问题大概也就到此为止了
+
+最后如果确实没有对内核设置之类的做太多的修改的话，使用中文博客中的方法：
+> 编译后指定内核版本：
+> ```bash
+> sed -i 's/eac88df3cb49b94d68ac3bc78be57f95/3051dee8f07064b727e9d57fbfeb05ec/' /usr/lib/opkg/status
+> ```
 
 **参考**
 
