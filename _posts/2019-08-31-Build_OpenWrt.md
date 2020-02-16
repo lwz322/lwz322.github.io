@@ -248,14 +248,16 @@ config wifi-iface
         option encryption none
 ```
 ### 修改内核版本
-在后面 Snapshot安装软件 部分也有提到，有一个这样的概括
+在逛论坛时看到了这样的概括：
 - 如果要回滚repo到之前的某个commit，请参阅git使用指南
 - 如果你要修改内核发行版本，比如4.9改到4.4，请修改对应target的Makefile中的KERNEL_PATCHVER
 - 如果你要修改指定内核发行版本的修订版本，比如4.9.111改到4.9.110，请修改include/kernel-version.mk
 
-## Snapshot安装软件
+在后面一节会提到，内核版本后接的一段参数
 
-Snapshot版本的源码是滚动更新的（包括内核版本），而官方的仓库[releases/19.07-SNAPSHOT/](https://downloads.openwrt.org/releases/19.07-SNAPSHOT/)中的软件分为package和kmod，前者一般对内核版本的倚赖不多，但是后者对内核版本是有比较严格的要求的，这就导致，即使是官方仓库中有的软件，都会出现无法安装的情况：
+## 内核版本问题
+
+Snapshot版本的源码是滚动更新的（包括内核版本），而官方的仓库[releases/19.07-SNAPSHOT/](https://downloads.openwrt.org/releases/19.07-SNAPSHOT/)中的软件分为package和kmod，前者一般对内核版本的倚赖不多，但是后者对内核版本是有严格的要求的，这就导致，即使是官方仓库中有的软件，都会出现无法安装的情况：
 
 比如安装的Snapshot固件的内核版本是4.14.145，而滚动更新的仓库中的固件内核版本已经是4.14.149，如果安装某些软件，就会出现下面的错误：
 ```shell
@@ -265,13 +267,17 @@ Collected errors:
  *      kernel (= 4.14.149-1-9b3f4da08295392b7d7eca715b1ee0b8)
  * opkg_install_cmd: Cannot install package openvpn-openssl.
 ```
-其中```4.14.149-1-9b3f4da08295392b7d7eca715b1ee0b8```是 Kernel_version + vermagic ;不仅仅与内核版本有关，还与内核的编译参数有关
+其中```4.14.149-1-9b3f4da08295392b7d7eca715b1ee0b8```是 Kernel_version + vermagic ，前者就是内核版本，后者与内核的编译参数有关
 
-这个问题当时我找到：[编译Openwrt固件安装软件内核版本不一致问题解决](https://www.haiyun.me/archives/1075.html)，其中就给出了vermagic的由来，在新版本中就是：
+### vermagic
+
+[编译Openwrt固件安装软件内核版本不一致问题解决](https://www.haiyun.me/archives/1075.html)，其中就给出了vermagic的由来，在新版本的代码中：
+
 ```bash
 grep '=[ym]' $(LINUX_DIR)/.config.set | LC_ALL=C sort | mkhash md5 > $(LINUX_DIR)/.vermagic
 ```
-其中给出的解决方法就是强行替换和官方仓库一致的vermagic，感觉不够优雅
+
+上面的文章给出的解决方法就是强行替换和官方仓库一致的vermagic，感觉不够优雅
 
 之后翻了下OpenWrt官方论坛，找到了维护者的一次回复：
 
@@ -285,9 +291,16 @@ grep '=[ym]' $(LINUX_DIR)/.config.set | LC_ALL=C sort | mkhash md5 > $(LINUX_DIR
   > - It is possible to compile individual modules later for a firmware if you have also compiled the static SDK and use that SDK for the kmod compilation (like eduperez does not mwlwifi driver kmods here in the forum)
   > - It is practically impossible to compile a new kernel or full firmware and then try to use older kmods with opkg. The vermagic will differ
 
-说的算是比较清楚了，最后在一篇不久前更新的博文中找到了较为满意的方法：
+说的算是比较清楚了（相对于没有找到config.set的具体生成方式），下面介绍几种个人试过的方法，先说明的是，暂时没有找到直接编译得到vermagic和官方一致的最优方法，至于imagebuilder，暂时还没用过
 
-[How to compile OpenWrt and still use the official repository](https://hamy.io/post/0015/how-to-compile-openwrt-and-still-use-the-official-repository/)的说法就是
+### 编译vermagic相同的固件
+
+对于某些情况来说是不可避免的，如
+- 编译能够使用官方的软件仓库的固件
+- 在使用官方固件的情况下，编译兼容的包，如kmod-nf-fullconenat
+- 在编译vermagic与官方不一致的固件的情况下，需要再次编译兼容的包
+
+对于第一种情况，在一篇不久前更新的博文中找到了较为满意的方法：[How to compile OpenWrt and still use the official repository](https://hamy.io/post/0015/how-to-compile-openwrt-and-still-use-the-official-repository/)
 
 > As part of building kernel, *.config.set* file is created. This file includes all the applied kernel settings.
 >
@@ -295,9 +308,22 @@ grep '=[ym]' $(LINUX_DIR)/.config.set | LC_ALL=C sort | mkhash md5 > $(LINUX_DIR
 >
 > In a nutshell, `config.seed` includes all the required changes for building the same image again. In other words, it contains all the changes that’s been applied to an image compared to the default configuration.
 
-```config.seed```文件在新版的仓库中就是```config.buildinfo```，暂时没尝试，因为即使是编译所有的内核模块但是不安装，编译一次固件也需要太久的时间了；鉴于偶尔需要改内核设置，这个问题大概也就到此为止了
+```config.seed```文件在新版的仓库中就是```config.buildinfo```，暂时没尝试，因为即使是编译所有的内核模块但是不安装，编译一次固件依然需要**耗费大量时间**
 
-最后如果确实没有对内核设置之类的做太多的修改的话，使用中文博客中的方法：
+对于第二种情况，第一种方法依然可用，细微的调整在于，编译菜单不能直接勾选内核模块，而是在使用官方的config.buildinfo文件的情况下，单独编译内核模块
+
+更见快捷的方法是使用官方提供的SDK，对K3可以在[19.07.1/targets/bcm53xx/generic/](http://mirrors.ustc.edu.cn/lede/releases/19.07.1/targets/bcm53xx/generic/)中找到```openwrt-sdk-19.07.1-bcm53xx_gcc*.tar.xz```，在不修改设置的情况下，编译出来的包的vermagic与官方固件是一致的
+
+第三种情况多见于自编译固件，因为：
+- 对于各路论坛下载到的固件，往往没有放出修改后的源码，config也不得而知
+- 一般自编译固件的过程和上文差不多，不会注意原始的config文件
+
+至于方法都是一样的，自编译固件可以留下编译时的config以及SDK，方便再次编译兼容的包
+
+### 强制修改vermagic
+还有一种非常普遍的情况就是，使用的固件既没有SDK，也没留下config
+
+如果确实没有对内核设置之类的做太多的修改的话，使用中文博客中的方法：
 > 编译后指定内核版本：
 > ```bash
 > sed -i 's/eac88df3cb49b94d68ac3bc78be57f95/3051dee8f07064b727e9d57fbfeb05ec/' /usr/lib/opkg/status
