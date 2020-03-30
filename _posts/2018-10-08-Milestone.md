@@ -28,43 +28,44 @@ article_header:
 ![Wireless Freedom](https://openwrt.org/lib/tpl/openwrt/images/logo.png)
 
 从OpenWrt Logo下面的那个Wireless Freedom讲起吧，几个里程碑
-- 让无线设备用上IPv6网络，畅通的使用Google，Youtube，IPv6 PT
-- 通过IPv6代理实现免流量高速上网
+- 在没有PD的情况下，通过IPv6 NAT，使无线设备用上IPv6（Google，Youtube，PT）
+- 通过IPv6代理，在校园网下实现免流量高速上网
 - 用Aria2挂PT，攒下了可以用几年的上传量（可能导致封号）
 - 在学校限速1Mbps的情况下把网速多拨叠加到6Mbps，逐步改进后又达到了40Mbps,60Mbps
 - 最后趁舍友国庆出游，用新的负载均衡方法以及HWNAT把汇聚全宿舍端口达到400Mps
 - 使用策略路由和iptables灵活地配置Linux路由
 - 移植和修改源码以实现功能和硬件的适配
+- 使用VLAN实现单线复用，进而聚合多个网口
 
 这里的Freedom就是得益于OpenWrt强大的扩展性以及可操作性实现想要的功能，尽管在官网的[Reasons to use OpenWrt](https://openwrt.org/reasons_to_use_openwrt)已经有了一些说明，本文从个人用户的视角介绍一些OpenWrt实用的软件和功能
 
-> 关于开源的路由器系统的稳定性问题，众说纷纭，OpenWrt支持的硬件多，针对某一特定的硬件的稳定性是比较随缘的，尤其是部分路由器的硬件设计上的稳定性就一般，如果准备在稳定性要求较高的环境使用，要谨慎（使用的工具越简单越好）
+> 关于开源的路由器系统的稳定性问题，众说纷纭，OpenWrt支持的硬件多，针对某一特定的硬件的稳定性是比较随缘的，尤其是部分路由器的硬件设计的稳定性就一般，如果准备在稳定性要求较高的环境使用，要谨慎（使用的工具越简单越好）
 
 # 如何开始
 ## 硬件
-建议选有官方固件支持，软件支持的路由器（也就是不太建议刷仅有民间固件的那种了，不开源感觉不安全），具体可以参考官方支持的[Hardware Table](https://OpenWrt.org/toh/start)，进入某一款路由器的详情界面就可以看到支持的情况
+建议选有官方固件支持的路由器（也就是不太建议刷仅有民间固件的设备，可能导致使用体验不佳甚至是安全问题），具体可以参考官方支持的[Hardware Table](https://OpenWrt.org/toh/start)，进入某一款路由器的详情界面就可以看到支持的情况
 
-或者是论坛，一般都会有详细的刷机教程，如国内的[恩山](https://right.com.cn/forum/portal.php)，[Koolshare](http://koolshare.cn/portal.php)
+论坛一般都会有详细的刷机教程，如国内的[恩山](https://right.com.cn/forum/portal.php)，[Koolshare](http://koolshare.cn/portal.php)
 > 就刷OpenWrt而言，推荐以高通（QAC）和联发科（MTK）或者软路由为主，博通CPU的因为驱动开源的不太好，所以可能会缺少无线功能（如果有能用的闭源驱动也不错），对于MTK平台有开源的MT76项目驱动，部分无线芯片依然运行情况不太好，总之不对OpenWrt的无线期望太高
 
 ## 固件
 ### 官方固件
-官方编译的版本主要是稳定版(写这篇文章的时候最新的是18.06.4)和每日构建的版本(Snapshot)，前者用的最广泛，后者没有自带LuCI界面，需要自己安装，又因为版本太新，不是所有的软件都有已经编译好的ipk
+官方编译的版本主要是稳定版(写这篇文章的时候最新的是18.06.4)和每日构建的版本(Snapshot)，前者用的最广泛，后者没有自带LuCI界面，需要自己安装，又因为版本太新，不是所有的软件都有已经编译好，版本合适的ipk
 
 ### 第三方固件
 在各种论坛里面推广的多是这一种，如果不想折腾太多就获得一系列的功能可以考虑
 
-比较出名的：[Lean's OpenWrt source](https://github.com/coolsnowwolf/lede)，作者现在只提供源码，主要特点：
+最出名的：[Lean's OpenWrt source](https://github.com/coolsnowwolf/lede)，作者现在只提供源码，主要特点：
 - 内置了部分实用的软件，如多拨助手
 - 功能性的“魔改”，如Full Cone NAT，DNS加速
 - 更新速度比官方快，紧跟民间的OpenWrt前沿
 
 另外还有pandorabox，据说多拨比较厉害
 
-第三方固件的缺点是自带的配置可能会和要做的配置冲突，而为了统一标准，大多数教程都会以在官方的OpenWrt上配置为准，比如说一些多拨固件默认开启的负载均衡和自带的IPv6功能有冲突，虽然一步步分析可以解决，但是这种折腾的必要性不大
+第三方固件的缺点是自带的配置可能会和要做的配置冲突，而为了统一标准，大多数教程都会以在官方默认设置的OpenWrt上配置为准，比如说一些多拨固件默认的负载均衡设置会导致IPv6无法使用，虽然可以解决，但是这种折腾的必要性见仁见智
 
 ### 自编译
-当然也可以自己编译，因为受限与路由器的存储空间和性能，固件的Linux内核被精简，部分软件也被精简了，比如说某些功能的实现就依赖于完全体的dnsmasq-full，推荐在编译时就处理好这个倚赖，对于Snapshot版本，官方仓库里缺少部分预编译软件包，又或者软件依赖不匹配，这些都需要自行编译解决，这里可以参考[编译OpenWrt Snapshot固件](https://lwz322.github.io/2019/08/31/Build_OpenWrt_snapshot.html)，一般还是推荐使用稳定版的源码编译
+当然也可以自己编译，因为受限与路由器的存储空间和性能，固件的Linux内核被精简，部分软件也被精简了，比如说某些功能的实现就依赖于完全体的dnsmasq-full，推荐在编译时就处理好这个倚赖；对于Snapshot版本，官方仓库里缺少部分预编译软件包，又或者软件依赖不匹配，这些都需要自行编译解决，这里可以参考[编译OpenWrt Snapshot固件](https://lwz322.github.io/2019/08/31/Build_OpenWrt_snapshot.html)，一般还是推荐使用稳定版的源码编译
 
 # 软件推荐
 官方的[Ueser Guide](https://openwrt.org/docs/guide-user/start)以及[Old Wiki](https://oldwiki.archive.openwrt.org/doc/howto/start)(看起来简洁一些)从功能上对软件划分，相当全面和详细的介绍了OpenWrt的功能及其实现的软件，这里主要是推荐一下个人用过的，体验还OK的部分软件
@@ -74,6 +75,7 @@ article_header:
 ### Aria2
 这是一个跨平台的多线程下载软件，主要是支持BT，在路由器性能允许的情况下能够做到全天挂PT，并且可以通过网络共享做一个简易的NAS
 >之前有一段时间官方源下载的Aria2是不支持BT的，需要自己动手编译，而1.34之后又自带BT支持了
+
 注：大部分的PT不支持使用Aria2作为BT客户端使用，而Aria2也自带了伪装功能，可以伪装成为被允许的客户端，然而部分PT站是可以检测出来的（因为会涉及到流量作弊的问题），所以在PT使用Aria2是可能**被封号**的（PT账号的价值不必多说）
 
 实测北邮人可以检测伪装，北洋园PT也加入了相关代码，参考自：[Pt 站点禁用 Aria2 客户端方法分析](https://blog.rhilip.info/archives/1010/)
@@ -148,7 +150,7 @@ OpenWrt上少有的分设备的LuCi界面下的网速监测工具，没有官方
 ![netdata](https://img.vim-cn.com/e3/44f5fa92845bda4dc5c31193badd6c2da0f87c.jpg)
 算是一个比较好看的性能监测界面了，第一次见到还是印象深刻，然而用处...对个人来说不大，效果可以看[Github](https://github.com/netdata/netdata)，在OpenWrt中直接用``opkg install netdata``就好，之后直接访问LuCI管理IP的19999端口就可以看到了，优点还是信息量大，占用低
 
-# 实用的功能
+# 实用的内建功能
 脱离了简单的应用软件层面，部分需要shell编程
 
 ### 交换机 Switch
