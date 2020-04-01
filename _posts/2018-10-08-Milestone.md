@@ -144,7 +144,7 @@ tcpdump -U -s 0 -i br-lan -w -
 
 ### luci-wrtbwmon
 ![mac](https://img.vim-cn.com/92/1b76c51f4991fd5b82f1d7c88a58efd33a917d.jpg)
-OpenWrt上少有的分设备的LuCi界面下的网速监测工具，没有官方的Feed，需要自己去[Github](https://github.com/Kiougar/luci-wrtbwmon)上面下载ipk
+OpenWrt上少有的分设备的LuCI界面下的网速监测工具，没有官方的Feed，需要自己去[Github](https://github.com/Kiougar/luci-wrtbwmon)上面下载ipk
 
 ### Netdata
 ![netdata](https://img.vim-cn.com/e3/44f5fa92845bda4dc5c31193badd6c2da0f87c.jpg)
@@ -317,7 +317,7 @@ $ ssh-keygen
 Generating public/private rsa key pair.
 Enter file in which to save the key (C:\Users\USER/.ssh/id_rsa):
 ```
-完成后会在指定的目录生成指定文件名的两个文件：私钥id_rsa和公钥id_rsa.pub，公钥保存在ssh-server中就好，OpenWrt默认使用Dropbear作为SSH工具，其公钥保存在```/etc/dropbear/authorized_keys```中（如果没有这个文件就新建），把公钥的文件内容复制进去就好，或者在LuCi界面的/cgi-bin/luci/admin/system/admin找到SSH-Keys，把公钥放进去
+完成后会在指定的目录生成指定文件名的两个文件：私钥id_rsa和公钥id_rsa.pub，公钥保存在ssh-server中就好，OpenWrt默认使用Dropbear作为SSH工具，其公钥保存在```/etc/dropbear/authorized_keys```中（如果没有这个文件就新建），把公钥的文件内容复制进去就好，或者在LuCI界面的/cgi-bin/luci/admin/system/admin找到SSH-Keys，把公钥放进去
 
 之后只要使用的SSH客户端带有私钥就可以直接使用SSH和SCP
 

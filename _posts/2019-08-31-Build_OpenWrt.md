@@ -32,7 +32,7 @@ K3的无线性能貌似不错，现在也有了Snapshot固件可以下载，但�
 # OpenWrt 19.07
 
 2019年11月，OpenWrt 19.07 rc1发布了，明显的变化：
-- 大幅更新了LuCi界面
+- 大幅更新了LuCI界面
  - 扁平化 + 卡片式的二级设置页面
  - 移动端网页自适应布局（响应式设计）
  - 通过客户端渲染提高响应速度（主要的luci-app由lua迁移到js）
@@ -46,7 +46,7 @@ K3的无线性能貌似不错，现在也有了Snapshot固件可以下载，但�
 
 另外还有18.06.5，修复了之前Web界面上status界面错位的问题，整体风格上部分和19.07同步
 
-## LuCi界面优化
+## LuCI优化
 
 首页的布局小改，截图底部的[排版错乱](https://www.jarviswang.me/?p=1119)终于被修复了，另外就是改动了选项卡的样式，在页面内呈现更多的信息
 ![](https://img.vim-cn.com/23/de476c3304bf0ff2047dd513fe03cc16b67440.png)
@@ -166,8 +166,8 @@ make menuconfig
 - Target 选 Broadcom BCM47xx/53xx (ARM)
 - Target Profile 选 PHICOMM K3 （如果用了上述技巧的话就只有K3可选）
 - Utilities 确保 k3screenctrl 选中，倚赖会自动选上
-- LuCi->Application 中的 luci-app-k3screenctrl
-- snapshot默认没有的web管理界面 LuCi -> Collection -> luci
+- LuCI -> Application 中的 luci-app-k3screenctrl
+- snapshot默认没有的web管理界面 LuCI -> Collection -> luci
 
 其他的软件包自选，选择完成之后一路Exit，保存配置文件，为了避免可能出现的软件包倚赖和网络问题，先检查倚赖和下载选择编译的包的源码，建议最开始选最基本的包编译，成功之后的编译可以用到之前编译的中间文件
 
