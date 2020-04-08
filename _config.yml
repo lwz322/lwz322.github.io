@@ -128,8 +128,8 @@ comments:
   ## Gitalk
   # please refer to https://github.com/gitalk/gitalk for more info.
   gitalk:
-    clientID    : 
-    clientSecret: 
+    clientID    : b34ff87f151ebb89922d
+    clientSecret: 2fab6b9bbbda944d557bb8c0337044a68f9303e0
     repository  : lwz322.github.io
     owner       : lwz322
     admin: lwz322
