@@ -137,6 +137,11 @@ git checkout v18.06.4
 
 ### 下载软件包源码
 
+**注意**：在2020年8月的提交[683bcbd](https://github.com/openwrt/openwrt/blob/a14f5bb4bd263c21e103f13279d0c2ff03e48fe5/target/linux/bcm53xx/image/Makefile#L391)之后，TARGET的名称由phicomm-k3变为了phicomm_k3，另外menuconfig上bcm53xx还需要选择subtarget，进而对Makefile产生了一些影响，博客和仓库均做了适配，建议使用较新版本源码编译时更新下k3screenctrl_build的Makefile:
+```Makefile
+DEPENDS:=@(TARGET_bcm53xx_generic_DEVICE_phicomm_k3||TARGET_bcm53xx_generic_DEVICE_phicomm-k3||TARGET_bcm53xx_DEVICE_phicomm-k3)
+```
+
 git clone屏幕相关文件到package/k3目录下，回到编译目录更新feeds以及把软件包注册到编译系统中
 ```bash
 mkdir openwrt/package/k3
@@ -152,9 +157,10 @@ cd ~/openwrt
 
 ## 编译与刷机
 
-先介绍一个技巧：修改固件的Makefile使其只编译K3的固件，大大减少编译需要的时间
+先介绍一个技巧：修改固件的Makefile使其只编译K3的固件，大大减少编译需要的时间，此处相对之前也做了TARGET名称变化的兼容
+
 ```bash
-sed -i 's|^TARGET_|# TARGET_|g; s|# TARGET_DEVICES += phicomm-k3|TARGET_DEVICES += phicomm-k3|' target/linux/bcm53xx/image/Makefile
+sed -i 's|^TARGET_|# TARGET_|g; s|# TARGET_DEVICES += phicomm-k3|TARGET_DEVICES += phicomm-k3| ; s|# TARGET_DEVICES += phicomm_k3|TARGET_DEVICES += phicomm_k3|' target/linux/bcm53xx/image/Makefile
 ```
 ### 编译选项
 
@@ -164,6 +170,7 @@ make menuconfig
 ```
 
 - Target 选 Broadcom BCM47xx/53xx (ARM)
+- 在2020年9月的Master分支上，menuconfig上bcm53xx还需要选择subtarget，generic即可
 - Target Profile 选 PHICOMM K3 （如果用了上述技巧的话就只有K3可选）
 - Utilities 确保 k3screenctrl 选中，倚赖会自动选上
 - LuCI -> Application 中的 luci-app-k3screenctrl
@@ -227,7 +234,7 @@ sed -i 's/192.168.1.1/192.168.2.1/g' package/base-files/files/bin/config_generat
 
 OpenWrt默认关闭WIFI的，需要修改配置文件以默认开启WIFI和修改SSID呢（方便刷机后不网线就可以连上路由器）
 
-编辑package/kernel/mac80211/files/lib/wifi/mac80211.sh文件，大约在文件最后有如下代码
+编辑 package/kernel/mac80211/files/lib/wifi/mac80211.sh 文件，大约在文件最后有如下代码
 
 ```
 config wifi-device  radio$devidx
