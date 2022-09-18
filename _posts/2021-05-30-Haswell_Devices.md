@@ -46,9 +46,9 @@ Haswell架构是Intel在2013年推出的”第四代“CPU架构，Haswell刚推
 虽然写的是T440p，但是实测对T440s基本适用，本文对以上的材料做下补充：
 - BIOS芯片的位置，第二张图是夹上编程器的样子
 
-![](assets/images/bioschip.jpg)
+![](https://lwz322.sfo3.digitaloceanspaces.com/github_io/bioschip.jpg)
 
-![](assets/images/T440s.jpg)
+![](https://lwz322.sfo3.digitaloceanspaces.com/github_io/T440s.jpg)
 
 - 用工具读取到的BIOS芯片型号和教程可能不同
 
