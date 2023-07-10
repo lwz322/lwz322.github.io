@@ -49,12 +49,12 @@ K3的无线性能貌似不错，现在也有了Snapshot固件可以下载，但�
 ## LuCI优化
 
 首页的布局小改，截图底部的[排版错乱](https://www.jarviswang.me/?p=1119)终于被修复了，另外就是改动了选项卡的样式，在页面内呈现更多的信息
-![](https://img.vim-cn.com/23/de476c3304bf0ff2047dd513fe03cc16b67440.png)
+![](https://cdn.jsdelivr.net/gh/lwz322/pics/github.io/LuCI_overview.png)
 
 另外改动的还有页面便签的设定，粗看没什么意义
 
 我觉得是最重要的改动————优化了移动端的页面布局，解决了之前竖屏修改设置极为不便的问题
-![](https://img.vim-cn.com/42/92d9dda00d3962bc209b5d3312dfaeb24a2a2e.png)
+![](https://cdn.jsdelivr.net/gh/lwz322/pics/github.io/LuCI_mobile.png)
 
 其他的变动如Administration界面从之前的一个长网页改成了多标签网页，Firewall的Traffic Rules精简了Open Ports等栏目，改为Add的悬浮窗
 
@@ -64,11 +64,11 @@ K3的无线性能貌似不错，现在也有了Snapshot固件可以下载，但�
 
 现在可以在路由器把连接的客户端断开了
 
-![](https://img.vim-cn.com/c8/c941036270873b4be3a21e16b59aa2f9622fcd.png)
+![](https://cdn.jsdelivr.net/gh/lwz322/pics/github.io/LuCI_Wireless.png)
 
 选项卡里默认都有了802.11r的选项，漫游和Mesh大概也是19.07的重要特性，另外的惊喜就是发现5G一栏居然有160Mhz的选项!! 使用Intel 9260AC的网卡实测，默认的无线固件下只有300Mbps的协商速率
 
-![](https://img.vim-cn.com/a6/8c6d33d90e84c59457490898fac81c0eed0922.png)
+![](https://cdn.jsdelivr.net/gh/lwz322/pics/github.io/LuCI_160Mhz.png)
 
 ## 其他
 

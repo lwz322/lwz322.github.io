@@ -131,7 +131,7 @@ tcpdump -U -s 0 -i br-lan -w -
 但是还是不太优雅的，刚好看了下上面的luci-app-frpc的代码，发现用到了OpenWrt内建的procd，于是就本着学习的目的写了一个[lwz322/luci-app-frps](https://github.com/lwz322/luci-app-frps)，欢迎提issue和PR
 
 ### luci-app-statistics
-![collectd](https://img.vim-cn.com/66/cce412e04be5032bddb4aa14a0845f07241647.jpg)
+![collectd](https://cdn.jsdelivr.net/gh/lwz322/pics/github.io/Collectd.jpg)
 强大的统计软件，和其他的包组合收集各种数据，个人的主要作用就是拿来监测网络延迟，可以提一下的就是能够结合防火墙数据收集实现复杂的流量监控，下面附上官方的WiKi
 [luci-app-statistics](https://oldwiki.archive.OpenWrt.org/doc/howto/luci_app_statistics)
 
@@ -139,21 +139,23 @@ tcpdump -U -s 0 -i br-lan -w -
 这个我是在做[家用宽带的IPv6配置](https://lwz322.github.io/2019/07/25/IPv6_Home.html)的时候用到的，相比与传统路由器支持数量极为有限的几个DDNS，这个简直强大太多，因为软件本身做好DDNS客户端的外围工作，至于各个DDNS供应商的适配可以由脚本完成，比如说[Sensec](https://github.com/sensec)写的[[分享]适用于OpenWRT/LEDE自带DDNS功能的阿里云脚本](https://www.right.com.cn/forum/thread-267501-1-1.html)
 
 ### luci-app-nlbwmon
-![nlbwon](https://img.vim-cn.com/00/f96b33b6c0aacd64d92b54f23b755bb86f58f0.png)
+![nlbwon](https://cdn.jsdelivr.net/gh/lwz322/pics/github.io/nlbwon.png)
 对设备流量统计工具，而且是分IPv4和IPv6的，在流量统计软件里算是很美观的了
 
 ### luci-wrtbwmon
-![mac](https://img.vim-cn.com/92/1b76c51f4991fd5b82f1d7c88a58efd33a917d.jpg)
+![mac](https://cdn.jsdelivr.net/gh/lwz322/pics/github.io/usage.jpg)
 OpenWrt上少有的分设备的LuCI界面下的网速监测工具，没有官方的Feed，需要自己去[Github](https://github.com/Kiougar/luci-wrtbwmon)上面下载ipk
 
 ### Netdata
-![netdata](https://img.vim-cn.com/e3/44f5fa92845bda4dc5c31193badd6c2da0f87c.jpg)
+![netdata](https://cdn.jsdelivr.net/gh/lwz322/pics/github.io/netdata.jpg)
 算是一个比较好看的性能监测界面了，第一次见到还是印象深刻，然而用处...对个人来说不大，效果可以看[Github](https://github.com/netdata/netdata)，在OpenWrt中直接用``opkg install netdata``就好，之后直接访问LuCI管理IP的19999端口就可以看到了，优点还是信息量大，占用低
 
 # 实用的内建功能
 脱离了简单的应用软件层面，部分需要shell编程
 
 ### 交换机 Switch
+在较新版本的OpenWrt中，部分路由器的交换机部分迁移到了DSA架构，与下文看到的可能不一致，等摸索之后再补充详细说明.{:.warning}
+
 先说一个用途：当路由器做路由，占用掉了墙壁内嵌的网口，但是这个时候又有设备需要直接拨号，从前的话可能就需要使用交换机了，但是现在的大部分路由器都是通过VLAN来划分网口的，而OpenWrt对此是可以自定义的，所以只需要改下网口的VLAN ID就好，比如像下面这样，WAN口和LAN4就相当于“桥接”了，任意一口作为接入的时候，另外一个网口也可以连接电脑拨号
 ![](https://i.loli.net/2019/11/09/keOTDbEr3oYfc6S.png)
 

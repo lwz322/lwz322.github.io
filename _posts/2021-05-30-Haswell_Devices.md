@@ -40,23 +40,25 @@ Haswell架构是Intel在2013年推出的”第四代“CPU架构，Haswell刚推
 
 ### 参考教程
 
-- [t440p bypass白名单(适用于任何BIOS版本)](https://forum.51nb.com/thread-1916046-1-1.html)
-- [关于T440p刷白名单+高级菜单之夹子使用补充（第一次用夹子的请看下，避免绕弯）](https://forum.51nb.com/thread-1991428-1-1.html)
+- [t440p bypass白名单(适用于任何BIOS版本)](https://www.ibmnb.com/forum.php?mod=viewthread&tid=1888819&highlight=BIOS%2B%B8%DF%BC%B6)
+- [关于T440p刷白名单+高级菜单之夹子使用补充（第一次用夹子的请看下，避免绕弯）](https://www.ibmnb.com/thread-1991428-1-1.html)
 
 虽然写的是T440p，但是实测对T440s基本适用，本文对以上的材料做下补充：
 - BIOS芯片的位置，第二张图是夹上编程器的样子
 
-![](https://lwz322.sfo3.digitaloceanspaces.com/github_io/bioschip.jpg)
+![](https://cdn.jsdelivr.net/gh/lwz322/pics/github.io/T440s_BIOS_CHIP.jpg)
 
-![](https://lwz322.sfo3.digitaloceanspaces.com/github_io/T440s.jpg)
+![](https://cdn.jsdelivr.net/gh/lwz322/pics/github.io/T440s_BIOS_CHIP_with_programer.jpg)
 
-- 用工具读取到的BIOS芯片型号和教程可能不同
+- 用工具读取到的BIOS芯片型号和教程可能不同，以卖家附赠的工具为准
 
 - 教程还带有解锁高级菜单的部分，但是实测貌似没什么用（主要想解锁功耗，15w下散热还是压得住的）
 
 ### 黑苹果
 
 换了AX200的网卡之后在160MHz下实测无线可以跑满1000Mbps，另外一个在2020年的新闻就是Intel的网卡在MacOS下终于可以日常使用了：[itlwm](https://github.com/OpenIntelWireless/itlwm)，因为手头空闲的机器不多，所以就尝试给T440s上黑苹果试一试，好在Clover的EFI不难找
+
+![](https://cdn.jsdelivr.net/gh/lwz322/pics/github.io/T440s_Hackintoshi.JPG)
 
 实测黑苹果日常使用确实比Win10流畅不少（主要是少了一些莫名其妙的高占用），但是多开还是有些吃力的
 
@@ -72,22 +74,12 @@ Haswell架构是Intel在2013年推出的”第四代“CPU架构，Haswell刚推
 这里选择CentOS下，初次编译OpenWrt作为负载，编译时，温度抵近90度，基本上就是达到默认风扇下的上限了，如果把风扇转速拉满，温度大概80左右，但是噪音太大了；使用s-tui可以在软件层面查看功耗和频率信息，CPU功耗接近60W，主频2.8GHz，因为可以用Type-C的方口诱骗线供电，所以也顺带看了下整机的功耗，基本在65W以下（用95W的电源）；编译的时间对比win10下使用WSL2的i7-8700K，M73这套平台是其两倍，可以接受的水平；另外日常待机功耗12W左右
 
 ### Docker下载机
-之前用NAS时，用的比较多的就是Docker版本的qBittorrent以及网络共享功能，其实在Linux下实现这些并不难，M73用这一套的优势是相比传统NAS噪音很小，且小体型放置随意；这里使用和NAS上一样的容器镜像源，主要是qBittorrent作为下载软件，Nextcloud挂载SMB提供多种外部访问方式（体验下来还是SMB为主，Nextcloud的客户端能做的事情有限）
+之前用NAS时，用的比较多的就是Docker版本的qBittorrent以及网络共享功能，其实在Linux下实现这些并不难，M73用这一套的优势是相比传统NAS噪音很小，且小体型放置随意；这里使用和NAS上一样的容器镜像源，主要是qBittorrent作为下载软件
 
 以下设置仅针对CentOS 7.9，其他发行版可能不同，其中Docker启动命令如下（记得建立挂卷的目录）：
 
 ```bash
-docker run -d \
-  --name=nextcloud \
-  --network=host \
-  -e PUID=1000 \
-  -e PGID=1000 \
-  -e TZ=Asia/Shanghai \
-  -v /home/nextcloud/config:/config \
-  -v /home/nextcloud/data:/data \
-  --restart unless-stopped \
-  linuxserver/nextcloud
-  
+
 docker run -d \
   --name=qbittorrent \
   --network=host \
@@ -105,42 +97,17 @@ docker run -d \
 
 1. 3.1X的内核可能存在qbt启动异常的问题，```/usr/bin/qbittorrent-nox: error while loading shared libraries: libQt5Core.so.5: cannot open shared object file: No such file or directory```参考[群晖](https://post.smzdm.com/p/a7do76vd/)
 
-2. 防火墙可能会阻止访问8080端口
+2. 防火墙可能会阻止访问8080端口（部分运营商的家用宽带也会在上游阻隔8080端口的访问）
 
    ```bash
    firewall-cmd --zone=public --add-port=443/tcp --permanent
    firewall-cmd --reload
    ```
 
-3. nextcloud会识别首次登陆的IP之类的信息
+### 文件服务
 
-   需要到docker指定的config目录下修改才可以换用域名或者新的IP访问
 
-   ```bash
-   vi ./nextcloud/config/www/nextcloud/config/config.php
-   ```
-
-   ```php
-   <?php
-   $CONFIG = array (
-     'memcache.local' => '\\OC\\Memcache\\APCu',
-     'datadirectory' => '/data',
-     'instanceid' => 'xxx',
-     'passwordsalt' => 'xxx',
-     'secret' => 'xxx',
-     'trusted_domains' =>
-     array (
-       0 => '192.168.8.114',
-       1 => preg_match('/cli/i',php_sapi_name())?'127.0.0.1':$_SERVER['SERVER_NAME'],
-     ),
-     'dbtype' => 'sqlite3',
-     'version' => '21.0.0.18',
-     'overwrite.cli.url' => 'https://192.168.8.114',
-     'installed' => true,
-   );
-   ```
-
-### SMB共享
+#### SMB共享
 
 1. 基于系统的用户创建SMB用户
 
@@ -157,3 +124,71 @@ docker run -d \
    重启机器即可
    ```
 
+在使用SMB作为局域网内的文件共享方式有以下的缺点：
+
+- Android和IOS的播放器软件使用SMB协议播放视频时，无法达到带宽的上限（据说是受限于移动端的APP的SMB协议版本
+- SMB协议基本上只能用于局域网内的文件传输，无法作为一种安全的公网传输方式
+
+优点：
+
+- 兼容性较好，Windows，MacOS自带的文件浏览器支持直接访问
+- SMB3在NAS上支持多路径，可以使用普通的千兆路由器路由器达到较快的网速
+
+#### Alist
+
+首先说WebDav协议，这个最早在群晖的NAS上只要安装就能使用，主要就是用于公网访问文件，然而我在很长一段时间，都没有在Linux上寻找一款配置简单，易用的服务端，在此期间用[gohttpserver](https://github.com/codeskyblue/gohttpserver)作为多端访问服务器文件的方式
+
+之前听闻Alist可以挂载云盘后对外提供WebDav协议的访问，所以就看了下文档，其简介为：“一个支持多种存储的文件列表程序”，打开发现其实也是支持挂载本地存储的，又有网页端，完全可以实现gohttpserver的功能，初次之外页面上的分享功能也方便将Alist本身作为网盘分享文件
+
+这里因为考虑到方便的挂载本地目录（主要是qbittorrent的下载目录）以及使用HTTPS（证书周期性的需要更换），所以使用了本地直接部署的方式，采用官网的[一键脚本](https://alist.nn.ci/zh/guide/install/script.html)
+```bash
+curl -fsSL "https://alist.nn.ci/v3.sh" | bash -s install
+```
+特别留意首次安装后，日志会显示默认的随机密码
+
+之后就是用nPlayer等播放器挂载webdav目录了，留意url的路径``http[s]://domain:port/dav/``中的dav，如果是Android的话，nPlayer可能常年没有更新了，推荐Reex
+
+#### NextCloud
+
+Nextcloud挂载SMB提供多种外部访问方式，体验下来还是SMB为主，Nextcloud的优势在于有完善的移动APP，2022年发现还是Alist更轻量好用
+
+```bash
+docker run -d \
+  --name=nextcloud \
+  --network=host \
+  -e PUID=1000 \
+  -e PGID=1000 \
+  -e TZ=Asia/Shanghai \
+  -v /home/nextcloud/config:/config \
+  -v /home/nextcloud/data:/data \
+  --restart unless-stopped \
+  linuxserver/nextcloud
+```
+
+可能遇到的问题：nextcloud会识别首次登陆的IP之类的信息，导致无法二次访问
+
+解决办法：需要到docker指定的config目录下修改才可以换用域名或者新的IP访问
+
+```bash
+vi ./nextcloud/config/www/nextcloud/config/config.php
+```
+
+```php
+<?php
+$CONFIG = array (
+  'memcache.local' => '\\OC\\Memcache\\APCu',
+  'datadirectory' => '/data',
+  'instanceid' => 'xxx',
+  'passwordsalt' => 'xxx',
+  'secret' => 'xxx',
+  'trusted_domains' =>
+  array (
+    0 => '192.168.8.114',
+    1 => preg_match('/cli/i',php_sapi_name())?'127.0.0.1':$_SERVER['SERVER_NAME'],
+  ),
+  'dbtype' => 'sqlite3',
+  'version' => '21.0.0.18',
+  'overwrite.cli.url' => 'https://192.168.8.114',
+  'installed' => true,
+);
+```

@@ -38,7 +38,7 @@ article_header:
 
 使用Linux网络防火墙iptables对虚拟的出的Interface的数据包做标记，再结合一定的规则对标记的数据包进行路由，也就是通过自定的策略路由来实现，而需要实现这种特定需求下的策略路由就必须**自下而上**(此处特指是路由器的网络结构)的对网络重构，具体的网络结构示意图如下：
 
-![网络结构](https://img.vim-cn.com/b0/c66409bcbbee571fbb9432774a8685ee1d3fcb.png)
+![网络结构](https://cdn.jsdelivr.net/gh/lwz322/pics/github.io/structure.png)
 
 **自顶而下的对结构的解读**：
 

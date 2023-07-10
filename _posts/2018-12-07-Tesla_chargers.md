@@ -15,7 +15,7 @@ article_header:
   theme: dark
   background_color: '#ffffff'
   background_image:
-    src: https://img.vim-cn.com/00/5be9e38bc749ac02d3a2903294de538ce2f3fd.png
+    src: assets/background/Tesla_chargers.png
     gradient: 'linear-gradient(0deg, rgba(0, 0, 0 , .7), rgba(0, 0, 0, .7))'
 ---
 2018年[MCM\ICM](https://www.comap.com/undergraduate/contests/mcm/contests/2018/problems/)的D题探讨了充电桩网络的建设问题，而现阶段的典范之一就是Tesla充电网络了，故需要具体的数据来做可视化，其中主要就是Tesla的充电桩的地理信息，还用到了Google Maps的API对周边地区做搜索
@@ -45,13 +45,13 @@ python3环境即可，不过这里可以提的一点是网络环境，大概是�
 
   [Supercharger](https://www.tesla.com/supercharger)中地图右下有[View list of location](https://www.tesla.com/findus/list/superchargers/United%20States)
 
-  ![1544246432708](https://img.vim-cn.com/96/ba7c025b8e1e5c2b112e7dd3d9bea677d380d0.png)
+  ![tesla_map](https://cdn.jsdelivr.net/gh/lwz322/pics/github.io/tesla_map.png)
 
   跳转后的网站就给出了美国的充电站的详细位置，那么又如何去获取经纬度呢？
 
   进入某个充电站的详细信息之后就有
 
-  ![1544246603839](https://img.vim-cn.com/29/3c1355a2f0d6e10c2315c2fa63fc11c20acbb0.png)
+  ![1544246603839](https://cdn.jsdelivr.net/gh/lwz322/pics/github.io/tesla_check.png)
 
   通过浏览器的F12的检查功能就可以看到地图给出了经纬度的信息，另外左侧的文字也给出了充电站内的充电桩的数目，经过这样的分析之后发现，其实只需要做下正则匹配就行了。
   > ...https://maps.googleapis.com/maps/api/staticmap?scale=2&amp;center=34.7854160000,-86.9428640000&amp... 这里其实是Google Map的静态地图的API，
@@ -143,14 +143,17 @@ print('Finished,totally got %d Charging Station,and %d Error'% (data_got,data_er
 
 # 结果
 
-程序大概要跑几分钟，爬下来的数据大概是4000+条，最后在[Google MAP](https://drive.google.com/open?id=15hRhkZiVIw3mHJHJEQ00SQHQJBDaHsWV&usp=sharing)画出来就是下面这样， 这里也把即将建成的充电站画了进来，不过充电桩数目为0![1544247339926](https://img.vim-cn.com/00/5be9e38bc749ac02d3a2903294de538ce2f3fd.png)
+程序大概要跑几分钟，爬下来的数据大概是4000+条，最后在[Google MAP](https://drive.google.com/open?id=15hRhkZiVIw3mHJHJEQ00SQHQJBDaHsWV&usp=sharing)画出来就是下面这样， 这里也把即将建成的充电站画了进来，不过该充电站下属的充电桩数目为0
+
+![1544247339926](https://cdn.jsdelivr.net/gh/lwz322/pics/github.io/Tesla_chargers.png)
+
 其中Super Chargers为蓝色，Destination Chargers为红色
 
 ## ECharts.js可视化
 
 这里用了下[ScatterGL](https://www.echartsjs.com/examples/editor.html?c=scatterGL-gps&gl=1)，点的数量不多，但是可以看出密度越高的部分也就越亮
 
-![US](https://img.vim-cn.com/dc/7c180c409d8786a3360fdf7ec17c11f515bf32.png)
+![US](https://cdn.jsdelivr.net/gh/lwz322/pics/github.io/Tesla_ScatterGL.jpg)
 
 ## 附近搜索功能
 
