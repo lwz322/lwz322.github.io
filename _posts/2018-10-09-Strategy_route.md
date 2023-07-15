@@ -24,7 +24,7 @@ article_header:
 以上的问题都可以归结到策略路由上，通过不同层级间的策略的组合就可以实现不同的效果
 <!--more-->
 
-**关键词**：iptables，VLAN，Route Load_Balance,IP rule
+**关键词**：iptables，VLAN，Route Load_Balance, IP rule
 
 ## 设备和环境
 

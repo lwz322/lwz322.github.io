@@ -27,11 +27,11 @@ article_header:
 # 关于OpenWrt
 ![Wireless Freedom](https://openwrt.org/lib/tpl/openwrt/images/logo.png)
 
-从OpenWrt Logo下面的那个Wireless Freedom讲起吧，几个里程碑
-- 在没有PD的情况下，通过IPv6 NAT，使无线设备用上IPv6（Google，Youtube，PT）
+从OpenWrt Logo下面的那个Wireless Freedom讲起吧，几个里程碑：
+- 在没有PD的情况下，通过IPv6 NAT，使无线设备用上IPv6
 - 通过IPv6代理，在校园网下实现免流量高速上网
-- 用Aria2挂PT，攒下了可以用几年的上传量（可能导致封号）
-- 在学校限速1Mbps的情况下把网速多拨叠加到6Mbps，逐步改进后又达到了40Mbps,60Mbps
+- 用Aria2挂PT，攒下了可以用几年的上传量（用Aria2伪装成别的BT软件可能导致封号，但是当时只有一台路由器能跑Aria2这种轻量级BT软件）
+- 在学校限速1Mbps的情况下把网速多拨叠加到6Mbps，逐步改进后又达到了40Mbps，60Mbps
 - 最后趁舍友国庆出游，用新的负载均衡方法以及HWNAT把汇聚全宿舍端口达到400Mps
 - 使用策略路由和iptables灵活地配置Linux路由
 - 移植和修改源码以实现功能和硬件的适配
@@ -45,20 +45,42 @@ article_header:
 ## 硬件
 建议选有官方固件支持的路由器（也就是不太建议刷仅有民间固件的设备，可能导致使用体验不佳甚至是安全问题），具体可以参考官方支持的[Hardware Table](https://OpenWrt.org/toh/start)，进入某一款路由器的详情界面就可以看到支持的情况
 
-论坛一般都会有详细的刷机教程，如国内的[恩山](https://right.com.cn/forum/portal.php)，[Koolshare](http://koolshare.cn/portal.php)
-> 就刷OpenWrt而言，推荐以高通（QAC）和联发科（MTK）或者软路由为主，博通CPU的因为驱动开源的不太好，所以可能会缺少无线功能（如果有能用的闭源驱动也不错），对于MTK平台有开源的MT76项目驱动，部分无线芯片依然运行情况不太好，总之不对OpenWrt的无线期望太高
+论坛一般都会有详细的刷机教程，如国内的[恩山论坛](https://right.com.cn/forum/portal.php)的氛围就很好
+
+### 平台差异
+
+就刷OpenWrt的机器的CPU平台而言，推荐以高通（QAC）和联发科（MTK）或者软路由为主，博通CPU的因为驱动开源的不太好，所以可能会缺少无线功能（如果有能用的闭源驱动也不错），MTK平台官方固件可以直接使用开源的[MT76项目](https://github.com/openwrt/mt76)编译驱动，大部分也有闭源驱动可以用
+
+> OpenWrt的无线能用但是性能大概率还是不及原厂，总之不对OpenWrt的无线期望太高
+
+另外就是CPU架构及硬路由的特性支持了，ARM架构的算力更强，一般有针对常用加密算法的CPU指令（可以加速），老的MIPS平台如MT7621有HWNAT这种硬路由才有的转发卸载能力，能在更低的功耗下带来强劲的转发性能
+
+关于散热和无线方案的情况，可以参考[acwifi](https://www.acwifi.net)的拆机
+### 闪存及内存需求
+
+当前我接触到的最小的是16MB闪存，一般大概还有一半的空间用来装插件，用来做家庭的主路由还是可以的；最少128MB的内存，考察23年的主流应该是256MB了；如果有更大的闪存和内存自然有更大的自由，这往往也是用来划分高中低端的标志
+
+### 有线与无线速率
+
+网口的数量一般看路由器的产品形态，做主路由的话还是网口越多越快越好，如果有USB口的话还可以用来扩展额外的2.5Gb网口，这几年的路由器的网口是越来越少了，5个网口基本上只存在于中高端路由器上了，至于2.5G网口也是高端路由器一般才有，当前千兆宽带（200M以上的都算）和AX 3000的WiFi6（实测一般可以跑到800Mbps~1.6Gbps）恰好卡在千兆网口左右，对于内网传输速度有要求的还是尽量2.5G网口；至于10G网口，当前支持OpenWrt的硬路由不多，而且10G电口往往发热量较大
 
 ## 固件
 ### 官方固件
-官方编译的版本主要是稳定版(写这篇文章的时候最新的是18.06.4)和每日构建的版本(Snapshot)，前者用的最广泛，后者没有自带LuCI界面，需要自己安装，又因为版本太新，不是所有的软件都有已经编译好，版本合适的ipk
+官方编译的版本主要是稳定版（写这篇文章的时候最新的是18.06.4，23年更新到21.02.6后刷新了部分段落）和每日构建的版本(Snapshot)、以及rc版本：
+- 稳定版用的最广泛，最推荐
+- rc版本适合在稳定版之前尝鲜新特性，在稳定版出来之前又软件源，稳定版发布后，基本上可以用稳定版的软件源
+- Snapshot版本随着代码合入更新，有最快的设备支持，适合开发者，没有自带LuCI界面，需要自己安装，软件源也是快速滚动更新，而且软件源的包相对稳定版的少
 
 ### 第三方固件
-在各种论坛里面推广的多是这一种，如果不想折腾太多就获得一系列的功能可以考虑
+在各种论坛里面推广/自编译分享的多是这一种，如果不想折腾太多就获得一系列的功能可以考虑
 
 最出名的：[Lean's OpenWrt source](https://github.com/coolsnowwolf/lede)，作者现在只提供源码，主要特点：
-- 内置了部分实用的软件，如多拨助手
+- 有更广泛的设备支持和更早的适配
+- 内置了部分实用的软件，适应国情，如多拨助手等
 - 功能性的“魔改”，如Full Cone NAT，DNS加速
-- 更新速度比官方快，紧跟民间的OpenWrt前沿
+- 更新速度比官方快，但是从在线的软件源安装插件不是很方便
+
+当前我个人最推荐是[ImmortalWrt](https://downloads.immortalwrt.org/)，项目开始的比较晚，而且整体还是跟随官方分支，新增设备支持的速度和广度稍落后（比如闪存小的设备装插件比较吃力），但是拥有和官方一样的随版本的软件源、有适用于国内使用的插件（同样的版本的OpenWrt一般也能用ImmortalWrt的软件源）
 
 另外还有pandorabox，据说多拨比较厉害
 
@@ -67,39 +89,28 @@ article_header:
 ### 自编译
 当然也可以自己编译，因为受限与路由器的存储空间和性能，固件的Linux内核被精简，部分软件也被精简了，比如说某些功能的实现就依赖于完全体的dnsmasq-full，推荐在编译时就处理好这个倚赖；对于Snapshot版本，官方仓库里缺少部分预编译软件包，又或者软件依赖不匹配，这些都需要自行编译解决，这里可以参考[编译OpenWrt Snapshot固件](https://lwz322.github.io/2019/08/31/Build_OpenWrt_snapshot.html)，一般还是推荐使用稳定版的源码编译
 
+自编译也可以用到闭源驱动的源码，比如K2P：[为斐讯K2P编译OpenWRT LEDE，并启用mtk闭源wifi驱动](https://www.asmodeus.cn/archives/728)就用到了[mtk-openwrt-feeds](https://github.com/Nossiac/mtk-openwrt-feeds)
+### 版本选择
+这里细说的话涉及到以下的方面：
+- Uboot/Breed等bootloader的选择，如Breed可以超频，部分bootloader有“刷不死”的特性
+- 刷机的闪存布局，这个会影响到升级的兼容性，一般来说官方OpenWrt的前后兼容性会比较好
+- OpenWrt大版本的新特性，例如OpenWrt 19的客户端渲染的新LuCI，OpenWrt 20的DSA架构交换机
+- 自带软件源的软件的新版本的新特性
+- 开源和闭源驱动，无线固件的选择
+
 # 软件推荐
 官方的[Ueser Guide](https://openwrt.org/docs/guide-user/start)以及[Old Wiki](https://oldwiki.archive.openwrt.org/doc/howto/start)(看起来简洁一些)从功能上对软件划分，相当全面和详细的介绍了OpenWrt的功能及其实现的软件，这里主要是推荐一下个人用过的，体验还OK的部分软件
 
 前半部分主要是OpenWrt下常用的Linux平台下的命令行工具：
 
-### Aria2
-这是一个跨平台的多线程下载软件，主要是支持BT，在路由器性能允许的情况下能够做到全天挂PT，并且可以通过网络共享做一个简易的NAS
->之前有一段时间官方源下载的Aria2是不支持BT的，需要自己动手编译，而1.34之后又自带BT支持了
-
-注：大部分的PT不支持使用Aria2作为BT客户端使用，而Aria2也自带了伪装功能，可以伪装成为被允许的客户端，然而部分PT站是可以检测出来的（因为会涉及到流量作弊的问题），所以在PT使用Aria2是可能**被封号**的（PT账号的价值不必多说）
-
-实测北邮人可以检测伪装，北洋园PT也加入了相关代码，参考自：[Pt 站点禁用 Aria2 客户端方法分析](https://blog.rhilip.info/archives/1010/)
-
-Aria2本身只是一个命令行下载软件，而OpenWrt提供了一个LuCI的配置APP(只能拿来做些设置)luci-app-aria2
-
-最近的OpenWrt使用luci-app-aria2启动不了Aria2，需要输入下面的命令才会在后台运行
-```bash
-aria2c --enable-rpc --rpc-listen-all=true --rpc-allow-origin-all -c -D
-```
-所以如果不想用命令行的话就需要一个前端界面，推荐[AiraNG](https://github.com/mayswind/AriaNg)，通过RPC与服务端通信，既可以安装到路由器上（貌似不安全），也可以放到终端上（客户端或者HTML）
-
-OpenWrt的仓库那个AriaNG版本比较老了，可以先安装一个AraiNg的IPK，之后再到AriaNG的release下载一个新版的html文件替换掉，但是如果是打开外网访问的话，AriaNg是没有什么安全措施的
-
-另外一点就是Aria2的内存消耗太恐怖了，大量的内存被用于缓存，这对主路由是极为不利的
-
 ### iperf3
 跨平台的网络测试工具，主要是拿来测速的，测试一下就知道路由器的性能是什么情况了，比如说5G-5G的传输速度，LAN-5G的传输速度
 
-[iperf3](https://iperf.fr/iperf-download.php)，这里面还有个移动端软件值得推荐[HE.NET-Network Tools](http://networktools.he.net/)，其中也包含了iperf3网络测速感觉
+[iperf3](https://iperf.fr/iperf-download.php)，这里面还有个移动端软件值得推荐[HE.NET-Network Tools](http://networktools.he.net/)，其中也包含了iperf3网络测速工具
 
-如果要测试较为极限的吞吐能力可以用参数```-P 10```
+如果要测试较为极限的吞吐能力可以用参数```-P 10```，默认参数测试的是上行，测试下行需要加上参数`-R`，默认服务端的一个端口同时只能一次测试一个客户端
 
-至于要测试路由器到互联网的上下行速度可以参考附录中的命令行Speedtest
+> 至于要测试路由器到互联网的上下行速度可以参考附录中的命令行Speedtest
 
 在最新的OpenWrt的package仓库中新加入了一个测试网络性能的命令行工具：[Netperf](https://github.com/openwrt/packages/tree/master/net/speedtest-netperf/files)
 
@@ -108,6 +119,23 @@ mtr是ping和traceroute的结合，网络问题排查的利器
 
 ### iftop
 在Linux用于监测网卡/接口的网络连接情况，在路由器上可以显示内外网连接的IP地址，以及连接的速度；个人的一个重要的用途就是用来查看多WAN接入的负载均衡的效果
+
+另外因为OpenWrt一直以来缺少一个用来实时查看客户端的网络上下行速率的LuCI插件，iftop也是命令行里最主要用来监控网速的工具
+
+### socat
+在OpenWrt自带的iptables命令行和LuCI防火墙设置都支持端口转发，前者需要熟悉命令行，后者仅支持IPv4，当前公网IPv4越来越少，家用的公网访问主要还是用的IPv6，对于路由器下层的设备，可以用一行命令将端口重定向（命令是需要常驻命令行才生效的，可以用tmux里运行确保不会因为SSH断开而停止）
+
+```bash
+socat TCP6-LISTEN:123,reuseaddr,fork TCP6:[2604:xxx]:456
+```
+用了一段时间发现：
+- 支持IPv4到IPv6的端口转发
+- 新版本支持解析域名（但是是否支持实时解析就不清楚了）
+
+这就有更大的想象空间了，比如国内不同地域的网络连接性是不同的，可以用这种方法去规避连接性的问题
+
+### gost
+相比socat的端口转发针对单一端口，gost的作用是提供一行命令构建代理服务器
 
 ### tcpdump
 一个运行在命令行下的嗅探工具，它允许用户拦截和显示发送或收到过网络连接到该计算机的TCP/IP和其他数据包。具体的使用方法网上的教程很多，这里就给出抓取WiFi或者路由器上任意接口的包的一个快捷的方法：使用Wireshark的SSH远程抓取功能，在Wireshark进入界面的捕获一栏下可以看到这个功能；设置好SSH的相关参数后在Capture可以设置抓取的命令，在这里使用tcpdump：
@@ -136,7 +164,29 @@ tcpdump -U -s 0 -i br-lan -w -
 [luci-app-statistics](https://oldwiki.archive.OpenWrt.org/doc/howto/luci_app_statistics)
 
 ### luci-app-ddns
-这个我是在做[家用宽带的IPv6配置](https://lwz322.github.io/2019/07/25/IPv6_Home.html)的时候用到的，相比与传统路由器支持数量极为有限的几个DDNS，这个简直强大太多，因为软件本身做好DDNS客户端的外围工作，至于各个DDNS供应商的适配可以由脚本完成，比如说[Sensec](https://github.com/sensec)写的[[分享]适用于OpenWRT/LEDE自带DDNS功能的阿里云脚本](https://www.right.com.cn/forum/thread-267501-1-1.html)
+这个我是在做[家用宽带的IPv6配置](https://lwz322.github.io/2019/07/25/IPv6_Home.html)的时候用到的，相比与传统路由器支持数量极为有限的几个DDNS，这个简直强大太多，因为软件本身做好DDNS客户端的外围工作，至于各个DDNS供应商的适配可以由脚本完成比如说[Sensec](https://github.com/sensec)写的[[分享]适用于OpenWRT/LEDE自带DDNS功能的阿里云脚本](https://www.right.com.cn/forum/thread-267501-1-1.html)
+
+> 随着时间的推移，opkg软件源提供的ddns脚本当然会越来越广
+
+### Aria2
+这是一个跨平台的多线程下载软件，主要是支持BT，在路由器性能允许的情况下能够做到全天挂PT，并且可以通过网络共享做一个简易的NAS；当然在条件允许的情况下还是建议使用Docker版的qbittorrent
+> 之前有一段时间官方源下载的Aria2是不支持BT的，需要自己动手编译，而1.34之后又自带BT支持了
+
+注：大部分的PT不支持使用Aria2作为BT客户端使用，而Aria2也自带了伪装功能，可以伪装成为被允许的客户端，然而部分PT站是可以检测出来的（因为会涉及到流量作弊的问题），所以在PT使用Aria2是可能**被封号**的（PT账号的价值不必多说）
+
+实测北邮人可以检测伪装，北洋园PT也加入了相关代码，参考自：[Pt 站点禁用 Aria2 客户端方法分析](https://blog.rhilip.info/archives/1010/)
+
+Aria2本身只是一个命令行下载软件，而OpenWrt提供了一个LuCI的配置APP(只能拿来做些设置)luci-app-aria2
+
+最近的OpenWrt使用luci-app-aria2启动不了Aria2，需要输入下面的命令才会在后台运行
+```bash
+aria2c --enable-rpc --rpc-listen-all=true --rpc-allow-origin-all -c -D
+```
+所以如果不想用命令行的话就需要一个前端界面，推荐[AiraNG](https://github.com/mayswind/AriaNg)，通过RPC与服务端通信，既可以安装到路由器上（貌似不安全），也可以放到终端上（客户端或者HTML）
+
+OpenWrt的仓库那个AriaNG版本比较老了，可以先安装一个AraiNg的IPK，之后再到AriaNG的release下载一个新版的html文件替换掉，但是如果是打开外网访问的话，AriaNg是没有什么安全措施的
+
+另外一点就是Aria2的内存消耗太恐怖了，大量的内存被用于缓存，这对主路由是极为不利的
 
 ### luci-app-nlbwmon
 ![nlbwon](https://cdn.jsdelivr.net/gh/lwz322/pics/github.io/nlbwon.png)
@@ -154,7 +204,8 @@ OpenWrt上少有的分设备的LuCI界面下的网速监测工具，没有官方
 脱离了简单的应用软件层面，部分需要shell编程
 
 ### 交换机 Switch
-在较新版本的OpenWrt中，部分路由器的交换机部分迁移到了DSA架构，与下文看到的可能不一致，等摸索之后再补充详细说明.{:.warning}
+`在较新版本的OpenWrt中，部分路由器的交换机模块迁移到了DSA架构，LuCI界面网络选项卡去掉了交换机页面，等摸索之后再补充详细说明`.{:.warning}
+> [DSA架构简介](https://forum.openwrt.org/t/mini-tutorial-for-dsa-network-config/96998)
 
 先说一个用途：当路由器做路由，占用掉了墙壁内嵌的网口，但是这个时候又有设备需要直接拨号，从前的话可能就需要使用交换机了，但是现在的大部分路由器都是通过VLAN来划分网口的，而OpenWrt对此是可以自定义的，所以只需要改下网口的VLAN ID就好，比如像下面这样，WAN口和LAN4就相当于“桥接”了，任意一口作为接入的时候，另外一个网口也可以连接电脑拨号
 ![](https://i.loli.net/2019/11/09/keOTDbEr3oYfc6S.png)
@@ -309,11 +360,11 @@ logger -t ECMPv6 "Done $ipv6_devices $status"
 在版本较新的Windows 10中已经内置了OpenSSH，可以用SSH和SCP，linux发行版基本上是自带了，使用私钥登陆可以免去输密码，也方便写脚本
 
 生成密钥，默认暂时是RSA-2048bit
-```
+```powershell
 ssh-keygen
 ```
 之后会提示输入密钥的保存路径，如果是初次设置默认就好，否则会覆盖掉之前的文件
-```
+```powershell
  ~: [00:42:02]
 $ ssh-keygen
 Generating public/private rsa key pair.
@@ -333,7 +384,15 @@ $ scp foo.txt bar.txt username@remotehost:/path/directory/
 $ scp username@remotehost:/path/directory/\{foo.txt,bar.txt\} .
 ```
 
+### 使用带有文件传输功能的终端软件
+一般需要额外安装一个软件
+```bash
+opkg install openssh-sftp-server
+```
 # 附录
+
+### WiFi参数查看APP
+[analiti](https://analiti.com/) 是一款Android APP，可以查看WiFi的特性支持情况：[教你用手机查看无线路由器Wi-Fi 7特性，还可查看KVR 和MU-MIMO的支持](https://www.acwifi.net/24613.html)，就2023年的支持MLO和4K QAM的新品铺开之际，这款工具显得非常强大了，使用时如果需要看到MU-MIMO等特性的支持情况，需要能够能连接到analiti的服务器（推测）
 
 ### Speedtest
 偶尔有网络测速需求，OpenWrt安装Python要注意空间占用
