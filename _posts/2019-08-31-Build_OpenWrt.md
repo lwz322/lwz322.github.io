@@ -72,7 +72,7 @@ K3的无线性能貌似不错，现在也有了Snapshot固件可以下载，但�
 
 ## 其他
 
-前段时间编译K2P的19.07的Snapshot时发现有MT7615e的驱动，K2P貌似只有一颗MT7615e，编译勾选之后也就可以用用2.4G频段，适当设置下速度还是有80Mbps的，5G有但是不能用
+前段时间编译K2P的19.07的Snapshot时发现有MT7615e的驱动，K2P貌似只有一颗MT7615e，编译勾选之后也就可以用2.4G频段，适当设置下速度还是有80Mbps的，5G有但是不能用
 
 另外小米路由3G（R3G）从18.06升级19.07的时候发现无论使用mtd还是sysupgrade都不行，前者提示can't open device，后者则是format not support，即使是升级到可能的国度版本18.06.5还是不行，后面我查了下mt7621.mk的commit log，发现R3G自一次[commit](https://github.com/openwrt/openwrt/commit/7f00123d63584e8d7da717c89fd1df610a161983)默认不再编译tar格式的sysupgrade，故这里需要先回滚mk文件中定义r3g固件格式的几行才可以编译得到tar文件做sysupgrade
 
