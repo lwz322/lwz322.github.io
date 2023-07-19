@@ -66,7 +66,7 @@ article_header:
 
 ## 固件
 ### 官方固件
-官方编译的版本主要是稳定版（写这篇文章的时候最新的是18.06.4，23年更新到21.02.6后刷新了部分段落）和每日构建的版本(Snapshot)、以及rc版本：
+官方编译的版本主要是稳定版（写这篇文章的时候最新的是18.06.4，23年我把设备更新到21.02.6后刷新了部分段落）和每日构建的版本(Snapshot)、以及rc版本：
 - 稳定版用的最广泛，最推荐
 - rc版本适合在稳定版之前尝鲜新特性，在稳定版出来之前又软件源，稳定版发布后，基本上可以用稳定版的软件源
 - Snapshot版本随着代码合入更新，有最快的设备支持，适合开发者，没有自带LuCI界面，需要自己安装，软件源也是快速滚动更新，而且软件源的包相对稳定版的少
@@ -74,10 +74,10 @@ article_header:
 ### 第三方固件
 在各种论坛里面推广/自编译分享的多是这一种，如果不想折腾太多就获得一系列的功能可以考虑
 
-最出名的：[Lean's OpenWrt source](https://github.com/coolsnowwolf/lede)，作者现在只提供源码，主要特点：
-- 有更广泛的设备支持和更早的适配
-- 内置了部分实用的软件，适应国情，如多拨助手等
-- 功能性的“魔改”，如Full Cone NAT，DNS加速
+最出名的：[Lean's OpenWrt source](https://github.com/coolsnowwolf/lede)，作者现在只提供源码，固件基本要在论坛找，主要特点：
+- 有更广泛的设备支持和更快的适配
+- 直接内置了部分实用的软件，适应国情，如多拨助手、USB驱动、SMB共享等
+- 功能性的“魔改”，如Full Cone NAT，DNS加速等
 - 更新速度比官方快，但是从在线的软件源安装插件不是很方便
 
 当前我个人最推荐是[ImmortalWrt](https://downloads.immortalwrt.org/)，项目开始的比较晚，而且整体还是跟随官方分支，新增设备支持的速度和广度稍落后（比如闪存小的设备装插件比较吃力），但是拥有和官方一样的随版本的软件源、有适用于国内使用的插件（同样的版本的OpenWrt一般也能用ImmortalWrt的软件源）
@@ -89,12 +89,12 @@ article_header:
 ### 自编译
 当然也可以自己编译，因为受限与路由器的存储空间和性能，固件的Linux内核被精简，部分软件也被精简了，比如说某些功能的实现就依赖于完全体的dnsmasq-full，推荐在编译时就处理好这个倚赖；对于Snapshot版本，官方仓库里缺少部分预编译软件包，又或者软件依赖不匹配，这些都需要自行编译解决，这里可以参考[编译OpenWrt Snapshot固件](https://lwz322.github.io/2019/08/31/Build_OpenWrt_snapshot.html)，一般还是推荐使用稳定版的源码编译
 
-自编译也可以用到闭源驱动的源码，比如K2P：[为斐讯K2P编译OpenWRT LEDE，并启用mtk闭源wifi驱动](https://www.asmodeus.cn/archives/728)就用到了[mtk-openwrt-feeds](https://github.com/Nossiac/mtk-openwrt-feeds)
+自编译也可以用闭源驱动，比如K2P：[为斐讯K2P编译OpenWRT LEDE，并启用mtk闭源wifi驱动](https://www.asmodeus.cn/archives/728)就用到了[mtk-openwrt-feeds](https://github.com/Nossiac/mtk-openwrt-feeds) 
 ### 版本选择
 这里细说的话涉及到以下的方面：
 - Uboot/Breed等bootloader的选择，如Breed可以超频，部分bootloader有“刷不死”的特性
 - 刷机的闪存布局，这个会影响到升级的兼容性，一般来说官方OpenWrt的前后兼容性会比较好
-- OpenWrt大版本的新特性，例如OpenWrt 19的客户端渲染的新LuCI，OpenWrt 20的DSA架构交换机
+- OpenWrt大版本的新特性，例如OpenWrt 19的客户端渲染的新LuCI，OpenWrt 21.02的DSA架构交换机，需要考虑兼容性和使用习惯问题
 - 自带软件源的软件的新版本的新特性
 - 开源和闭源驱动，无线固件的选择
 
@@ -204,7 +204,7 @@ OpenWrt上少有的分设备的LuCI界面下的网速监测工具，没有官方
 脱离了简单的应用软件层面，部分需要shell编程
 
 ### 交换机 Switch
-`在较新版本的OpenWrt中，部分路由器的交换机模块迁移到了DSA架构，LuCI界面网络选项卡去掉了交换机页面，等摸索之后再补充详细说明`{:.warning}
+`在较新版本的OpenWrt中，部分路由器的交换机模块迁移到了DSA架构，LuCI界面网络选项卡去掉了交换机页面，VLAN设置的页面被迁移到了“网络-接口-设备-网桥VLAN过滤”，等摸索之后再补充详细说明`{:.warning}
 > [DSA架构简介](https://forum.openwrt.org/t/mini-tutorial-for-dsa-network-config/96998)
 
 先说一个用途：当路由器做路由，占用掉了墙壁内嵌的网口，但是这个时候又有设备需要直接拨号，从前的话可能就需要使用交换机了，但是现在的大部分路由器都是通过VLAN来划分网口的，而OpenWrt对此是可以自定义的，所以只需要改下网口的VLAN ID就好，比如像下面这样，WAN口和LAN4就相当于“桥接”了，任意一口作为接入的时候，另外一个网口也可以连接电脑拨号
