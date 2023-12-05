@@ -17,16 +17,16 @@
 }
 
 .extensions--video {
-  padding-top: percentage(315 / 560);
+  padding-top: percentage(calc(315 / 560));
 }
 
 .extensions--slide {
-  padding-top: percentage(487 / 599);
+  padding-top: percentage(calc(487 / 599));
 }
 
 .extensions--demo {
   min-height: 340px;
-  padding-top: percentage(315 / 560);
+  padding-top: percentage(calc(315 / 560));
 }
 
 .extensions--audio {

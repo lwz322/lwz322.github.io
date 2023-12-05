@@ -114,16 +114,16 @@ $button-height-sm:        1.5rem;
 $button-height-xs:        1.2rem;
 
 $button: (
-  padding-y-xl:           ($button-height-xl - map-get($base, font-size-xl)) / 2,
-  padding-x-xl:           $button-height-xl / 3,
-  padding-y-lg:           ($button-height-lg - map-get($base, font-size-lg)) / 2,
-  padding-x-lg:           $button-height-lg / 3,
-  padding-y:              ($button-height - map-get($base, font-size)) / 2,
-  padding-x:              $button-height / 3,
-  padding-y-sm:           ($button-height-sm - map-get($base, font-size-sm)) / 2,
-  padding-x-sm:           $button-height-sm / 3,
-  padding-y-xs:           ($button-height-xs - map-get($base, font-size-xs)) / 2,
-  padding-x-xs:           $button-height-xs / 3,
+  padding-y-xl:           calc(($button-height-xl - map-get($base, font-size-xl)) / 2),
+  padding-x-xl:           calc($button-height-xl / 3),
+  padding-y-lg:           calc(($button-height-lg - map-get($base, font-size-lg)) / 2),
+  padding-x-lg:           calc($button-height-lg / 3),
+  padding-y:              calc($button-height - map-get($base, font-size)),
+  padding-x:              calc($button-height / 3),
+  padding-y-sm:           calc(($button-height-sm - map-get($base, font-size-sm)) / 2),
+  padding-x-sm:           calc($button-height-sm / 3),
+  padding-y-xs:           calc(($button-height-xs - map-get($base, font-size-xs)) / 2),
+  padding-x-xs:           calc($button-height-xs / 3),
 
   pill-radius:            6rem,
 
