@@ -74,7 +74,7 @@
     $end-at: str-index($rest, $search-end);
 
     @if $end-at {
-      $end-at: $end-at + $start-at -1;
+      $end-at: $end-at + $start-at - 1;
       $variable: str-slice($string, $start-at + $search-start-length, $end-at - 1);
       // @debug '---var', $variable, $start-at, $end-at;
       @return (
