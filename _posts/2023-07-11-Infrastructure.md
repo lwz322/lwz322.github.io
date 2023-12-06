@@ -131,6 +131,22 @@ root@XDR6088:~# uqmi -d  /dev/cdc-wdm3   --get-signal-info
 
 关于IPv6，首先路由器时可以获取到公网IPv6地址的（以及64位前缀的PD），并且在LAN默认的IPv6设置下，可以向下分配地址，另外就是传入连接的连接性，实测发现有运营商的差异：移动的IPv6地址无法外网访问，联通和电信的地址可以外网访问
 
+### CPE/4G模块下的二级路由
+由于CPE和4G模块获取的IPv6地址是不含短于64位的前缀的，所以在使用二级路由的情况下，二级路由下的设备无法获取公网IPv6地址，这个时候需要配置“IPv6中继+NDP代理”，OpenWrt 23.05的LuCI界面的设置过程如下：
+1. 比如wan6接口已经获取到IPv6地址，下面都是在默认的设置上修改的，第一张图的设置不需要改
+![](https://cdn.jsdelivr.net/gh/lwz322/pics/github.io/IPv6Relay_wan6.png)
+2. wan6接口的设置勾选指定的主接口，接下来三个地址分配的选项选中继，学习路由要勾选
+![](https://cdn.jsdelivr.net/gh/lwz322/pics/github.io/IPv6Relay_wan6_2.png)
+3. lan接口的设置，三个地址分配的选项选中继，学习路由要勾选
+![](https://cdn.jsdelivr.net/gh/lwz322/pics/github.io/IPv6Relay_lan.png) 
+4. 删除ULA前缀（这里是经验之谈）
+![](https://cdn.jsdelivr.net/gh/lwz322/pics/github.io/IPv6Relay_ULA.png)
+正常情况下，连接在路由器下面的设备就能获取到公网IPv6地址了，但是可能还打不开IPv6网站：http://test6.ustc.edu.cn，这个时候可能需要ping一下wan6接口的IPv6地址，让地址被NDP代理学习（可以用``ip -6 neigh``和LuCI上的系统->路由表->IPv6邻居看IPv6地址对应的接口来观察NDP代理的效果）
+
+我的网络结构是CPE做一级路由，OpenWrt做二级路由，因为华为5G CPE本身防火墙的原因，二级路由下面的设备可以获取到IPv6地址，但是无法从外网访问
+
+但是如果CPE或者4G模块支持桥模式，那么OpenWrt路由器大概率是不受CPE或者4G模块的防火墙影响的，放开OpenWrt的防火墙之后，只剩下运营商屏蔽了传入连接的可能性
+
 # 局域网
 局域网肯定还是要用一台OpenWrt路由器作为主路由，如果一台主路由能解决问题是最好，列出来的要求有点多：
 1. 网口足够多，早期的路由器一般是5个千兆口（1 x WAN + 4 x LAN），勉强够用（PC + NAS + xx），如果带USB口的话，还能额外扩展网口
