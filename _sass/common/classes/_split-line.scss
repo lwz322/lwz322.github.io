@@ -3,12 +3,13 @@
     $direction: top;
   }
   @if $color == default {
-    $color: $border-color-l;
+    $color: "border-color-l";
   }
   @if $width == default {
     $width: 1px;
   }
-  border: 0 solid $color;
+  border: 0 solid;
+  @include css-var(border-color, "var(--#{$color})");
   @if $direction == top {
     border-top-width: $width;
   }

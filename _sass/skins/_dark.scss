@@ -4,6 +4,8 @@
 // Email: kitian616@outlook.com
 ///
 
+/* stylelint-disable value-list-max-empty-lines, function-max-empty-lines */
+
 // main colors
 $main-color-1:     #ff9500;
 $text-color-1:     rgba(#fff, .8);
@@ -69,6 +71,110 @@ $douban-color:     #42bd56;
 $linkedin-color:   #1074af;
 $github-color:     #000;
 $npm-color:        #fff;
+
+
+$default: (
+  // main colors
+  main-color-1:         $main-color-1,
+  main-color-1-hover:   darken($main-color-1, 14%),
+  main-color-1-active:  darken($main-color-1, 20%),
+
+  text-color-1:         $text-color-1,
+  text-color-1-hover:   darken($text-color-1, 14%),
+  text-color-1-active:  darken($text-color-1, 20%),
+
+  main-color-2-active:  darken($main-color-2, 20%),
+  main-color-2-hover:   darken($main-color-2, 14%),
+  main-color-2:         $main-color-2,
+
+  text-color-2:         $text-color-2,
+  text-color-2-hover:   darken($text-color-2, 14%),
+  text-color-2-active:  darken($text-color-2, 20%),
+
+  main-color-3:         $main-color-3,
+  main-color-3-hover:   darken($main-color-3, 14%),
+  main-color-3-active:  darken($main-color-3, 20%),
+
+  text-color-3:         $text-color-3,
+  text-color-3-hover:   darken($text-color-3, 14%),
+  text-color-3-active:  darken($text-color-3, 20%),
+
+  main-color-theme-light:         $main-color-theme-light,
+  main-color-theme-light-hover:   darken($main-color-theme-light, 14%),
+  main-color-theme-light-active:  darken($main-color-theme-light, 20%),
+
+
+  main-color-theme-dark:          $main-color-theme-dark,
+  main-color-theme-dark-hover:    lighten($main-color-theme-dark, 18%),
+  main-color-theme-dark-active:   lighten($main-color-theme-dark, 32%),
+
+  // function colors
+  green:                $green,
+  green-hover:          darken($green, 14%),
+  green-active:         darken($green, 20%),
+
+  blue:                 $blue,
+  blue-hover:           darken($blue, 14%),
+  blue-active:          darken($blue, 20%),
+
+  yellow:               $yellow,
+  yellow-hover:         darken($yellow, 14%),
+  yellow-active:        darken($yellow, 20%),
+
+  red:                  $red,
+  red-hover:            darken($red, 14%),
+  red-active:           darken($red, 20%),
+
+  text-color-function:        $text-color-function,
+  text-color-function-hover:  darken($text-color-function, 14%),
+  text-color-function-active: darken($text-color-function, 20%),
+
+  // page background
+  background-color: $background-color,
+
+  // text colors
+  text-color-theme-light-d: $text-color-theme-light-d,
+  text-color-theme-light: $text-color-theme-light,
+  text-color-theme-light-l: $text-color-theme-light-l,
+
+  text-color-theme-dark-d: $text-color-theme-dark-d,
+  text-color-theme-dark: $text-color-theme-dark,
+  text-color-theme-dark-l: $text-color-theme-dark-l,
+
+  text-color-d: $text-color-d,
+  text-color: $text-color,
+  text-color-l: $text-color-l,
+
+  text-background-color: $text-background-color,
+
+  // header and footer colors
+  header-text-color: $text-color-3,
+  header-background: $main-color-3,
+
+  footer-text-color: $text-color-3,
+  footer-background: $main-color-3,
+
+  // border and shadow colors
+  border-color: $border-color,
+  border-color-l: $border-color-l,
+  decorate-color: $decorate-color,
+  mask-color: $mask-color,
+  select-color: $select-color,
+
+  // logo colors
+  mail-color:       #0072c5,
+  facebook-color:   #4267b2,
+  twitter-color:    #1da1f2,
+  weibo-color:      #e6162d,
+  google-plus-color:#ea4335,
+  telegram-color:   #32afed,
+  medium-color:     #000,
+  zhihu-color:      #0084ff,
+  douban-color:     #42bd56,
+  linkedin-color:   #1074af,
+  github-color:     #000,
+  npm-color:        #fff
+);
 
 // highlight colors
 @import "skins/highlight/tomorrow-night";

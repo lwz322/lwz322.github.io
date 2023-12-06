@@ -1,74 +1,102 @@
-///
-// Skin: Default
-// Author: Tian Qi
-// Email: kitian616@outlook.com
-///
+/**
+ * Skin: Default
+ * Author: Tian Qi
+ * Email: kitian616@outlook.com
+ */
 
-// main colors
-$main-color-1:     #fc4d50;
-$text-color-1:     #fff;
+/* stylelint-disable value-list-max-empty-lines, function-max-empty-lines */
 
-$main-color-2:     #fca24d;
-$text-color-2:     #fff;
+$default: (
+  // main colors
+  main-color-1:     #fc4d50,
+  text-color-1:     #fff,
 
-$main-color-3:     #f2f2f2;
-$text-color-3:     #333;
+  main-color-2:     #fca24d,
+  text-color-2:     #fff,
 
-$main-color-theme-light: rgba(#000, .9);
-$main-color-theme-dark:  rgba(#fff, .9);
+  main-color-3:     #f2f2f2,
+  text-color-3:     #333,
 
-// page background
-$background-color: #fff;
+  main-color-theme-light:  rgba(#000, .9),
+  main-color-theme-dark:   rgba(#fff, .9),
 
-// text colors
-$text-color-theme-light-d: #000;
-$text-color-theme-light:   #222;
-$text-color-theme-light-l: #888;
+  // text colors
+  text-color-theme-light-d: #000,
+  text-color-theme-light:   #222,
+  text-color-theme-light-l: #888,
 
-$text-color-theme-dark-d:  #fff;
-$text-color-theme-dark:    rgba(#fff, .95);
-$text-color-theme-dark-l:  rgba(#fff, .85);
+  text-color-theme-dark-d:  #fff,
+  text-color-theme-dark:    rgba(#fff, .95),
+  text-color-theme-dark-l:  rgba(#fff, .85),
 
-$text-color-d:     $text-color-theme-light-d;
-$text-color:       $text-color-theme-light;
-$text-color-l:     $text-color-theme-light-l;
+  text-color-d:  #000,
+  text-color:    #222,
+  text-color-l:  #888,
 
-$text-background-color: rgba(#000, .05);
+  text-background-color: rgba(#000, .05),
 
-// header and footer colors
-$header-text-color: $text-color-3;
-$header-background: $main-color-3;
+  // function colors
+  green-color:           #52c41a,
+  blue-color:            #1890ff,
+  yellow-color:          #fa8c16,
+  red-color:             #f5222d,
+  text-color-function:   #fff,
 
-$footer-text-color: $text-color-3;
-$footer-background: $main-color-3;
+  // page
+  background-color: #fff,
+  select-color:     rgba(#fc4d50, .5), // main-color-1
 
-// border and shadow colors
-$border-color:     mix(#000, $background-color, 20%);
-$border-color-l:   mix(#000, $background-color, 10%);
-$decorate-color:   rgba(#000, .1);
-$mask-color:       rgba(#000, .9);
-$select-color:     rgba($main-color-1, .5);
+  // border and shadow
+  border-color:     mix(#000, #fff, 20%), // background-color
+  border-color-l:   mix(#000, #fff, 10%), // background-color
+  decorate-color:   rgba(#000, .1),
+  mask-color:       rgba(#000, .9),
 
-// function colors
-$green:           #52c41a;
-$blue:            #1890ff;
-$yellow:          #fa8c16;
-$red:             #f5222d;
-$text-color-function: #fff;
+  // header and footer
+  header-background: #f2f2f2, // main-color-3
+  header-text-color: #333, // text-color-3
 
-// logo colors
-$mail-color:       #0072c5;
-$facebook-color:   #4267b2;
-$twitter-color:    #1da1f2;
-$weibo-color:      #e6162d;
-$google-plus-color:#ea4335;
-$telegram-color:   #32afed;
-$medium-color:     #000;
-$zhihu-color:      #0084ff;
-$douban-color:     #42bd56;
-$linkedin-color:   #1074af;
-$github-color:     #000;
-$npm-color:        #fff;
+  footer-background: #f2f2f2, // main-color-3
+  footer-text-color: #333, // text-color-3
+
+  // sidebar
+  sidebar-button-background-color: rgba(#f2f2f2, .75), // main-color-3
+
+  // tags
+  tag-button-background-color-1:   rgba(#fc4d50, .4),  // main-color-1
+  tag-button-background-color-2:   rgba(#fc4d50, .55), // main-color-1
+  tag-button-background-color-3:   rgba(#fc4d50, .7),  // main-color-1
+  tag-button-background-color-4:   rgba(#fc4d50, .9),  // main-color-1
+
+  // logo colors
+  mail-color:       #0072c5,
+  facebook-color:   #4267b2,
+  twitter-color:    #1da1f2,
+  weibo-color:      #e6162d,
+  google-plus-color:#ea4335,
+  telegram-color:   #32afed,
+  medium-color:     #000,
+  zhihu-color:      #0084ff,
+  douban-color:     #42bd56,
+  linkedin-color:   #1074af,
+  github-color:     #000,
+  npm-color:        #fff
+);
+
+@import "skins/common/functions";
+
+@each $name, $value in $default {
+  @if str-index($name, "-color") {
+    @if map-has-key($default, "#{$name}--hover") == false {
+      $default: map-merge($default, ("#{$name}--hover": get-hover-color($value)));
+    }
+    @if map-has-key($default, "#{$name}--active") == false {
+      $default: map-merge($default, ("#{$name}--active": get-active-color($value)));
+    }
+  }
+}
+
+@import "skins/default-dark";
 
 // highlight colors
 @import "skins/highlight/tomorrow";

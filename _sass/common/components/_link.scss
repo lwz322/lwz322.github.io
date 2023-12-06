@@ -1,0 +1,55 @@
+.link {
+  @include plain() {
+    text-decoration: none;
+  }
+  @include hover() {
+    text-decoration: underline;
+  }
+  @include active() {
+    text-decoration: none;
+  }
+}
+
+.link--primary {
+  @include link-colors("main-color-1");
+}
+
+.link--text {
+  @include link-colors("text-color");
+}
+
+.link--text-d {
+  @include link-colors("text-color-d");
+}
+
+.link--text-l {
+  @include link-colors("text-color-l");
+}
+
+.link--theme-light {
+  @include link-colors("text-color-theme-light");
+}
+
+.link--theme-dark {
+  @include link-colors("text-color-theme-dark");
+}
+
+.link--highlight-text {
+  @include link-colors("text-color", "main-color-1--hover");
+}
+
+.link--highlight-text-d {
+  @include link-colors("text-color-d", "main-color-1--hover");
+}
+
+.link--highlight-text-l {
+  @include link-colors("text-color-l", "main-color-1--hover");
+}
+
+.link--highlight-theme-light {
+  @include link-colors("text-color-theme-light", "main-color-1--hover");
+}
+
+.link--highlight-theme-dark {
+  @include link-colors("text-color-theme-dark", "main-color-1--hover");
+}

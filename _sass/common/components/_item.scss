@@ -26,11 +26,11 @@
 }
 
 a > .item__header, a.item__header, .item__header > a {
-  @include link-colors($text-color-d, $main-color-1);
+  @extend .link, .link--highlight-text-d;
 }
 
 .item__meta {
-  color: $text-color-l;
+  @include css-var(color, "var(--text-color-l)");
 }
 
 .item__description {
@@ -45,7 +45,7 @@ a > .item__header, a.item__header, .item__header > a {
       margin-top: map-get($spacers, 3);
     }
     h1, h2, h3 {
-      color: $text-color;
+      @include css-var(color, "var(--text-color)");
     }
     h1, h2 {
       padding: 0;

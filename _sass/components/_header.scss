@@ -1,9 +1,9 @@
 .header {
-  background: $header-background;
+  @include css-var(background, "var(--header-background)");
   a {
     font-weight: map-get($base, font-weight);
     text-decoration: none !important;
-    @include link-colors($header-text-color, $main-color-1);
+    @include link-colors("header-text-color", "main-color-1");
   }
   .main {
     @include flexbox();
@@ -18,7 +18,7 @@
   background: rgba(#000, .15);
   .navigation__item--active {
     &::after {
-      @include split-line(bottom, 4px, $text-color-theme-dark);
+      @include split-line(bottom, 4px, "text-color-theme-dark");
     }
   }
 }
@@ -28,7 +28,7 @@
   background: rgba(#fff, .15);
   .navigation__item--active {
     &::after {
-      @include split-line(bottom, 4px, $text-color-theme-light);
+      @include split-line(bottom, 4px, "text-color-theme-light");
     }
   }
 }
@@ -115,9 +115,9 @@
 }
 .navigation__item--active {
   a {
-    @include link-colors($main-color-1, $main-color-1);
+    @include link-colors("main-color-1", "main-color-1");
   }
   &::after {
-    @include split-line(bottom, 4px, $main-color-1);
+    @include split-line(bottom, 4px, "main-color-1");
   }
 }

@@ -1,20 +1,37 @@
-@mixin clickable($clr, $bg-clr, $hover-clr: default, $hover-bg-clr: default, $active-clr: default, $active-bg-clr: default, $focus-clr: default, $focus-bg-clr: default, $theme: default, $ignore-path: default) {
-
-  @if $theme == default {
-    @if $bg-clr == null and $hover-bg-clr == null {
-      @if $hover-clr == default {
-        $theme: get-color-theme($clr);
-      } @else {
-        $theme: get-color-theme($hover-clr);
-      }
-    } @else {
-      @if $hover-bg-clr == default {
-        $theme: get-color-theme($bg-clr);
-      } @else {
-        $theme: get-color-theme($hover-bg-clr);
-      }
-    }
+@function get-key-from-hover($key) {
+  $slice-index: str-length($key) - 5;
+  @if str-slice($key, $slice-index) == "-hover" {
+    @return str-slice($key, 0, $slice-index - 1);
   }
+  @return null;
+}
+
+@function get-key-from-active($key) {
+  $slice-index: str-length($key) - 6;
+  @if str-slice($key, $slice-index) == "-active" {
+    @return str-slice($key, 0, $slice-index - 1);
+  }
+  @return null;
+}
+
+@function get-key-and-suffix($key) {
+  $index: str-index($key, "--");
+  @if $index {
+    @return (
+      key: str-slice($key, 1, $index - 1),
+      suffix: str-slice($key, $index + 2)
+    );
+  }
+  @return null;
+}
+
+@mixin clickable(
+  $clr, $bg-clr,
+  $hover-clr: default, $hover-bg-clr: default,
+  $active-clr: default, $active-bg-clr: default,
+  $focus-clr: default, $focus-bg-clr: default,
+  $ignore-path: default
+) {
 
   @if $ignore-path == default {
     $ignore-path: false;
@@ -33,127 +50,106 @@
 
   // hover
   @if $hover-clr == default {
-    @if $hover-bg-clr == null {
-      @if $theme == "light" {
-        $hover-clr: darken($clr, 14%);
-      }
-      @if $theme == "dark" {
-        $hover-clr: lighten($clr, 18%);
-      }
-    } @else if $hover-bg-clr == default {
+    @if $hover-bg-clr == null { // transparent background, text color need change.
+      $hover-clr: $clr + "--hover";
+    } @else {
       $hover-clr: $clr;
     }
-  }
 
+  }
   @if $hover-bg-clr == default {
-    @if $theme == "light" {
-      $hover-bg-clr: darken($bg-clr, 14%);
-    }
-    @if $theme == "dark" {
-      $hover-bg-clr: lighten($bg-clr, 18%);
-    }
+    $hover-bg-clr: $bg-clr + "--hover";
   }
 
   // active
   @if $active-clr == default {
-    @if $active-bg-clr == null {
-      @if $theme == "light" {
-        $active-clr: darken($hover-clr, 15%);
-      }
-      @if $theme == "dark" {
-        $active-clr: lighten($hover-clr, 16%);
-      }
-    } @else if $active-bg-clr == default {
+    $suffix: get-key-and-suffix($hover-clr);
+    @if $active-bg-clr == null and type-of($suffix) == "map" {
+      $active-clr: map-get($suffix, key) + "--active";
+    } @else {
       $active-clr: $hover-clr;
     }
   }
 
   @if $active-bg-clr == default {
-    @if $theme == "light" {
-      $active-bg-clr: darken($hover-bg-clr, 15%);
-    }
-    @if $theme == "dark" {
-      $active-bg-clr: lighten($hover-bg-clr, 16%);
+    $suffix: get-key-and-suffix($hover-bg-clr);
+    @if type-of($suffix) == "map" {
+      $active-bg-clr: map-get($suffix, key) + "--active";
     }
   }
 
   // focus
   @if $focus-clr == default {
-    @if $focus-bg-clr == null {
-      $focus-clr: $hover-clr;
-    } @else if $hover-bg-clr == default {
-      $focus-clr: $hover-clr;
+    $suffix: get-key-and-suffix($active-clr);
+    @if $focus-bg-clr == null and type-of($suffix) == "map" {
+      $focus-clr: map-get($suffix, key) + "--hover";
+    } @else {
+      $focus-clr: $active-clr;
     }
   }
 
   @if $focus-bg-clr == default {
-    $focus-bg-clr: $hover-bg-clr;
+    $suffix: get-key-and-suffix($active-bg-clr);
+    @if type-of($suffix) == "map" {
+      $focus-bg-clr: map-get($suffix, key) + "--hover";
+    }
   }
 
   @include plain() {
-    color: $clr;
-    @if $bg-clr {
-      background-color: $bg-clr;
-    }
+    @include css-var(color, "var(--#{$clr})");
     @if $ignore-path == false {
       svg path {
-        fill: $clr;
+        @include css-var(fill, "var(--#{$clr})");
       }
+    }
+    @if $bg-clr {
+      @include css-var(background-color, "var(--#{$bg-clr})");
     }
   }
   @include hover() {
-    color: $hover-clr;
-    @if $hover-bg-clr {
-      background-color: $hover-bg-clr;
-    }
+    @include css-var(color, "var(--#{$hover-clr})");
     @if $ignore-path == false {
       svg path {
-        fill: $hover-clr;
+        @include css-var(fill, "var(--#{$hover-clr})");
       }
+    }
+    @if $hover-bg-clr {
+      @include css-var(background-color, "var(--#{$hover-bg-clr})");
     }
   }
   @include active() {
-    color: $active-clr;
-    @if $active-bg-clr {
-      background-color: $active-bg-clr;
-    }
+    @include css-var(color, "var(--#{$active-clr})");
     @if $ignore-path == false {
       svg path {
-        fill: $active-clr;
+        @include css-var(fill, "var(--#{$active-clr})");
       }
+    }
+    @if $active-bg-clr {
+      @include css-var(background-color, "var(--#{$active-bg-clr})");
     }
   }
   @include focus() {
-    color: $focus-clr;
-    @if $focus-bg-clr{
-      background-color: $focus-bg-clr;
-      box-shadow: 0 0 0 2px rgba($focus-bg-clr, .4);
-    }
+    @include css-var(color, "var(--#{$focus-clr})");
     @if $ignore-path == false {
       svg path {
-        fill: $focus-clr;
+        @include css-var(fill, "var(--#{$focus-clr})");
       }
+    }
+    @if $focus-bg-clr{
+      @include css-var(background-color, "var(--#{$focus-bg-clr})");
+      // box-shadow: 0 0 0 2px rgba($pv_focus-bg-clr, .4);
     }
   }
   @include disabled() {
-    @if $theme == "light" {
-      color: rgba($clr, .2) !important;
-    }
-    @if $theme == "dark" {
-      color: rgba($clr, .4) !important;
-    }
-    @if $bg-clr {
-      background-color: $bg-clr !important;
-    }
+    @include css-var(color, "var(--#{$clr}) !important");
+    opacity: .2 !important; /* stylelint-disable-line declaration-no-important */
     @if $ignore-path == false {
       svg path {
-        @if $theme == "light" {
-          fill: rgba($clr, .2) !important;
-        }
-        @if $theme == "dark" {
-          fill: rgba($clr, .4) !important;
-        }
+        @include css-var(fill, "var(--#{$clr}) !important");
       }
+    }
+    @if $bg-clr {
+      @include css-var(background-color, "var(--#{$bg-clr}) !important");
     }
   }
 }
