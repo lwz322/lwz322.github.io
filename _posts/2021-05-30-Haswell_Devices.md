@@ -95,11 +95,27 @@ docker run -d \
 
 1. 3.1X的内核可能存在qbt启动异常的问题，```/usr/bin/qbittorrent-nox: error while loading shared libraries: libQt5Core.so.5: cannot open shared object file: No such file or directory```参考[群晖](https://post.smzdm.com/p/a7do76vd/)
 
-2. 防火墙可能会阻止访问8080端口（部分运营商的家用宽带也会在上游阻隔8080端口的访问）
+2. Linux的防火墙可能会阻止访问8080端口
 
    ```bash
-   firewall-cmd --zone=public --add-port=443/tcp --permanent
+   firewall-cmd --zone=public --add-port=8080/tcp --permanent
    firewall-cmd --reload
+   ```
+  部分运营商的家用宽带也会在上游阻隔8080端口的访问，此时建议将Docker启动命令的监听端口修改为8081
+
+3. 添加证书设置开启HTTPS访问后无法打开网页
+
+   需要修改证书的key的权限为所有人可读
+
+   ```bash
+   chmod +044 keyfilepath
+   ```
+
+   这个在使用供应商的证书 对比 通过ACME申请的Let's Ecrypt证书发现的差异，因为```ps -ef | grep -i qbit```可以看到实际使用证书的程序的UID是abc而不是root，acme在使用root权限执行申请到的证书key对abc用户是不可读的
+   
+   ```bash
+   root       255     1  0 18:26 ?        00:00:00 s6-supervise qbittorrent
+   abc        333   255  1 19:15 ?        00:00:00 /usr/bin/qbittorrent-nox --webui-port=8081
    ```
 
 ## 文件服务
