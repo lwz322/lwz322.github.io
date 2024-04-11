@@ -66,12 +66,13 @@ ios更新14之后，以上教程提到的方法就失效了，后续就没有在
 
 写出来有点多，但不可否认的是在很长一段时间里H122就是能买到的最强的5G CPE，在我这稳定运行了三年，因为是价格低位购入，还能直接用天际通物联网卡（23年已经限速到200Mbps，没有了5G SA，只能用4G）
 
+最后需要担心的其实是流量问题，因为5G的流量消耗速度非常快，实时监控流量消耗情况也是必要的，如用[iOS小组件](https://lwz322.github.io/2018/11/30/Flow.html#%E8%BF%90%E8%90%A5%E5%95%86%E6%B5%81%E9%87%8F%E6%9F%A5%E8%AF%A2%E5%92%8C%E5%B0%8F%E7%BB%84%E4%BB%B6%E6%98%BE%E7%A4%BA)；因为华为5G CPE当前已经无法收到短信，流量告警只能自行编写脚本等方式实现
+
 ## OpenWrt + 4G模块
 这里使用的是[DJI增强图传模块](https://support.dji.com/help/content?customId=zh-cn03400007101&spaceId=34&re=CN&lang=zh-CN#!)连接OpenWrt路由器USB接口接入的4G网络
 - 个人认为只能算是驱动了基础的QMI拨号上网功能，缺少产品本身完整功能及驱动的说明
-- 加了DIY的无人机上的天线，信号还是比手机略差，实测最高50Mbps/最低10Mbps的速率
-- 发热情况在28度的室内属于可以接受，目前使用了两周，上网基本是稳定的，游戏偶尔会跳ping，4G网络期望不能太高
-
+- 加了DIY的无人机上的天线，信号还是比手机略差，实测50Mbps-10Mbps传输的速率
+- 发热情况在28度的室内属于可以接受，上网基本是稳定的，游戏偶尔会跳ping，4G网络期望不能太高
 
 2022年大疆在Mavic3发布之后发布了与之配套的4G图传模块（DJI Cellular），然而自带的增强图传服务只有一年的套餐，后续如果要继续使用就需要以每年99续费增强图传服务，对于只是想超视距飞行过把瘾的人来说，增强图传服务到期之后模块自然就闲置了（大疆2023年新品不兼容该模块），二手市场上挂出的非常多，感觉出手比较困难（原价699，2023.11二手大把的450），而全新的同规格的Cat4速率的4G USB网卡120可以买到，既然如此，还不如留着当4G网卡发挥余热
 
@@ -86,7 +87,6 @@ opkg install qmi-utils usb-modeswitch kmod-mii kmod-nls-base kmod-usb-core kmod-
 ```bash
 echo "2ca3 4006 0 2c7c 0125" > /sys/bus/usb/drivers/qmi_wwan/new_id
 ```
-
 
 3. 创建QMI拨号的接口，例如命名为DJI，在调制解调器设备一栏填入```/dev/cdc-wdm3```（最关键，下图是借用的其他教程的截图作为参考），其余的信息保持默认； 在防火墙设置，给这个接口分配防火墙区域为```wan```，保存设置即可
 ![](https://pic3.zhimg.com/v2-430f0082435f1de7b045b7064c667f1e_b.jpg)
@@ -118,7 +118,7 @@ echo "2ca3 4006 0 2c7c 0125" > /sys/bus/usb/drivers/qmi_wwan/new_id
 ### 查看信号及IPv6情况
 ``uqmi``命令可以与模块通信并输出一些状态的信息，其中个人比较关注的主要是信号
 ```
-root@XDR6088:~# uqmi -d  /dev/cdc-wdm3   --get-signal-info
+root@XDR6088:~# uqmi -d /dev/cdc-wdm3 --get-signal-info
 {
 	"type": "lte",
 	"rssi": -55,
@@ -129,7 +129,7 @@ root@XDR6088:~# uqmi -d  /dev/cdc-wdm3   --get-signal-info
 ```
 4G模块的速率标准为Cat4（下行速率最高150Mbps，上行最高为50Mbps），实测在以上信号强度的电信4G上下行均为50Mbps左右，日常用这速率也算能接受吧，联想到我测试过最快的4G是2018年在iPhoneSE（4G Cat6最高下行速率300Mbps）上跑出了100Mbps的下行
 
-关于IPv6，首先路由器时可以获取到公网IPv6地址的（以及64位前缀的PD），并且在LAN默认的IPv6设置下，可以向下分配地址，另外就是传入连接的连接性，实测发现有运营商的差异：移动的IPv6地址无法外网访问，联通和电信的地址可以外网访问
+关于IPv6，首先路由器时可以获取到公网IPv6地址的（以及64位前缀的PD），并且在LAN默认的IPv6设置下，可以向下分配地址，另外就是传入连接的连接性，实测发现有运营商的差异：移动的IPv6地址无法从外网访问路由器，联通和电信的IPv6地址则可以
 
 ### CPE/4G模块下的二级路由
 由于CPE和4G模块获取的IPv6地址是不含短于64位的前缀的，所以在使用二级路由的情况下，二级路由下的设备无法获取公网IPv6地址，这个时候需要配置“IPv6中继+NDP代理”，OpenWrt 23.05的LuCI界面的设置过程如下：
@@ -198,7 +198,8 @@ root@XDR6088:~# uqmi -d  /dev/cdc-wdm3   --get-signal-info
 因为我之前给[T440s修改BIOS](https://lwz322.github.io/2021/05/30/Haswell_Devices.html)买了CH341A编程器和8pin的夹子，所以就鼓起勇气拆机，经过艰难的掰卡口后，很快就遇到了问题：
 - [红米AX6000救砖](https://www.right.com.cn/forum/forum.php?mod=viewthread&tid=8265832&extra=page%3D1&page=1)中提到建议改CH341的输出电压为3.3v，这个要飞线，我没有工具：
   
-  - 我查了下ThinkPad BIOS芯片W25Q32V的datasheet，发现支持的也是2.7~3.6V，之前成功刷上了BIOS，通过不严谨的推测，不改CH341的输出电压也能刷2.7~3.6V的F50L1G41LB
+ - 我查了下ThinkPad BIOS芯片W25Q32V的datasheet，发现支持的也是2.7~3.6V，之前成功刷上了BIOS，通过不严谨的推测，不修改CH341的输出电压也能刷2.7~3.6V的F50L1G41LB
+
 - 店家给的CH341的编程器刷写软件不支持F50L1G41LB，[红米AX6000救砖](https://www.right.com.cn/forum/forum.php?mod=viewthread&tid=8265832&extra=page%3D1&page=1)中提到“NeoProgrammer不知道如何写入单独分区，我选择了SNANDer”：
   
   - SNANDer大概是缺少说明，我这里用的不太顺利，最后还是选了NeoProgrammer，因为后者能成功识别到芯片并读写
@@ -211,7 +212,7 @@ root@XDR6088:~# uqmi -d  /dev/cdc-wdm3   --get-signal-info
 ### 刷入官方OpenWrt
 在OpenWrt官方23.05正式版支持XDR-6088的固件后，参考了[TL-XDR6088/6086 刷入官方 Openwrt/Immortalwrt](https://shun.typlog.io/tl-xdr608x-openwrt-install)，原文已经记录的相当的详细，此处仅摘录用到的步骤（因为独立博客的域名过期之后就很可能找不到原文了）
 
-> 本文写作时，最新的是 23.05.0-rc3 版。将来请用更新的稳定版本，目前 Immortalwrt 已经支持：
+> 本文写作时，最新的是**23.05.0-rc3**版。将来请用更新的稳定版本，目前Immortalwrt官方固件已经支持：
 > 
 > - 双 2.5Gb 网口的正常驱动（但LED灯还不亮）
 > - WiFi6 160Mhz
@@ -260,11 +261,11 @@ PE开头的NIC（网卡）均为silicom官网上的网卡的功耗数据（均�
 
 | NIC          | Controller | 无Link | GE    | XGE       |              |
 | ------------ | ---------- | ------ | ----- | --------- | ------------ |
-| PE310G2I50-T | X550-AT2   | 4.62W  | 5.4W  | 8.16W     | x4 pcie 3.0  |
-| PE210G2I40-T | X540       | 7.23W  | 7.92W | 14.28W    | x8 pcie 2.1  |
-| PE310G2I71-T | X710-AT2   | 3.6W   | 5.52w | 8.28W     | x8 pcie 3.0  |
-| PE310G2I71   | X710BM2    | 3~4W   |       | 4.6~4.8W  | x8 pcie 3.0  |
-| PE210G2SPI9A | 82599ES    | 4~6W   |       | 6W        | x8 pcie 2.0  |
+| PE310G2I50-T | X550-AT2   | 4.62W  | 5.4W  | 8.16W     | x4 PCIe 3.0  |
+| PE210G2I40-T | X540       | 7.23W  | 7.92W | 14.28W    | x8 PCIe 2.1  |
+| PE310G2I71-T | X710-AT2   | 3.6W   | 5.52w | 8.28W     | x8 PCIe 3.0  |
+| PE310G2I71   | X710BM2    | 3~4W   |       | 4.6~4.8W  | x8 PCIe 3.0  |
+| PE210G2SPI9A | 82599ES    | 4~6W   |       | 6W        | x8 PCIe 2.0  |
 | LREC6880BT   | AQC 107    |        |       | 网卡4.7W  | x4 PCIe v2.1 |
 
 数据中心下架的卡基本上都有些年头了，关于网卡的控制器、发布时间、制程、TDP，2022年末的二手价如下:
@@ -294,41 +295,46 @@ PE开头的NIC（网卡）均为silicom官网上的网卡的功耗数据（均�
 因为不涉及到后面的修改BIOS文件就能上64GB内存，这里直接上结论：
 - 实测在华硕Z370-I的1410版本的BIOS，可以识别到64GB内存并开机正常使用，使用的内存是2条金士顿Fury DDR4 32GB 3200MHz
 
-  在我的平台上，用最新的3005的BIOS反而会导致莫名其妙的自动重启
+在我的平台上，用最新的3005的BIOS反而会导致莫名其妙的自动重启
 
 - 关于CMD运行命令“wmic memphysical get maxcapacity会显示最大支持的内存”，实测是不准确的
-
 - 华硕这块ITX的主板的BIOS文件的 最大内存限制的二进制位 与 已有经验反馈的ATX主板BIOS文件的不同，所以最后还是实践出真理
 
 因为在互联网上找不到Z370-I成功实践的经验，所以这里留个记录：
 
 Asus Z370-I是一块ITX主板，只有两个内存插槽，装机的时候切好碰上DDR4内存天价，所以很长一段时间里只有双通道16GB 3000MHz，这块主板在官网上参数写着最大支持32GB内存，也就是2X16GB，然而随着内存降价，发现23年单条32GB的内存已经很便宜了，想着直接上到双通道64GB，以后这台机器退役也能当服务器用
 
-### 修改BIOS提升内存支持上限
+## 32G单条内存的颗粒检索
 
-于是我搜到了CHH的帖子：[首发！Z170/Z370 突破内存64g可用的上限限制](https://www.chiphell.com/forum.php?mod=viewthread&tid=2022941&extra=page%3D1&ordertype=1&page=1)，精华在评论里，总结如下：
+因为是捡垃圾买到的“Fury DDR4 32GB 3200MHz”，想要知道超频情况，无法在thaiphoon burner中识别出具体的镁光颗粒，所以只能通过拆内存条散热马甲查看颗粒的FBGA Code（或者叫Market Code：颗粒第二行的编码，例如比较流行的镁光超频内存条C9BJZ），然后在官网[Micron FBGA and component marking decoder](https://www.micron.com/sales-support/design-tools/fbga-parts-decoder)查询，然而如下的丝印代码在官网是查不到的:	
+```bash
+3CE22 
+Z9XJP
+```
+最后是在电子元器件网站上检索到了颗粒的型号（Part Number）：MT40A4G8VNE-062H ES:B；根据镁光的PART NUMBER命名规则表，可以获取到如下信息：
+- 频率：062对应3200MHz
+- 内存条单面八颗粒，叠die颗粒（4G8 4Gb*8 为2Gb的2G8的叠die版本）[MT40A4G8](https://media-www.micron.com/-/media/client/global/documents/products/data-sheet/dram/ddr4/16gb_32gb_x4_x8_3ds_ddr4_sdram.pdf?rev=77c8db7a371) 这个是叠die的颗粒
+- 然后是ES是工程样片，对应Market Code第一位为Z
+
+然后因为网上搜索不到相同的颗粒，所以超频抄作业可以不用想了，只能搜索到[酷兽银甲单条32g 颗粒分析和超频](https://www.bilibili.com/read/cv18671997/)也是叠die颗粒超频：“3200频率下1.45V时序可压c14-18-18-34，这里简单调了下一二时序，能效可以达到4.8w左右”，我看到了这个之后就按照文中提到的时序调整，实测不需要以上那样的参数，1.35v c14-18-18-32即可，其他的时序参考网上的超频教程进一步收紧，TM5跑不过就放开一点（tRFC为500），最后时延能控制在52ns左右（收紧的话可以49ns但是TM5报错）
+
+## 修改BIOS提升内存支持上限
+我搜到了CHH的帖子：[首发！Z170/Z370 突破内存64g可用的上限限制](https://www.chiphell.com/forum.php?mod=viewthread&tid=2022941&extra=page%3D1&ordertype=1&page=1)，精华在评论里，总结如下：
 
 > 如何使 H310C/B365/Z370 的 BIOS 支持最大 128G 内存：
 >
 > 1.**UEFITool**提取SiInitPreMem模块，GUID为A8499E65-A6F6-48B0-96DB-45C266030D83
->
 > 2.**UEFITool**搜索“C786....000000....00”，其中“..”为任意HEX值
->
 > 3.第一处“....”不用理会，第二处“....”如果是“8000”那么就是最大64G，如果是“0001”就是最大128G
->
 > 4.将“8000”修改为“0001”可破除64G限制
->
 > 5.100/200系BIOS内也有此内容，理论上6-9代的IMC支持的内存没差，6700+Z170也能128G内存（已测试可行）
->
 > 6.我这边看，MSI的Z370，18年底的BIOS还是8000，19年4月的BIOS就是0001了，ASUS的BIOS一水的都还是8000
->
 > 7.ME 需要禁用（修改Flash Descriptor的HAP Bit，但要注意部分主板有校验不允许这么改，改后无法开机）
->
 > 8.部分BIOS需设置 Chipset->System Agent (SA) Configuration->Above 4GB MMIO BIOS assignment->Disabled 不同 BIOS 位置不同，且可能被隐藏，无法直接修改
 
 注：参考后面的引用，第七步为：将 0x102h的位置 +1
 
-### Z370-I的BIOS的修改追踪
+## Z370-I的BIOS的修改追踪
 
 限制内存大小的字段，在我的主板上看到的是
 
@@ -353,3 +359,12 @@ C7 86 6F 25 00 00 00 80 00 00 8B C3
 ```
 
 “18年底的BIOS还是8000，19年4月的BIOS就是0001了”的这一行去掉发生3004（更新日志：主要是添加了Win11的支持，没有提内存上线变化）,我找了M10H [ROG MAXIMUS X HERO ](https://rog.asus.com/motherboards/rog-maximus/rog-maximus-x-hero-model/) BIOS变更日志中有内存上限修改(Support Max DRAM Total Capacity up to 128 GB.)的新老BIOS看了下，也是去掉了8000这一行
+
+# 恩杰H1自带140水冷老化
+
+这个问题能搜索到公开的文字信息不多，主要的问题是用了一段时间之后散热能力迅速衰减，比如新购入可以压制170w发热的CPU（已经开盖换液态金属），然而老化之后散热能力在CPU功耗80w左右温度就冲击100度，网上能搜索到的维修和拆解分析的经验：
+- Youtube上维修的视频 [NZXT H1 PUMP FAILURE (AND FIX)](https://www.youtube.com/watch?v=vGRHY8SgdkU)
+- CHH论坛的帖子（可能需要登录，晚些可能会被归档）：[水冷头杂质阻塞](https://www.chiphell.com/thread-2466291-1-1.html)
+- 恩杰H1水冷的水泵损坏的案例也有[恩杰H1开机水冷90度怎么办](https://www.bilibili.com/video/BV1WZ4y1e7Q3/?spm_id_from=333.337.search-card.all.click)
+
+我拆开水冷头之后，果然如上面引用所述是杂志堵塞了水冷头的微水道，用蒸馏水冲洗了几轮水路，最后换了蒸馏水之后散热能力重回170w，另外水冷的大风扇，对内存散热也要更友好（换用了一段时间的AXP100，内吹的时候内存太烫了）
