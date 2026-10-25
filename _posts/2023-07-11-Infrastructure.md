@@ -81,7 +81,7 @@ ios更新14之后，以上教程提到的方法就失效了，后续就没有在
 
 1. 安装QMI拨号需要的包
 ```bash
-opkg install qmi-utils usb-modeswitch kmod-mii kmod-nls-base kmod-usb-core kmod-usb-ehci kmod-usb2 kmod-usb-net kmod-usb-wdm kmod-usb-net-qmi-wwan wwan uqmi luci-proto-qmi
+opkg install qmi-utils usb-modeswitch kmod-mii kmod-nls-base kmod-usb-core kmod-usb-ehci kmod-usb2 kmod-usb-net kmod-usb-wdm kmod-usb-net-qmi-wwan wwan uqmi luci-proto-qmi usbutils
 ```
 2. USB连接4G模块，执行识别驱动的命令，命令如果没有报错的话，```ls /dev/```应该看到```cdc-wdm3```这个设备了
 ```bash
@@ -146,6 +146,9 @@ root@XDR6088:~# uqmi -d /dev/cdc-wdm3 --get-signal-info
 我的网络结构是CPE做一级路由，OpenWrt做二级路由，因为华为5G CPE本身防火墙的原因，二级路由下面的设备可以获取到IPv6地址，但是无法从外网访问
 
 但是如果CPE或者4G模块支持桥模式，那么OpenWrt路由器大概率是不受CPE或者4G模块的防火墙影响的，放开OpenWrt的防火墙之后，只剩下运营商屏蔽了传入连接的可能性
+
+### 其他无驱动的平台使用4G模块
+
 
 # 局域网
 局域网肯定还是要用一台OpenWrt路由器作为主路由，如果一台主路由能解决问题是最好，列出来的要求有点多：

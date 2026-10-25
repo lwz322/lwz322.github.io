@@ -17,7 +17,6 @@ titles:
   ko-KR   : *KO
 key: page-about
 ---
-About
 
 博客主要记录的是:
 

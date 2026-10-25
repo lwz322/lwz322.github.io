@@ -22,7 +22,7 @@ url     : # the base hostname & protocol for your site e.g. https://www.someone.
 baseurl : # does not include hostname
 title   : TimeForget
 description: > # this means to ignore newlines until "Language & timezone"
-  Carry inspiration and Stimulate Wisdom
+  Carry inspiration and Stimulate wisdom
 
 
 ## => Language and Timezone
@@ -35,7 +35,7 @@ timezone: # see https://en.wikipedia.org/wiki/List_of_tz_database_time_zones for
 ##############################
 author:
   type      : person # "person" (default), "organization"
-  name      : Erease
+  name      : lwz322
   url       :
   avatar    : # path or url of avatar image
   bio       : Stay hungery, Stay foolish
@@ -65,6 +65,8 @@ repository_tree: master
 paths:
   root    : # title link url, "/" (default)
   home    : # home layout url, "/" (default)
+  solution: /solution.html
+  gallary : /gallary.html
   archive : # "/archive.html" (default)
   rss     : # "/feed.xml" (default)
 
@@ -214,7 +216,6 @@ defaults:
       show_edit_on_github: true
       show_subscribe: true
       pageview: true
-
 
 ## => Plugins
 ##############################
